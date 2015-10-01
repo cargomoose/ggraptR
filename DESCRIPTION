@@ -2,16 +2,17 @@ Package: raptR
 Type: Package
 Title: The package allows interactive visualization of data through a web browser GUI.
 Version: 1.0
-Date: 2015-09-5
+Date: 2015-10-1
 Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="eugene@presciient.com"),
 	     person("Howard", "Song", role="aut",comment="Developer"),
 	     person("Susan", "Wang", role="ctb",comment="Project Manager"),
 	     person("Jason", "Widjaja", role="ctb",comment="Vignette"),
-	     person("Jose", "Magana", role="ctb",comment="Package Manager"))
+	     person("Jose", "Magana", role="ctb",comment="Package Manager and developer"))
 Description: The package is intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
-License: BSD 3-Clause | file LICENSE
-Depends: R (>= 3.1.0), shiny (>= 0.12.1), ggplot2 (>= 1.0.0), dplyr(>= 0.4.1),
-        DT(>= 0.1), stringr(>= 0.6.2), shinyBS(>= 0.61), shinyjs (>= 0.1.0), ggthemes (>= 2.2.1)
-        
+License: BSD 3-Clause
+Depends: R (>= 3.1.0), shiny (>= 0.12.2), ggplot2 (>= 1.0.1), dplyr(>= 0.4.3),
+        DT(>= 0.1), stringr(>= 1.0.0), shinyBS(>= 0.61), shinyjs (>= 0.2.0), 
+        ggthemes (>= 2.2.1)
+BugReports: https://github.com/cargomoose/raptR/issues        
         
 

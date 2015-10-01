@@ -21,7 +21,7 @@ raptR()
  Also, the package allows to generate tables and perform aggregate operations specifying 
  the by and target columns and the operation to be applied (min, max, count, ...).
  
- The user can import it´s own data files, specifiying the header, separator and quote options.
+ The user can import it's own data files, specifiying the header, separator and quote options.
 
 }
 \references{
