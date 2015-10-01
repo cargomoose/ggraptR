@@ -1,0 +1,56 @@
+fluidRow(
+  column(6,
+         uiOutput('xCtrl')             
+  ),
+  column(6,
+         uiOutput('yCtrl'),
+         uiOutput('binWidthCtrl')
+  )
+),
+fluidRow(
+  column(6,
+         uiOutput('colCtrl')
+  ),
+  column(6,
+         uiOutput('fillCtrl')
+  )
+),
+
+fluidRow(
+  column(6, 
+         uiOutput('sizeCtrl')
+  ),
+  column(6,
+         uiOutput('shapeCtrl')
+  )
+),
+
+fluidRow(
+  column(6, 
+         uiOutput('jitCtrl')
+  ),
+  column(6,
+         uiOutput('smthCtrl')
+  )
+),
+
+fluidRow(
+  column(6,
+         uiOutput('facetRowCtrl')             
+  ),
+  column(6,
+         uiOutput('facetColCtrl')             
+  )
+),
+fluidRow(
+  column(6,
+         uiOutput('facetWrapCtrl')
+  ),
+  column(6,
+         uiOutput('facetScaleCtrl')       
+  )
+),
+
+uiOutput('alphaCtrl'),
+uiOutput('sizeMagCtrl'),
+uiOutput('coordFlipCtrl')

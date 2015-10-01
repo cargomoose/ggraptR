@@ -1,0 +1,19 @@
+verticalLayout(
+  fluidRow(
+    column(6,
+           uiOutput('facetRowCtrl')
+    ),
+    column(6,
+           uiOutput('facetColCtrl')
+    )
+  ),
+  
+  fluidRow(
+    column(6,
+           uiOutput('facetWrapCtrl')
+    ),
+    column(6,
+           uiOutput('facetScaleCtrl')
+    )
+  )  
+)
