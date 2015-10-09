@@ -120,7 +120,6 @@ If data appears cluttered or overly spaced out in the plot, check the 'Flip X an
 
 ![alt text](raptR_34_themes.png "Themes")
 
-Note that the "Enable reactivity" checkbox needs to be disabled in order to edit the axes labels and plot title.
 
 #### 2.3.2 Faceting
 
