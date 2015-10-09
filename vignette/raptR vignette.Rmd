@@ -11,7 +11,6 @@ ggplot2 offers a wide array of marks and channels that constitute the building b
  
 raptR is designed to handle a spectrum of data visualisation needs ranging from visualising the raw values of individual variables through to fully aggregated, pivot-table style visualisations. Data volume and visual complexity is handled by the implementation of two approaches to handle visual complexity - faceting into multiple views, and reduction of items and attributes.
 
-
 ## Workflow
 
 The standard workflow in raptR consists of
@@ -30,9 +29,27 @@ However, when dealing with large datasets that take awhile to render it may be a
 
 ## 1. Importing Data
 
-There are two options for importing data. The preferred way is to load a dataset into a data frame within the R environment. All loaded data frames will be available to raptR when raptR is launched.
+There are two options for importing data. The preferred way is to load a dataset into a data frame within the R environment. All loaded data frames will be available to raptR when raptR is launched. 
 
-To do this, data in csv format can be read using the read.csv command:
+To check which data frames are available, click on the dropdown underneath 'Choose a dataset'. A number of pre-loaded datasets along with any data frames within the R environment should be shown. For users of RStudio, these can be found under the environment tab (next to history and build). 
+
+If your data is present in the environment and not in raptR, you should confirm if the data type is data frame using the command:
+
+```
+class(my_data_frame)
+```
+
+where 'my_data_frame' is the name of your data. 
+
+If it is not of type "data.frame" then you can coerce it using
+
+```{r eval=FALSE}
+data_frame_name <- as.data.frame(my_data_frame)
+```
+
+where 'my_data_frame' is the name of your data and 'data_frame_name' is the name of your data when saved into a data frame format. 
+
+To load a csv file into a new data frame, read data in csv format using the read.csv command:
 
 ```{r eval=FALSE}
 data_frame_name <- read.csv("data_to_be_imported.csv")
@@ -138,13 +155,19 @@ An example of this control in action is shown below:
 
 #### 2.4 Aggregation
 
-To plot aggregated measures of data, check the 'Show dataset type and aggregation method' box.
+Aggregation controls are used to simulate pivot chart functionality. 
+
+To plot aggregated measures of data, check the 'Show dataset type and aggregation method' box. 
 
 The 'Dataset Type' dropdown can be ignored.
 
 Select the desired aggregation method from the dropdown menu.
 
 ![alt text](raptR_4_aggregate.png "Aggregation method")
+
+The aggregation contol applies a function to transform raw data into count data or calculated values. 
+
+![alt text](raptR_42_aggregatecompare.png "Aggregation method")
 
 ## 3. Export Plot
 
