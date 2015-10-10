@@ -5,8 +5,6 @@ plotLine <- function(dataset, ls) {
   
   if (is.null(ls$color)) {
     p <- p + geom_line(aes(group=1), alpha=ls$alpha)
-  } else if (x==ls$color) {
-    p <- p + geom_line(aes(group=1), alpha=ls$alpha)
   } else {
     p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha)
   }
@@ -64,7 +62,7 @@ plotPointsOverlay <- function(plot, ls) {
     p <- plot + 
       geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
                  alpha=ls$alpha, position=ls$jitter) + 
-      scale_size(range = c(1, sizeMag))
+      scale_size(range = c(1, ls$sizeMag))
   } else {
     p <- plot + 
       geom_point(aes_string(shape=ls$shapeAsFactor), 
@@ -152,5 +150,17 @@ plotBox <- function(dataset, ls) {
 plotPath <- function(dataset, ls) {
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_path(alpha=ls$alpha)
+  
+  if (is.null(ls$color)) {
+    p <- p + geom_line(aes(group=1), alpha=ls$alpha)
+  } else {
+    p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha)
+  }
+  
+  if (!is.null(ls$color)) {
+    p <- p + aes_string(color=ls$colorAsFactor) + 
+      guides(color = guide_legend(title=ls$color))
+  }
+  
   return(p)
 }

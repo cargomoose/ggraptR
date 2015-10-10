@@ -32,7 +32,9 @@ lineWidgets <- reactive({
 
 ## line plot points overlay widgets
 linePtsOverlayWidgets <- reactive({
-  wgts <- c('shape', 'size', 'smooth', 'jitter', 'ptsOverlayCond')
+  wgts<-c('ptsOverlayCond')
+  if (input$showAesWgts) 
+    wgts <- c(wgts, 'x', 'shape', 'size', 'smooth', 'jitter', 'sizeMag')
   wgts
 })
 
@@ -96,6 +98,8 @@ pathWidgets <- reactive({
 
 ## path plot points overlay widgets loaded
 pathPtsOverlayWidgets <- reactive({
-  wgts <- c('shape', 'size', 'ptsOverlayCond')
+  wgts <- c('ptsOverlayCond')
+  if (input$showAesWgts) 
+    wgts <- c('shape', 'size')
   wgts
 })

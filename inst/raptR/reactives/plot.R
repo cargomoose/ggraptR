@@ -58,7 +58,7 @@ boxPlotInputs <- reactive({
 ## path plot inputs
 pathPlotInputs <- reactive({
   if (is.null(plotDF())) return()
-  pil <- list(x=x(), y=y(), alpha=alpha())
+  pil <- list(x=x(), y=y(), color=color(), colorAsFactor=colorAsFactor(), alpha=alpha())
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
@@ -90,8 +90,8 @@ linePlot <- reactive({
   p <- plotLine(dataset, linePlotInputs())
   
   ## line plot with points overlay
-  if (!linePtsOverlayWidgetsLoaded()) return()
-  if (ptsOverlayCond) 
+  if (!linePtsOverlayWidgetsLoaded()) return(p)
+  if (input$ptsOverlayCond) 
     p <- plotPointsOverlay(p, linePtsOverlayInputs())
   
   p
@@ -136,8 +136,8 @@ pathPlot <- reactive({
   p <- plotPath(dataset, pathPlotInputs())
   
   ## path plot with points overlay
-  if (!pathPtsOverlayWidgetsLoaded()) return()
-  if (ptsOverlayCond)
+  if (!pathPtsOverlayWidgetsLoaded()) return(p)
+  if (input$ptsOverlayCond)
     p <- plotPointsOverlay(p, pathPtsOverlayInputs())
   p
 })
