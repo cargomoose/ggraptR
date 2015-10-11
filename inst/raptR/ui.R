@@ -1,6 +1,6 @@
 shinyUI(pageWithSidebar(
   
-  headerPanel("Data Explorer"),
+  headerPanel("raptR"),
   sidebarPanel(
     
     ## use shinyjs to disable/enable buttons w/ JS
