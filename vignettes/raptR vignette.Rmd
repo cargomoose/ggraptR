@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 # raptR: Rapid And Pretty Things in R
 
 ## A Flexible Interface for Data Visualisation and Analysis
@@ -212,6 +215,10 @@ Example 2: Faceted boxplots
 * Set transparency to 0.5
 
 ![alt text](raptR_7_combine3.png "Example 2")
+
+### Questions and issues
+
+This vignette was authored by Jason Widjaja and Eugene Dubossarsky. Any questions and issues may be directed to : eugene@presciient.com
 
 ### Appendix A: Guide to Visual Idiom Choices
 
