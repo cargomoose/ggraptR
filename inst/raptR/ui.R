@@ -16,6 +16,12 @@ shinyUI(pageWithSidebar(
     
     ## dataset selection
     uiOutput('datasetCtrl'),
+    ## "view plot" button if import tab
+    conditionalPanel(
+      condition = 'input.conditionedPanels=="importTab"',
+      ## view plot button
+      actionButton("viewPlot", label = "View Plot")
+    ),
     
     hr(),
     
@@ -57,11 +63,20 @@ shinyUI(pageWithSidebar(
                          br(),
                          DT::dataTableOutput("displayTable"),
                          value='tableTab'
-                         ),
+                ),
                 tabPanel('Import',
+                         tags$head(tags$script('
+                                     Shiny.addCustomMessageHandler("myCallbackHandler",
+                                       function(typeMessage) {
+                                          if(typeMessage == 1){
+                                          $("a:contains(Plot)").click();
+                                          }
+                                          });
+                                          ')),
                          value='importTab'
                 ),
                 id = "conditionedPanels"
-    )    
-  )
+    )
+  )  
+  
 ))

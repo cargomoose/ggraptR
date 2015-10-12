@@ -31,6 +31,12 @@ observeEvent(input$reactive, {
   }
 })
 
+## view plot from import tab
+observe({
+  if(input$viewPlot > 0){
+    session$sendCustomMessage("myCallbackHandler", "1")
+  }
+})
 
 ## disable/enable toggle between facet grid and facet wrap
 observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
