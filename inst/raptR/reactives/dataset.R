@@ -14,8 +14,8 @@ customDataset <- reactive({
   fileInfo <- customDatasetFileInfo()
   if (is.null(fileInfo)) return()
   if (is.null(input$header) | is.null(input$sep) | is.null(input$quote)) return()
-  read.csv(fileInfo$datapath, header = as.logical(input$header),
-           sep = input$sep, quote = input$quote)
+  read_delim(fileInfo$datapath, input$sep, col_names = as.logical(input$header),
+           quote = input$quote)
 })
 
 ## reactive variable for custom dataset name

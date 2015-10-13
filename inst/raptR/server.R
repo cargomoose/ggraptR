@@ -7,6 +7,7 @@ library(stringr)
 library(shinyBS)
 library(shinyjs)
 library(ggthemes)
+library(readr)
 
 
 ## import functions
