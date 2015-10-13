@@ -1,8 +1,8 @@
 ---
 title: "raptR"
-author: "Jason Widjaja and Jose Magana"
+author: "Jason Widjaja"
 date: "`r Sys.Date()`"
-output: pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{raptR}
   %\VignetteEngine{knitr::rmarkdown}
