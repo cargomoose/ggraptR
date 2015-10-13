@@ -9,7 +9,7 @@ Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="
 	     person("Jason", "Widjaja", role="ctb",comment="Vignette"),
 	     person("Jose", "Magana", role="ctb",comment="Package Manager and developer"))
 Description: The package is intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
-License: BSD 3-Clause
+License: file LICENSE
 Depends: R (>= 3.1.0), shiny (>= 0.12.2), ggplot2 (>= 1.0.1), dplyr(>= 0.4.3),
         DT(>= 0.1), stringr(>= 1.0.0), shinyBS(>= 0.61), shinyjs (>= 0.2.0), 
         ggthemes (>= 2.2.1)
