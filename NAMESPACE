@@ -2,5 +2,19 @@ export(
   raptR
 )
 
+import(
+  shiny,
+  dplyr,
+  DT,
+  stringr,
+  shinyjs,
+  ggthemes,
+  shinyBS,
+  ggplot2
+)
+
+
+
+
 
 
