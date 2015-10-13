@@ -1,5 +1,12 @@
 ---
+title: "raptR"
+author: "Jason Widjaja and Jose Magana"
+date: "`r Sys.Date()`"
 output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{raptR}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 # raptR: Rapid And Pretty Things in R
 
