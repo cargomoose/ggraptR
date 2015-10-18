@@ -2,16 +2,21 @@ export(
   raptR
 )
 
-import(
-  shiny,
-  dplyr,
-  DT,
-  stringr,
-  shinyjs,
-  ggthemes,
+import (
+  ggplot2,
+  ggthemes, 
   shinyBS,
-  ggplot2
+  dplyr
 )
+
+importFrom(DT, renderDataTable)
+importFrom(shinyjs, enable)
+importFrom(shinyjs, disable)
+
+
+
+
+
 
 
 

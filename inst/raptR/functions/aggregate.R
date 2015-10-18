@@ -57,7 +57,7 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
   if (length(aggMeth) != 0) {
     ## perform non-problematic aggregation by column
     aggMethNaRm <- appendNaRmToAggMeth(aggMeth)
-    agg <- dplyr::summarise_each(grp, funs_(aggMethNaRm ))
+    agg <- dplyr::summarise_each(grp, dplyr::funs_(aggMethNaRm ))
     
     ## convert to data frame
     agg <- as.data.frame(agg)
