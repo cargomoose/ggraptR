@@ -1,6 +1,6 @@
 \name{raptR}
 \alias{raptR}
-\title{Launch the application on your default web browser.}
+\title{Launch the application on your default web browser}
 \description{
 
   raptR is the command that launches a Browser based User Interface that gives 
