@@ -9,7 +9,7 @@ Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="
 	     person("Jason", "Widjaja", role="ctb",comment="Vignette"),
 	     person("Julius", "Neggo", role="ctb",comment="Developer"),
 	     person("Jose", "Magana", role="ctb",comment="Package Manager and Developer"))
-Description: The package is intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
+Description: Intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
 License: GPL (>= 2)
 Suggests: knitr
 Depends: R (>= 3.1.0), ggplot2 (>= 1.0.1), ggthemes (>= 2.2.1) 
