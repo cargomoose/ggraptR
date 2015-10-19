@@ -311,7 +311,7 @@ output$labelFontSizeCtrl <- renderUI({
 output$labelFontColorCtrl <- renderUI({
   if (is.null(displayThemeWgts())) return()
   if (displayThemeWgts())
-    colourInput('labelFontColor', 'Label Font Color', value=isolate(labelFontColor()))
+    shinyjs::colourInput('labelFontColor', 'Label Font Color', value=isolate(labelFontColor()))
 })
 
 ## hjust

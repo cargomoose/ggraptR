@@ -9,9 +9,9 @@ import (
   dplyr
 )
 
-importFrom(DT, renderDataTable)
-importFrom(shinyjs, enable)
-importFrom(shinyjs, disable)
+importFrom("DT", renderDataTable)
+importFrom("shinyjs", enable)
+importFrom("shinyjs", disable)
 
 
 

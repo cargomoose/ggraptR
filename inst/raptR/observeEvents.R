@@ -42,17 +42,17 @@ observe({
 observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
   if (input$showFacetWgts) {
     if (noFacetSelected()) {
-      enable('facetCol')
-      enable('facetRow')
-      enable('facetWrap')
+      shinyjs::enable('facetCol')
+      shinyjs::enable('facetRow')
+      shinyjs::enable('facetWrap')
     } else if (facetGridSelected()) {
-      enable('facetCol')
-      enable('facetRow')
-      disable('facetWrap')
+      shinyjs::enable('facetCol')
+      shinyjs::enable('facetRow')
+      shinyjs::disable('facetWrap')
     } else if (facetWrapSelected()) {
-      disable('facetCol')
-      disable('facetRow')
-      enable('facetWrap')
+      shinyjs::disable('facetCol')
+      shinyjs::disable('facetRow')
+      shinyjs::enable('facetWrap')
     } 
   }
 })
