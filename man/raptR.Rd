@@ -7,7 +7,7 @@
   access to the package functionality for data exploration via many different types of 
   plots that the user will be able   to customize. You can expect to have most of the 
   flexibility existing on the ggplot2 package and being able to benefit from it without 
-  having to write a single line of code
+  having to write a single line of code.
   
 }
 \usage{
