@@ -1,6 +1,6 @@
 Package: raptR
 Type: Package
-Title: Allows Interactive Visualization of Data Through a Web Browser GUI.
+Title: Allows Interactive Visualization of Data Through a Web Browser GUI
 Version: 1.0
 Date: 2015-10-1
 Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="eugene@presciient.com"),
