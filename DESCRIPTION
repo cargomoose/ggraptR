@@ -12,10 +12,8 @@ Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="
 Description: Intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
 License: GPL (>= 2)
 Suggests: knitr
-Depends: R (>= 3.1.0), ggplot2 (>= 1.0.1), ggthemes (>= 2.2.1) 
-Imports: shiny (>= 0.12.2), shinyjs (>= 0.2.0), dplyr(>= 0.4.3), 
+Depends: R (>= 3.1.0), ggplot2 (>= 1.0.1), ggthemes (>= 2.2.1), shinyjs (>= 0.2.0)
+Imports: shiny (>= 0.12.2), dplyr(>= 0.4.3),
          DT (>= 0.1), shinyBS(>= 0.61)
 BugReports: https://github.com/cargomoose/raptR/issues        
 VignetteBuilder: knitr
-        
-

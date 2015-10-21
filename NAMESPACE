@@ -4,14 +4,13 @@ export(
 
 import (
   ggplot2,
-  ggthemes, 
+  ggthemes,
+  shinyjs,
   shinyBS,
   dplyr
 )
 
 importFrom("DT", renderDataTable)
-importFrom("shinyjs", enable)
-importFrom("shinyjs", disable)
 
 
 
