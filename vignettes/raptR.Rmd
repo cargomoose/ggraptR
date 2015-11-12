@@ -6,8 +6,13 @@ output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{raptR}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(raptR)
+```
+
 # raptR: Rapid And Pretty Things in R
 
 ## A Flexible Interface for Data Visualisation and Analysis
