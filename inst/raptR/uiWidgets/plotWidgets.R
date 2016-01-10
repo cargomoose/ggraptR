@@ -80,9 +80,15 @@ output$posCtrl <- renderUI({
 
 ## jitter options
 output$jitCtrl <- renderUI({
-  if (is.null(displayJitCond())) return()  
+  flog.debug("plotWidgets::output$jitCtrl() - Begin", name='all')
+  if (is.null(displayJitCond())){
+    flog.debug("plotWidgets::output$jitCtrl() - is.null(displayJitCond()) - End", name='all')
+    return()
+  }
   if (displayJitCond()) {
-    checkboxInput('jitter', 'Apply jitter effect', value=isolate(jitter()))
+    flog.debug("plotWidgets::output$jitCtrl() - displayJitCond() - End", name='all')
+    flog.debug(jitter(), name='all')
+    checkboxInput('jitter', 'Apply jitter effect', value=TRUE) #isolate(jitter())
   }
 })
 

@@ -1,13 +1,17 @@
-# ## import libraries
-# library(shiny)
-# library(ggplot2)
-# library(dplyr)
-# library(DT)
-# library(stringr)
-# library(shinyBS)
-# library(shinyjs)
-# library(ggthemes)
+## import libraries
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(DT)
+library(stringr)
+library(shinyBS)
+library(shinyjs)
+library(ggthemes)
+library(jsonlite)
+library(futile.logger)
 
+## set debug logs
+source('./debug/debug.R')
 
 ## import functions
 source('./functions/helper.R')
@@ -17,12 +21,10 @@ source('./functions/aggregate.R')
 ## import global constants
 source('./global_constants.R')
 
-
 ## file size options
 # by default, the file size limit is 5MB. It can be changed by
 # setting this option. Here we'll raise limit to 10GB.
 options(shiny.maxRequestSize = 10000*1024^2)
-
 
 shinyServer(function(input, output, session) {
   ## reactive variables
@@ -47,5 +49,4 @@ shinyServer(function(input, output, session) {
   
   ## observed events
   source('./observeEvents.R', local=TRUE)
-  
 })

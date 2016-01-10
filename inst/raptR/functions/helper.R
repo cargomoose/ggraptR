@@ -169,6 +169,7 @@ checkTwoRangesOverlap <- function(range1, range2) {
 
 ## this function ensures correct plot inputs for an updated dataset
 ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
+  flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
     if (!is.null(plotInputsList[[name]])) {
       if (any(name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap'))) {
@@ -183,6 +184,7 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
       }
     }
   }
+  flog.debug("helper::ensureCorrectPlotInputs() - End", name='all')
   return(plotInputsList)
 }
 

@@ -1,6 +1,8 @@
 ## function for line plot
 plotLine <- function(dataset, ls) {
   
+  flog.debug("plot::plotLine() - Begin", name='all')
+  
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y))
   
   if (is.null(ls$color)) {
@@ -14,12 +16,16 @@ plotLine <- function(dataset, ls) {
       guides(color = guide_legend(title=ls$color))
   }
   
+  flog.debug("plot::plotLine() - End", name='all')
+  
   return(p)
 }
 
 
 ## function for scatter plot
 plotScatter <- function(dataset, ls) {
+  
+  flog.debug("plot::plotScatter() - Begin", name='all')  
   
   if (!is.null(ls$size)) {
     p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
@@ -49,6 +55,8 @@ plotScatter <- function(dataset, ls) {
   if (!is.null(ls$smooth)) {
     p <- p + stat_smooth(method=ls$smooth)
   }
+  
+  flog.debug("plot::plotScatter() - End", name='all')  
 
   return(p)
 }
@@ -56,6 +64,8 @@ plotScatter <- function(dataset, ls) {
 
 ## function for points overlay
 plotPointsOverlay <- function(plot, ls) {
+  
+  flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
   
   ## 
   if (!is.null(ls$size)) {
@@ -77,20 +87,27 @@ plotPointsOverlay <- function(plot, ls) {
   if (!is.null(ls$smooth)) {
     p <- p + stat_smooth(method=ls$smooth)
   }
+
+  flog.debug("plot::plotPointsOverlay() - End", name='all')       
   
   return(p)
 }
 
 ## function for histogram
 plotHistogram <- function(dataset, ls) {
+  
+  flog.debug("plot::plotHistogram() - Begin", name='all')
+  
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
-    geom_histogram(alpha=ls$alpha, position=ls$position, binwidth=ls$binWidth) + 
-    aes_string(fill=ls$fillAsFactor)
+    geom_histogram(alpha=ls$alpha, position='identity', binwidth=ls$binWidth) + 
+    aes_string(fill=ls$fillAsFactor) #ls$position
   
   ## legend labeling for fill
   if (!is.null(ls$fill)) {
     p <- p + guides(fill = guide_legend(title=ls$fill))
   }
+  
+  flog.debug("plot::plotHistogram() - End", name='all')    
 
   return(p)
 }
@@ -98,6 +115,8 @@ plotHistogram <- function(dataset, ls) {
 
 ## function for density plot 
 plotDensity <- function(dataset, ls) {
+  
+  flog.debug("plot::plotDensity() - Begin", name='all')      
 
   p <- ggplot(dataset, aes_string(x=ls$x)) 
   if (ls$densBlkLineCond) {
@@ -112,27 +131,37 @@ plotDensity <- function(dataset, ls) {
                       color = guide_legend(title=ls$fill),
                       fill = guide_legend(title=ls$fill))
   }
+  
+  flog.debug("plot::plotDensity() - End", name='all')   
+  
   return(p)
 }
 
 
 ## function for bar plot
 plotBar <- function(dataset, ls) {
+  
+  flog.debug("plot::plotBar() - Begin", name='all')   
 
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) + 
-    aes_string(fill=ls$fillAsFactor)
+    geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
+    aes_string(fill=ls$fillAsFactor)#ls$position
   
   ## legend labeling for fill
   if (!is.null(ls$fill)) {
     p <- p + guides(fill = guide_legend(title=ls$fill))
   }
+  
+  flog.debug("plot::plotBar() - End", name='all')     
 
   return(p)
 }
 
 ## function for box plot
 plotBox <- function(dataset, ls) {
+  
+  flog.debug("plot::plotBox() - Begin", name='all')     
+  
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor)
@@ -141,6 +170,8 @@ plotBox <- function(dataset, ls) {
   if (!is.null(ls$fill)) {
     p <- p + guides(fill = guide_legend(title=ls$fill))
   }
+  
+  flog.debug("plot::plotBox() - End", name='all')   
 
   return(p)
 }
@@ -148,6 +179,9 @@ plotBox <- function(dataset, ls) {
 
 ## function for path plot
 plotPath <- function(dataset, ls) {
+  
+  flog.debug("plot::plotPath() - Begin", name='all')   
+  
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_path(alpha=ls$alpha)
   
@@ -161,6 +195,8 @@ plotPath <- function(dataset, ls) {
     p <- p + aes_string(color=ls$colorAsFactor) + 
       guides(color = guide_legend(title=ls$color))
   }
+  
+  flog.debug("plot::plotPath() - End", name='all')    
   
   return(p)
 }

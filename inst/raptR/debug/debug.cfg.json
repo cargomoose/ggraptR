@@ -1,0 +1,6 @@
+# raptr debug configuration file
+# select the format for the log file(s) by entering "simple" or "json" in the format value
+# select the logs you want to write by adding the log name in the logs value, followed by a new line
+# to turn off logging comment out the json record below
+
+#{"format":"simple", "logs":"all"}

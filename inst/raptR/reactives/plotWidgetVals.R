@@ -1,4 +1,3 @@
-
 #### current widget values
 
 ## dataset name
@@ -113,13 +112,14 @@ jitterOrig <- reactive({
 
 ## jitter 
 ## should return either "jitter" or NULL
+## 07/01/2016 - jitter has become broken. for now we will always jitter
 jitter <- reactive({
-  if (is.null(input$jitter)) return()
+  if (is.null(input$jitter)) return('jitter')
   jit <- input$jitter
   if (jit) 
     jit <- 'jitter' 
   else 
-    jit <- NULL
+    jit <- 'jitter'
   jit
 })
 
