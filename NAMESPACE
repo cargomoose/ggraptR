@@ -7,7 +7,9 @@ import (
   ggthemes,
   shinyjs,
   shinyBS,
-  dplyr
+  dplyr,
+  futile.logger,
+  rmarkdown
 )
 
 importFrom("DT", renderDataTable)
