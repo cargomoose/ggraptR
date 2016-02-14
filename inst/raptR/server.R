@@ -52,7 +52,7 @@ shinyServer(function(input, output, session) {
       contentType = "image/png",
       alt = "raptR"
     ))
-  })  
+  }, deleteFile = FALSE)  
   
   ## download handlers
   source('./reactives/download.R', local=TRUE)
