@@ -54,6 +54,7 @@ observeEvent(input$reset_input, {
   shinyjs::reset('jitter')
   shinyjs::reset('smooth')
   shinyjs::reset('size')
+  shinyjs::reset('shape')
   shinyjs::reset('binWidth')
   shinyjs::reset('densBlkLineCond')
   shinyjs::reset('ptsOverlayCond')
