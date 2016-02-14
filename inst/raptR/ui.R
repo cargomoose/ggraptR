@@ -1,11 +1,18 @@
-shinyUI(pageWithSidebar(
+shinyUI(bootstrapPage(
   
   headerPanel(windowTitle="raptR", title=div()),
+  
+  tags$head(tags$style(
+    type="text/css",
+    "#rappy img {max-width: 95%; max-height: 140px;}" #height: 100%; width: 100%
+  )),  
   
   sidebarPanel(
     
     splitLayout(cellWidths = c("25%", "75%"),
-    img(src = "RAPPY.png", height = 140, width = 120),
+    #img(src = "www//RAPPY.png", height = 150, width = 150, align = "center"),
+    
+    imageOutput("rappy", height = "100%", width = "100%"),
     div(
         ## use shinyjs to disable/enable buttons w/ JS
         shinyjs::useShinyjs(),

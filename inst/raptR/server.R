@@ -44,6 +44,16 @@ shinyServer(function(input, output, session) {
   source('./uiWidgets/manAggWidgets.R', local=TRUE)
   source('./uiWidgets/plotWidgets.R', local=TRUE)
   
+  output$rappy <- renderImage({
+    return(list(
+      src = "www/RAPPY.png",
+      height = "140px",
+      width = "120px",
+      contentType = "image/png",
+      alt = "raptR"
+    ))
+  })  
+  
   ## download handlers
   source('./reactives/download.R', local=TRUE)
   
