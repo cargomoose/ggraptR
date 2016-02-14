@@ -4,7 +4,7 @@ shinyUI(pageWithSidebar(
   
   sidebarPanel(
     
-    splitLayout(cellWidths = c("35%", "70%"),
+    splitLayout(cellWidths = c("25%", "75%"),
     img(src = "RAPPY.png", height = 140, width = 120),
     div(
         ## use shinyjs to disable/enable buttons w/ JS
