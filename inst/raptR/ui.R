@@ -1,17 +1,27 @@
 shinyUI(pageWithSidebar(
   
-  headerPanel("raptR"),
+  headerPanel(windowTitle="raptR", title=div()),
+  
   sidebarPanel(
     
-    ## use shinyjs to disable/enable buttons w/ JS
-    shinyjs::useShinyjs(),
-    
-    ## reactive vs. upon-manual-submit calculations
-    uiOutput('submitCtrl'),
-    
-    ## enable reactive option
-    uiOutput('reactiveCtrl'),
-    
+    splitLayout(cellWidths = c("35%", "65%"),
+    img(src = "RAPPY.png", height = 130, width = 120),
+    div(
+        ## use shinyjs to disable/enable buttons w/ JS
+        shinyjs::useShinyjs(),
+        
+        uiOutput('resetable_input'),
+        actionButton("reset_input", "Reset inputs", width = '50%'),
+        
+        br(),
+        br(),
+        
+        ## reactive vs. upon-manual-submit calculations
+        uiOutput('submitCtrl'),
+        
+        ## enable reactive option
+        uiOutput('reactiveCtrl'))
+    ),
     hr(),
     
     ## dataset selection

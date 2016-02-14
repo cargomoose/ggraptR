@@ -50,7 +50,7 @@ output$yCtrl <- renderUI({
 output$colCtrl <- renderUI({
   if (is.null(displayColCond())) return()
   if (displayColCond()) {
-    selectInput('color', 'Color', colOpts(), selected=isolate(color_sel()))
+    selectInput('color', 'Color', colOpts(), selected="clarity") #isolate(color_sel())
   }
 })
 
@@ -188,7 +188,7 @@ output$alphaCtrl <- renderUI({
   if (is.null(input$showAesWgts)) return()
   if (input$showAesWgts) {
     sliderInput("alpha", label = "Opacity",
-                min=0, max=1, value=isolate(alpha()), step=0.1)
+                min=0, max=1, value=0.5, step=0.1) #isolate(alpha())
   }
 })
 
@@ -198,7 +198,7 @@ output$sizeMagCtrl <- renderUI({
   if (is.null(displaySizeMagCond())) return()
   if (displaySizeMagCond()) {
     sliderInput("sizeMag", label="Size Magnifier",
-                min=1, max=25, value=isolate(sizeMag()), step=1)
+                min=1, max=25, value=3, step=1) #isolate(sizeMag())
   }
 })
 
@@ -359,7 +359,7 @@ output$plotThemeCtrl <- renderUI({
 #### show/hide checkbox widgets
 ## show aesthetic controls
 output$showAesWgtsCtrl <- renderUI({
-  checkboxInput('showAesWgts', 'Show aesthetics', value=FALSE)
+  checkboxInput('showAesWgts', 'Show aesthetics', value=TRUE)
 })
 
 ## show facet controls
