@@ -1,34 +1,34 @@
 ---
-title: "raptR"
+title: "ggraptR"
 author: "Jason Widjaja"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{raptR}
+  %\VignetteIndexEntry{ggraptR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 ```{r, include = FALSE}
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-library(raptR)
+library(ggraptR)
 ```
 
-# raptR: Rapid And Pretty Things in R
+# ggraptR: Rapid And Pretty Things in R
 
 ## A Flexible Interface for Data Visualisation and Analysis
 
-This vignette provides a guide to the raptR package. It describes the situations where the package can be applied and provides context in terms of package design and application. It also provides examples of the package in action.  
+This vignette provides a guide to the ggraptR package. It describes the situations where the package can be applied and provides context in terms of package design and application. It also provides examples of the package in action.  
 
 ## Overview
-raptR is an open source R package providing a graphical user interface for data exploration and visualisation. It is based on principles of visualization analysis by Tamara Munzner, and also acts as a wrapper for functionality implemented in the grammar of graphics for R, ggplot2.
+ggraptR is an open source R package providing a graphical user interface for data exploration and visualisation. It is based on principles of visualization analysis by Tamara Munzner, and also acts as a wrapper for functionality implemented in the grammar of graphics for R, ggplot2.
 
 ggplot2 offers a wide array of marks and channels that constitute the building blocks for developing visual encodings, as well as a large selection of built-in visual idioms. However, users unfamiliar with the package may not have visibility of the options available to them, or find it challenging to express their envisioned design in their desired visual idiom.
  
-raptR is designed to handle a spectrum of data visualisation needs ranging from visualising the raw values of individual variables through to fully aggregated, pivot-table style visualisations. Data volume and visual complexity is handled by the implementation of two approaches to handle visual complexity - faceting into multiple views, and reduction of items and attributes.
+ggraptR is designed to handle a spectrum of data visualisation needs ranging from visualising the raw values of individual variables through to fully aggregated, pivot-table style visualisations. Data volume and visual complexity is handled by the implementation of two approaches to handle visual complexity - faceting into multiple views, and reduction of items and attributes.
 
 ## Workflow
 
-The standard workflow in raptR consists of
+The standard workflow in ggraptR consists of
 
 1. Importing data (from an R dataset or a flat file)
 2. Producing and customisation a data visualisation using the Plot toolbar
@@ -36,7 +36,7 @@ The standard workflow in raptR consists of
 
 ### Reactivity and large data sets
 
-![alt text](raptR_5_submit.png "Reactivity")
+![alt text](ggraptR_5_submit.png "Reactivity")
 
 By default, the visualisation refreshes whenever there is a change to the dataset or any input control.
 
@@ -44,11 +44,11 @@ However, when dealing with large datasets that take awhile to render it may be a
 
 ## 1. Importing Data
 
-There are two options for importing data. The preferred way is to load a dataset into a data frame within the R environment. All loaded data frames will be available to raptR when raptR is launched. 
+There are two options for importing data. The preferred way is to load a dataset into a data frame within the R environment. All loaded data frames will be available to ggraptR when ggraptR is launched. 
 
 To check which data frames are available, click on the dropdown underneath 'Choose a dataset'. A number of pre-loaded datasets along with any data frames within the R environment should be shown. For users of RStudio, these can be found under the environment tab (next to history and build). 
 
-If your data is present in the environment and not in raptR, you should confirm if the data type is data frame using the command:
+If your data is present in the environment and not in ggraptR, you should confirm if the data type is data frame using the command:
 
 ```
 class(my_data_frame)
@@ -74,7 +74,7 @@ where 'data_frame_name' is your preferred name for the dataset to be loaded and 
 
 Alternatively, you may import a dataset, by clicking on the import tab as shown:
 
-![alt text](raptR_import.png "Import a file")
+![alt text](ggraptR_import.png "Import a file")
 
 Click 'choose file', and select the required file. 
 
@@ -124,7 +124,7 @@ Click on the 'Show aesthetics' box to explore a number of options to improve plo
 
 Note: The 'jitter' effect is often used to enhance visual interpretability when dealing with a larger data sets with many overlapping data points. In this case, jittering would reveal the relative density of points around each overlapping data point.
 
-![alt text](raptR_31_jitter.png "Jitter options")
+![alt text](ggraptR_31_jitter.png "Jitter options")
 
 If data appears cluttered or overly spaced out in the plot, check the 'Flip X and Y coordinates' box to explore swapping axes. 
 
@@ -133,7 +133,7 @@ If data appears cluttered or overly spaced out in the plot, check the 'Flip X an
 * Axis font labels and positioning can be adjusted
 * Built-in themes can be used as a starting point for further customisation
 
-![alt text](raptR_34_themes.png "Themes")
+![alt text](ggraptR_34_themes.png "Themes")
 
 Note that the "Enable reactivity" checkbox needs to be disabled in order to edit the axes labels and plot title.
 
@@ -141,7 +141,7 @@ Note that the "Enable reactivity" checkbox needs to be disabled in order to edit
 
 Click on the 'Show facets' check box to display controls for presenting a multi-plot data visualisation. 
 
-![alt text](raptR_32_facets.png "Faceting controls")
+![alt text](ggraptR_32_facets.png "Faceting controls")
 
 There are two faceting alternatives available to users:
 
@@ -150,7 +150,7 @@ There are two faceting alternatives available to users:
 
 The differences are shown below:
 
-![alt text](raptR_32_facetoptions.png "Facet Options")
+![alt text](ggraptR_32_facetoptions.png "Facet Options")
 
 Optionally, the facet scale functionality allows the DE the freedom to re-scale the X-axis and/or Y-axis within each facet grid.
 
@@ -161,13 +161,13 @@ This is useful to improve visual clarity if the relative values of data attribut
 
 Click on the 'Show ranges' check box to display controls for zooming in on a subset of the plot. 
 
-![alt text](raptR_33_ranges.png "Zoom-in")
+![alt text](ggraptR_33_ranges.png "Zoom-in")
 
 The two sliders can be dragged to restrict the range of the data shown. The visualisation area will scale so that the subsetted range will be shown over the full area.
 
 An example of this control in action is shown below:
 
-![alt text](raptR_33b_ranges.png "Range restrictions")
+![alt text](ggraptR_33b_ranges.png "Range restrictions")
 
 #### 2.4 Aggregation
 
@@ -179,21 +179,21 @@ The 'Dataset Type' dropdown can be ignored.
 
 Select the desired aggregation method from the dropdown menu.
 
-![alt text](raptR_4_aggregate.png "Aggregation method")
+![alt text](ggraptR_4_aggregate.png "Aggregation method")
 
 The aggregation contol applies a function to transform raw data into count data or calculated values. 
 
-![alt text](raptR_42_aggregatecompare.png "Aggregation method")
+![alt text](ggraptR_42_aggregatecompare.png "Aggregation method")
 
 ## 3. Export Plot
 
 Once the visualisation is complete, click on 'Export Plot' to save the visualisation. The 'Export Options' dialogue box will appear.
 
-![alt text](raptR_6_export.png "Export options")
+![alt text](ggraptR_6_export.png "Export options")
 
 Select the dimensions and file type for the exported file and click 'Download' to save it to your local machine. 
 
-*Known issue: Machines running on Windows may not be able to save plots if they are running raptR from RStudio. If this is the case, click 'Open in Browser' to enable export functionality.*
+*Known issue: Machines running on Windows may not be able to save plots if they are running ggraptR from RStudio. If this is the case, click 'Open in Browser' to enable export functionality.*
 
 *Known issue: The Export Options dialogue box may not appear for machines running on Windows. However the file can still be saved using the workaround above.*
 
@@ -213,7 +213,7 @@ Example 1: Faceted boxplots
 * Select Clarity under 'Facet Column'
 * Click 'Flip X and Y coordinates'
 
-![alt text](raptR_7_combine2.png "Example 1")
+![alt text](ggraptR_7_combine2.png "Example 1")
 
 Example 2: Faceted boxplots
 
@@ -226,7 +226,7 @@ Example 2: Faceted boxplots
 * Select am (automatic/manual) under 'Facet Column'
 * Set transparency to 0.5
 
-![alt text](raptR_7_combine3.png "Example 2")
+![alt text](ggraptR_7_combine3.png "Example 2")
 
 ### Questions and issues
 

@@ -1,13 +1,13 @@
-Package: raptR
+Package: ggraptR
 Type: Package
 Title: Allows Interactive Visualization of Data Through a Web Browser GUI
-Version: 1.0
-Date: 2015-10-1
+Version: 0.1
+Date: 2016-02-29
 Authors@R: c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),email="eugene@presciient.com"),
+	     person("Julius", "Neggo", role="ctb",comment="Lead Developer"),
 	     person("Howard", "Song", role="aut",comment="Developer"),
 	     person("Susan", "Wang", role="ctb",comment="Project Manager"),
 	     person("Jason", "Widjaja", role="ctb",comment="Vignette"),
-	     person("Julius", "Neggo", role="ctb",comment="Developer"),
 	     person("Jose", "Magana", role="ctb",comment="Package Manager and Developer"))
 Description: Intended for both technical and non-technical users to create interactive data visualizations through a web browser GUI without writing any code.
 License: GPL (>= 2)
@@ -15,4 +15,4 @@ Suggests: knitr
 Depends: R (>= 3.1.0), ggplot2 (>= 1.0.1), ggthemes (>= 2.2.1), shinyjs (>= 0.2.0), shinyBS(>= 0.61)
 Imports: shiny (>= 0.12.2), dplyr(>= 0.4.3), DT (>= 0.1), futile.logger (>= 1.4.1), rmarkdown(>= 0.9.2)
 BugReports: https://github.com/cargomoose/raptR/issues        
-VignetteBuilder: knitr
+VignetteBuilder: rmarkdown

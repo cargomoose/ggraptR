@@ -1,6 +1,6 @@
 shinyUI(bootstrapPage(
   
-  headerPanel(windowTitle="raptR", title=div()),
+  headerPanel(windowTitle="ggraptR", title=div()),
   
   tags$head(tags$style(
     type="text/css",
@@ -10,7 +10,6 @@ shinyUI(bootstrapPage(
   sidebarPanel(
     
     splitLayout(cellWidths = c("25%", "75%"),
-    #img(src = "www//RAPPY.png", height = 150, width = 150, align = "center"),
     
     imageOutput("rappy", height = "100%", width = "100%"),
     div(

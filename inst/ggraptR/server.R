@@ -50,7 +50,7 @@ shinyServer(function(input, output, session) {
       height = "140px",
       width = "120px",
       contentType = "image/png",
-      alt = "raptR"
+      alt = "ggraptR"
     ))
   }, deleteFile = FALSE)  
   

@@ -1,9 +1,9 @@
-\name{raptR}
-\alias{raptR}
+\name{ggraptR}
+\alias{ggraptR}
 \title{Launch the application on your default web browser}
 \description{
 
-  raptR is the command that launches a Browser based User Interface that gives 
+  ggraptR is the command that launches a Browser based User Interface that gives 
   access to the package functionality for data exploration via many different types of 
   plots that the user will be able   to customize. You can expect to have most of the 
   flexibility existing on the ggplot2 package and being able to benefit from it without 
@@ -11,7 +11,7 @@
   
 }
 \usage{
-raptR()
+ggraptR()
 }
 \details{
 
@@ -31,7 +31,7 @@ A reference
 
 \examples{
   \dontrun{
-    raptR()
+    ggraptR()
   }
 }
 \keyword{ ~ggplot2 }
