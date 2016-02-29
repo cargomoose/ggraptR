@@ -47,6 +47,8 @@ shinyServer(function(input, output, session) {
   output$rappy <- renderImage({
     return(list(
       src = "www/RAPPY.png",
+      height = "140px",
+      width = "120px",
       contentType = "image/png",
       alt = "ggraptR"
     ))
