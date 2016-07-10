@@ -1,6 +1,14 @@
 ## dataset drop-down options 
 output$datasetCtrl <- renderUI({
-  selectInput("dataset", "Choose a dataset:", 
+  #for now we will select diamonds by default
+  selectedDataFrame = "diamonds"
+  if ((exists(gDefaultDataFrame)) && gDefaultDataFrame != "" && gDefaultDataFrame %in% rawDatasetNames())
+  {
+    #variable set by the ggraptR("x") instantiation parameter (see ggraptR.R)
+    selectedDataFrame = gDefaultDataFrame
+  }
+  selectInput("dataset", "Choose a dataset:",
+              selected = selectedDataFrame,
               choices = rawDatasetNames())
 })
 

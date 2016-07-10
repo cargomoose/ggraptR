@@ -47,11 +47,13 @@ rawDatasetNames <- reactive({
   
   flog.debug("dataset::rawDatasetNames() - Begin", name='all')
   
-  flog.debug("dataset::rawDatasetNames() - End", name='all')
-  
-  c("diamonds", "mtcars", "rock", 
+  ds <- c("diamonds", "mtcars", "rock", 
     customDatasetName(),
     getLoadedDataFrameNames())
+  
+  flog.debug("dataset::rawDatasetNames() - End", name='all')  
+  
+  ds
 })
 
 ## reactive variable for raw dataset
