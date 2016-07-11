@@ -7,11 +7,16 @@
 #'   ggraptR()
 #' }
 #' @export
-ggraptR <- function() {
+
+#prep the default data frame global variable to be used by ggraptR (see generalWidgets.R)
+gDefaultDataFrame <<- ""
+ 
+ggraptR <- function(defaultDataFrame="") {
   appDir <- system.file("ggraptR", package = "ggraptR")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
   }
+  gDefaultDataFrame <<- defaultDataFrame
   shiny::runApp(appDir, display.mode = "normal")
 }
 
