@@ -189,41 +189,9 @@ plotInput <- reactive({
   ## don't plot anything if x hasn't been updated according to new dataset
   if (!(x() %in% xOpts())) return()
   
-  ## scatter plot
-  if (plotType()=='scatter')  {
-    p <- scatterPlot()
-  }
-
-  ## line plot
-  else if (plotType()=='line') {
-    p <- linePlot()
-  }
-  
-  ## bar plot
-  else if (plotType()=='bar') {
-    p <- barPlot()
-  }
-  
-  ## histogram
-  else if (plotType()=='histogram') {
-    p <- histogram()
-  }
-
-  ## density plot
-  else if (plotType()=='density') {
-    p <- densityPlot()
-  }
-  
-  ## box plot
-  else if (plotType()=='box') {
-    p <- boxPlot()
-  }
-  
-  ## path plot
-  else if (plotType()=='path') {
-    p <- pathPlot()
-  }
-  
+  p <- do.call(paste0(plotType(), 
+                      if (plotType() == 'histogram') '' else 'Plot'), list())
+    
   ## plot facet controls
   if (!noFacetSelected()) {
 
