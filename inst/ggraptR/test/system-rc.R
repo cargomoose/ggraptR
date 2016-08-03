@@ -1,3 +1,8 @@
+# http://adv-r.had.co.nz/OO-essentials.html#picking-a-system
+# http://www.cyclismo.org/tutorial/R/s3Classes.html
+# http://www.agapow.net/programming/r/reference-classes/
+
+
 Rappy.ggplot <- setRefClass("Rappy.ggplot",
   fields = c('gg'),  # dataset, x
   methods = list(
