@@ -12,10 +12,12 @@ plt <- ggplot(mtcars, aes(x=factor(cyl), y=mpg, fill=factor(gear))) +
   scale_fill_brewer(palette="Dark2")
 plt
 
-eval(parse(text=sprintf('ggplot(%s, aes(%s)) + geom_bar(stat="identity")',
-    'mtcars',
-    sapply(1:length(plt$mapping), function(i) paste(c(names(plt$mapping)[i], plt$mapping[[i]]), collapse = '=')) %>%
-  paste(collapse=', '))))
+txt <- sprintf('ggplot(%s, aes(%s)) + geom_bar(stat="identity")',
+        'mtcars',
+        sapply(1:length(plt$mapping), function(i) paste(c(names(plt$mapping)[i], plt$mapping[[i]]), collapse = '=')) %>%
+          paste(collapse=', '))
+print(txt)
+eval(parse(text=txt))
 
 plt$layers[[1]]$geom %>% class
 plt$scales$scales[[1]]$scale_name
