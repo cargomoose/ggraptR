@@ -75,7 +75,7 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
   dfNames <- c()
   for (objName in objNames) {
     obj <- get(objName)
-    if(class(obj)=='data.frame') {
+    if(any(class(obj)=='data.frame')) {  # class() can return many values and generate warning
       dfNames <- c(dfNames, objName)
     } 
   }

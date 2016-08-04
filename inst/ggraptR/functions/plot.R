@@ -1,9 +1,16 @@
+get_ggplot <- function(dataset, aes_obj) {
+  p <- ggplot(dataset, aes_obj)
+  class(p) <- append(class(p), "rappy")
+  p$rappy$dataset_name <- deparse(substitute(dataset))
+  p
+}
+
 ## function for line plot
 plotLine <- function(dataset, ls) {
   
   flog.debug("plot::plotLine() - Begin", name='all')
   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y))
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y))
   
   if (is.null(ls$color)) {
     p <- p + geom_line(aes(group=1), alpha=ls$alpha)
@@ -28,12 +35,12 @@ plotScatter <- function(dataset, ls) {
   flog.debug("plot::plotScatter() - Begin", name='all')  
   
   if (!is.null(ls$size)) {
-    p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+    p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
       geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
                  alpha=ls$alpha, position=ls$jitter) + 
       scale_size(range = c(1, ls$sizeMag))
   } else {
-    p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+    p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
       geom_point(aes_string(shape=ls$shapeAsFactor), 
                  alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag)
   }
@@ -98,7 +105,7 @@ plotHistogram <- function(dataset, ls) {
   
   flog.debug("plot::plotHistogram() - Begin", name='all')
   
-  p <- ggplot(dataset, aes_string(x=ls$x)) + 
+  p <- get_ggplot(dataset, aes_string(x=ls$x)) + 
     geom_histogram(alpha=ls$alpha, position='identity', binwidth=ls$binWidth) + 
     aes_string(fill=ls$fillAsFactor) #ls$position
   
@@ -118,7 +125,7 @@ plotDensity <- function(dataset, ls) {
   
   flog.debug("plot::plotDensity() - Begin", name='all')      
 
-  p <- ggplot(dataset, aes_string(x=ls$x)) 
+  p <- get_ggplot(dataset, aes_string(x=ls$x)) 
   if (ls$densBlkLineCond) {
     p <- p + geom_density(aes_string(group=ls$fillAsFactor, fill=ls$fillAsFactor), alpha=ls$alpha)
     if (!is.null(ls$fill)) 
@@ -143,7 +150,7 @@ plotBar <- function(dataset, ls) {
   
   flog.debug("plot::plotBar() - Begin", name='all')   
 
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor)#ls$position
   
@@ -162,7 +169,7 @@ plotBox <- function(dataset, ls) {
   
   flog.debug("plot::plotBox() - Begin", name='all')     
   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor)
   
@@ -182,7 +189,7 @@ plotPath <- function(dataset, ls) {
   
   flog.debug("plot::plotPath() - Begin", name='all')   
   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_path(alpha=ls$alpha)
   
   if (is.null(ls$color)) {
@@ -200,3 +207,108 @@ plotPath <- function(dataset, ls) {
   
   return(p)
 }
+
+generateCode <- function(p) {
+  # useful thing: geom_bar(alpha=0.8)$print
+  
+  # reorder inner aes arguments
+  for (sorted_arg in c('y', 'x')) {
+    if (names(p$mapping)[1] != sorted_arg && sorted_arg %in% names(p$mapping)) {
+      arg <- p$mapping[sorted_arg]
+      ind <- which(sorted_arg == names(p$mapping))
+      p$mapping[[ind]] <- p$mapping[[1]]
+      p$mapping[[1]] <- arg[[1]]
+      names(p$mapping)[ind] <- names(p$mapping)[[1]]
+      names(p$mapping)[1] <- sorted_arg
+    }
+  }
+  res <- sprintf('ggplot(%s, aes(%s))', p$rappy$dataset_name, clist(p$mapping))
+  
+  for (layer in p$layers) {
+    if (any(class(layer$geom) == 'Geom')) {
+      geom_name <- snakeize(class(layer$geom)[[1]])
+      geom_params <- paste(parse_kv(snakeize(class(layer$stat)[[1]])), 
+                           parse_kv(snakeize(class(layer$position)[[1]])), sep=', ')
+      if (!is.null(layer$aes_params) && length(layer$aes_params)) {
+        geom_params <- paste(geom_params, clist(layer$aes_params), sep=', ')
+      }
+      if (!is.null(layer$mapping) && length(layer$mapping)) {
+        geom_params <- sprintf('aes(%s), %s', clist(layer$mapping), geom_params)
+      }
+      # for (params in c(layer$stat_params, layer$geom_params)) {
+      # collision na.rm=F for both stat_params and geom_params
+      param_mask <- sapply(layer$stat_params, function(x)
+        !is.null(x) && (!is.logical(x) || x) && (!is.numeric(x) || x > 0) &&
+          ((!is.vector(x) && !is.list(x)) || length(x) > 0))
+      if (any(param_mask)) {
+        useful_params <- layer$stat_params[param_mask]
+        geom_params <- paste(geom_params, clist(useful_params), sep=', ')
+        if ('binwidth' %in% names(useful_params) && geom_name == 'geom_bar') {
+          geom_name <- 'geom_histogram'
+          # otherwise, Warning message:
+          # `geom_bar()` no longer has a `binwidth` parameter. Please use `geom_histogram()` instead.
+        }
+      }
+      res <- sprintf('%s + %s(%s)', res, geom_name, geom_params)
+    }
+  }
+  
+  if ('guides' %in% names(p)) {
+    guide_params <- c()
+    for (guide_i in 1:length(p$guides)) {
+      guide_name <- names(p$guides)[guide_i]
+      guide <- p$guides[[guide_i]]
+      if (guide_name != guide$title) {
+        guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', guide_name, guide$title))
+      }
+    }
+    if (length(guide_params)) {
+      res <- sprintf('%s + guides(%s)', res, paste(guide_params, collapse=', '))
+    }
+  }
+  
+  for (scale in p$scales$scales) {
+    if (scale$aesthetics == 'size') {
+      # I have found that range information stores as an inner function
+      # print(scale_size) -> continuous_scale(.., palette=area_pal(range)) -> ggproto(palette=palette)
+      # so we can restore range's low and high by palette() out solving equation: 
+      # sqrt(in)*(high-low)+low=out
+      low <- p$scales$scales[[1]]$palette(0)
+      high <- p$scales$scales[[1]]$palette(1)
+      res <- sprintf('%s + scale_size(range=c(%s, %s))', res, low, high)
+    } else if (scale$aesthetics == 'colour') {
+      res <- sprintf('%s + scale_color_%s()', res, scale$scale_name)
+    }
+  }
+  
+  if (class(p$coordinates)[1] == 'CoordFlip') {
+    res <- sprintf('%s + %s()', res, snakeize(class(p$coordinates)[1]))
+  }
+  
+  if (!is.null(p$rappy$theme_name)) {
+    res <- sprintf('%s + theme_%s()', res, p$rappy$theme_name)
+  }
+  if (!is.null(p$rappy$theme_attrs)) {
+    res <- sprintf('%s + theme(text=element_text(%s))', res, clist(p$rappy$theme_attrs))
+  }
+  
+  for (lab in c('title', 'x', 'y')) {
+    if (!is.null(p$labels[[lab]])) {
+      res <- sprintf('%s + %s("%s")', res, 
+                     if (lab == 'title') 'ggtitle' else paste0(lab, 'lab'), 
+                     p$labels[[lab]])
+    }
+  }
+  
+  if (!is.null(p$facet)) {
+    res <- sprintf('%s + %s', res, gsub(',', ' +', format(p$facet)))
+    free_mask <- unlist(p$facet$free)
+    if (any(free_mask)) {
+      res <- sub(')$', sprintf(
+        ', scales="free%s")', if (all(free_mask)) '' else if (free_mask['x']) '_x' else '_y'), res)
+    }
+  }
+  
+  res
+}
+

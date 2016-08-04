@@ -387,3 +387,11 @@ output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
   checkboxInput('showDSTypeAndPlotAggWgts', 
                 'Show dataset type and aggregation method', value=FALSE)
 })
+
+output$generatePlotCodeCtl <- renderUI({
+  shinyBS::bsButton("generatePlotCode", label="Generate Plot Code", type="action", icon = icon("code"))
+})
+
+output$generateCode <- renderText({
+  generateCodeReactive()
+})

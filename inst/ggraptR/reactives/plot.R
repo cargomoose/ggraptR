@@ -194,118 +194,50 @@ plotInput <- reactive({
     
   ## plot facet controls
   if (!noFacetSelected()) {
-
     ## facet grids
     if (facetGridSelected()) {
       p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
-    } 
-    
-    ## facet wrap
-    else if (facetWrapSelected()) {
+    } else if (facetWrapSelected()) {  ## facet wrap
       p <- p + facet_wrap(facets=facetWrap(), scales=facetScale())
     }
   }
   
   ## plot coord flip control 
-  if (coordFlip()) 
-    p <- p + coord_flip()
+  p <- p + if (coordFlip()) coord_flip()
 
   ## plot labels 
-  if (!is.null(plotTitle()))
-    if (plotTitle() != '')
-      p <- p + ggtitle(plotTitle())
-  if (!is.null(xLabel()))
-    if (xLabel() != '')
-      p <- p + xlab(xLabel())
-  if (!is.null(yLabel())) 
-    if (yLabel() != '')
-      p <- p + ylab(yLabel())
+  p <- p + if (!is.null(plotTitle()) && plotTitle() != '') ggtitle(plotTitle())
+  p <- p + if (!is.null(xLabel()) && xLabel() != '') xlab(xLabel())
+  p <- p + if (!is.null(yLabel()) && yLabel() != '') ylab(yLabel())
   
   ## plot themes
   if (!is.null(plotTheme())) {
-    if (plotTheme()=='theme_grey')
-      p <- p + theme_grey()
-    else if (plotTheme()=='theme_bw') 
-      p <- p + theme_bw()
-    else if (plotTheme()=='theme_calc') {
-      p <- p + theme_calc()
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_color_calc()
-    }
-    else if (plotTheme()=='theme_economist') {
-      p <- p + theme_economist() + scale_colour_economist()
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_color_calc()
-    }
-    else if (plotTheme()=='theme_few') {
-      p <- p + theme_few()
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_few()      
-    }
-    else if (plotTheme()=='theme_fivethirtyeight') {
-      p <- p + theme_fivethirtyeight() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_fivethirtyeight()      
-    }
-    else if (plotTheme()=='theme_gdocs') {
-      p <- p + theme_gdocs() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_gdocs()
-    }
-    else if (plotTheme()=='theme_hc') {
-      p <- p + theme_hc() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_hc()
-    }
-    else if (plotTheme()=='theme_pander') {
-      p <- p + theme_pander() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_pander()      
-    } 
-    else if (plotTheme()=='theme_solarized') {
-      p <- p + theme_solarized() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_solarized()      
-    }
-    else if (plotTheme()=='theme_stata') {
-      p <- p + theme_stata() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_stata()      
-    }
-    else if (plotTheme()=='theme_tufte') {
-      p <- p + theme_tufte() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_tufte()      
-    }
-    else if (plotTheme()=='theme_wsj') {
-      p <- p + theme_wsj() 
-      if (!is.null(colorType()))
-        if (colorType()=='discrete')
-          p <- p + scale_colour_wsj()      
+    p <- p + do.call(plotTheme(), list())
+    
+    theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
+    p$rappy$theme_name <- theme_name
+    color_type_flag <- !is.null(colorType()) && colorType() == 'discrete'
+    if (!theme_name %in% c('grey', 'bw', 'economist')) {
+      scale_color_name <- sprintf('scale_colour_%s()', theme_name)
+      if (theme_name == 'calc') {
+        scale_color_name <- sub('u', '', scale_color_name)
+      }
+      p <- p + if (color_type_flag) do.call(scale_color_name, list())
+    } else if (theme_name == 'economist') {
+      p <- p + scale_colour_economist() + if (color_type_flag) scale_color_calc()
     }
   }
     
-    ## plot label styles
-    p <- p + 
-      theme(text=element_text(family = labelFontFamily(),
+  ## plot label styles
+  p$rappy$theme_attrs <- list(family = labelFontFamily(),
                               face = labelFontFace(),
                               color = labelFontColor(),
                               size = labelFontSize(),
                               hjust = hjust(),
-                              vjust = vjust()))
+                              vjust = vjust())
+  p <- p + theme(text=do.call(element_text, p$rappy$theme_attrs))
     
   flog.debug("plot::plotInput() - End", name='all')
-
   flog.debug("proctime - end", name='all')
   end.time <- Sys.time()
   flog.debug(end.time, name='all')
@@ -313,7 +245,15 @@ plotInput <- reactive({
   flog.debug("time.taken", name='all')
   flog.debug(time.taken , name='all')
 
-  ## return
   p
+})
+
+generateCodeReactive <- reactive({
+  flog.debug("plot::generateCode() - Begin", name='all')
+  # res <- generateCode(output$plot)
+  browser()
+  res <- format(ls())
+  flog.debug("plot::generateCode() - End", name='all')
+  res
 })
 

@@ -6,3 +6,6 @@ shinyBS::bsModal("modalExportOptions", "Export Options", "exportPlotCtl", size =
                  uiOutput('fileDPICtl'),
                  uiOutput('fileTypeCtl'),
                  uiOutput('dlBtnPlot'))
+
+shinyBS::bsModal("modalCodeView", "Generated Code", "generatePlotCodeCtl", size = "small",
+                 verbatimTextOutput('generateCode'))

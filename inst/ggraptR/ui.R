@@ -68,7 +68,8 @@ shinyUI(bootstrapPage(
     tabsetPanel(type = "tabs",
                 tabPanel("Plot", 
                          br(),
-                         uiOutput('exportPlotCtl'),
+                         fluidRow(column(2, uiOutput('exportPlotCtl')),
+                                  column(2, uiOutput('generatePlotCodeCtl'))),
                          br(),
                          plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=TRUE)),
                          value='plotTab'

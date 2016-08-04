@@ -26,6 +26,10 @@ source('./global_constants.R')
 # setting this option. Here we'll raise limit to 10GB.
 options(shiny.maxRequestSize = 10000*1024^2)
 
+if (!exists('gDefaultDataFrame')) {  # to have opportunity to launch app without ggraptR or using 'showcase'
+  gDefaultDataFrame <<- ""
+}
+
 shinyServer(function(input, output, session) {
   ## reactive variables
   source('./reactives/reactives.R', local=TRUE)  # general/miscellaneous

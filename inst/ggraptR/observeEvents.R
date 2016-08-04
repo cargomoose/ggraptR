@@ -41,49 +41,18 @@ observe({
 observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
-  shinyjs::reset("dataset")
-  shinyjs::reset("plotType")
-  shinyjs::reset('rawVsManAgg')
-  shinyjs::reset('plotAggMeth')
-  shinyjs::reset('x')
-  shinyjs::reset('y')
-  shinyjs::reset('color')
-  shinyjs::reset('treatAsFacVarCol')
-  shinyjs::reset('fill')
-  shinyjs::reset('position')
-  shinyjs::reset('jitter')
-  shinyjs::reset('smooth')
-  shinyjs::reset('size')
-  shinyjs::reset('shape')
-  shinyjs::reset('binWidth')
-  shinyjs::reset('densBlkLineCond')
-  shinyjs::reset('ptsOverlayCond')
-  shinyjs::reset('facetRow')
-  shinyjs::reset('facetCol')
-  shinyjs::reset('facetWrap')
-  shinyjs::reset('facetScale')
-  shinyjs::reset('alpha')
-  shinyjs::reset('sizeMag')
-  shinyjs::reset('coordFlip')
-  shinyjs::reset('plotAddAggBy')
-  shinyjs::reset('xlim')
-  shinyjs::reset('ylim')
-  shinyjs::reset('plotTitle')
-  shinyjs::reset('xLabel')
-  shinyjs::reset('yLabel')
-  shinyjs::reset('labelFontFamily')
-  shinyjs::reset('labelFontFace')
-  shinyjs::reset('labelFontSize')
-  shinyjs::reset('labelFontColor')
-  shinyjs::reset('hjust')
-  shinyjs::reset('vjust')
-  shinyjs::reset('plotTheme')
-  shinyjs::reset('showAesWgts')
-  shinyjs::reset('showFacetWgts')
-  shinyjs::reset('showXYRangeWgts')
-  shinyjs::reset('showPlotAggWgt')
-  shinyjs::reset('showThemeWgts')
-  shinyjs::reset('showDSTypeAndPlotAggWgts')
+  # I hope there is some way to extract these ids from env
+  ids <- c('dataset', 'plotType', 'rawVsManAgg', 'plotAggMeth', 'x', 'y', 'color', 
+           'treatAsFacVarCol', 'fill', 'position', 'jitter', 'smooth', 'size', 
+           'shape', 'binWidth', 'densBlkLineCond', 'ptsOverlayCond', 'facetRow', 
+           'facetCol', 'facetWrap', 'facetScale', 'alpha', 'sizeMag', 'coordFlip', 
+           'plotAddAggBy', 'xlim', 'ylim', 'plotTitle', 'xLabel', 'yLabel', 
+           'labelFontFamily', 'labelFontFace', 'labelFontSize', 'labelFontColor', 
+           'hjust', 'vjust', 'plotTheme', 'showAesWgts', 'showFacetWgts', 
+           'showXYRangeWgts', 'showPlotAggWgt', 'showThemeWgts', 'showDSTypeAndPlotAggWgts')
+  for (id in ids) {
+    shinyjs::reset(id)
+  }
   Sys.sleep(0.5)
   updateCheckboxInput(session, "reactive", value = TRUE)
 })
