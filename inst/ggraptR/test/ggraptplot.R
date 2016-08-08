@@ -5,7 +5,7 @@
 ggraptR <- function(defaultDataFrame="") {
   print('source version')
   gDefaultDataFrame <<- ""
-  shiny::runApp('D:/dev/projects/R/raptR/inst/ggraptR', display.mode="showcase")
+  shiny::runApp('D:/dev/projects/R/raptR/inst/ggraptR')#, display.mode="showcase")
 }
 ggraptR::ggraptR()
 

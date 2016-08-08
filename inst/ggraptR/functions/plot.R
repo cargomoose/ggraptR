@@ -1,7 +1,8 @@
 get_ggplot <- function(dataset, aes_obj) {
   p <- ggplot(dataset, aes_obj)
   class(p) <- append(class(p), "rappy")
-  p$rappy$dataset_name <- deparse(substitute(dataset))
+  p$rappy$dataset_name <- 'diamonds'  # ugly hardcoded. Need to obtain input$dataset here
+  # plotDF() does not work
   p
 }
 
@@ -208,6 +209,29 @@ plotPath <- function(dataset, ls) {
   return(p)
 }
 
+snakeize <- function(camel_str) {
+  s <- gsub("([a-z])([A-Z])", "\\1_\\L\\2", camel_str, perl = TRUE)
+  sub("^(.[a-z])", "\\L\\1", s, perl = TRUE) # make 1st char lower case
+}
+
+parse_kv <- function(str, sep='_') {
+  do.call(sprintf, as.list(unlist(c('%s="%s"', str_split(str, sep)))))
+}
+
+wrap_quote <- function(el) {
+  if (is.character(el)) {
+    sprintf('"%s"', el)
+  } else if (is.language(el)) {
+    as.character(list(el))
+  } else as.character(el)
+}
+
+clist <- function(arg_lst) {
+  arg_lst <- arg_lst[!sapply(arg_lst, is.null)]
+  paste(sapply(1:length(arg_lst), function(par_i) 
+    sprintf('%s=%s', names(arg_lst)[par_i], wrap_quote(arg_lst[[par_i]]))), collapse=', ')
+}
+
 generateCode <- function(p) {
   # useful thing: geom_bar(alpha=0.8)$print
   
@@ -233,7 +257,12 @@ generateCode <- function(p) {
         geom_params <- paste(geom_params, clist(layer$aes_params), sep=', ')
       }
       if (!is.null(layer$mapping) && length(layer$mapping)) {
-        geom_params <- sprintf('aes(%s), %s', clist(layer$mapping), geom_params)
+        aes_mapping_mask <- sapply(layer$mapping, function(x) !is.null(x))
+        if (any(aes_mapping_mask)) {
+          geom_params <- sprintf('aes(%s), %s', clist(layer$mapping[aes_mapping_mask]), geom_params)
+        }
+        # "ggplot(dataset, aes(x=carat, y=price, colour=clarity)) + geom_point(aes(character(0)), stat=\"identity\", position=\"jitter\", alpha=0.5, size=3) + theme_grey() + theme(text=element_text(character(0), character(0), color=\"black\", size=15, hjust=0.5, vjust=0.5)) + xlab(\"carat\") + ylab(\"price\") + facet_null()"
+        
       }
       # for (params in c(layer$stat_params, layer$geom_params)) {
       # collision na.rm=F for both stat_params and geom_params
@@ -300,7 +329,7 @@ generateCode <- function(p) {
     }
   }
   
-  if (!is.null(p$facet)) {
+  if (all(class(p$facet) != 'null')) {
     res <- sprintf('%s + %s', res, gsub(',', ' +', format(p$facet)))
     free_mask <- unlist(p$facet$free)
     if (any(free_mask)) {

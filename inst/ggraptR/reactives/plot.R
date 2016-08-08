@@ -250,10 +250,11 @@ plotInput <- reactive({
 
 generateCodeReactive <- reactive({
   flog.debug("plot::generateCode() - Begin", name='all')
-  # res <- generateCode(output$plot)
-  browser()
-  res <- format(ls())
+  res <- generateCode(plotInput())
+  flog.debug("plot::generateCode() - res", name='all')
+  flog.debug(res, name='all')
   flog.debug("plot::generateCode() - End", name='all')
   res
 })
+
 
