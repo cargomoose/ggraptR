@@ -1,12 +1,10 @@
 ## dataset drop-down options 
 output$datasetCtrl <- renderUI({
-  #select diamonds by default
-  selectedDataFrame <- "diamonds"
-  if (gDefaultDataFrame != "" && gDefaultDataFrame %in% rawDatasetNames())
-  {
-    #variable set by the ggraptR("x") instantiation parameter (see ggraptR.R)
-    selectedDataFrame <- gDefaultDataFrame
-  }
+  # select diamonds by default
+  selectedDataFrame <- 
+    if (gDefaultDataFrame != "" && gDefaultDataFrame %in% rawDatasetNames()) 
+    # variable set by the ggraptR("x") instantiation parameter (see ggraptR.R)
+      gDefaultDataFrame else "diamonds"
   
   selectInput("dataset", "Choose a dataset:", 
               choices = rawDatasetNames(),
@@ -21,5 +19,6 @@ output$reactiveCtrl <- renderUI({
 
 ## upon-manual-submit button
 output$submitCtrl <- renderUI({
-  shinyBS::bsButton("submit", label="Submit", icon=icon("refresh"), type = "action", block=TRUE)
+  shinyBS::bsButton("submit", label="Submit", icon=icon("refresh"), type = "action", 
+                    block=TRUE)
 })

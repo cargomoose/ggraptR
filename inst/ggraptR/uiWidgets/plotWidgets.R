@@ -389,7 +389,8 @@ output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
 })
 
 output$generatePlotCodeCtl <- renderUI({
-  shinyBS::bsButton("generatePlotCode", label="Generate Plot Code", type="action", icon = icon("code"))
+  shinyBS::bsButton("generatePlotCode", label="Generate Plot Code", type="action", 
+                    icon = icon("code"))
 })
 
 output$generateCode <- renderText({

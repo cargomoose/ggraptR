@@ -65,6 +65,8 @@ rawDataset <- reactive({
     return()
   }
   
+  dataset_name <<- input$dataset
+  
   ## if no custom dataset was uploaded, then set one of the preloaded datasets as raw dataset
   if (is.null(input$file)) {
     flog.debug("dataset::rawDataset() - is.null(input$file) - End", name='all')
