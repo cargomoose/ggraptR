@@ -7,21 +7,8 @@ library(ggthemes)
 library(dplyr)
 library(stringr)
 
-# ggraptplot <- function(dataset, x, y=NULL) {  # we need to distinguish classes
-#   p <- ggplot(dataset, do.call(aes_string, c(list(x), if (!is.null(y)) list(y))))
-#   class(p) <- append(class(p), "rappy")
-#   p$dataset_name <- deparse(substitute(dataset))
-#   return(p)
-# }
-# `+` <- function(rappy, e2) {
-#   # print(any(class(e2) == 'Layer'))
-#   # if (any(class(e2$geom) == 'GeomBar')) {
-#     # rappy$geom <- e2$geom
-#   # }
-#   ggplot2::`%+%`(rappy, e2)
-# }
 
-
+#### test cases ####
 p <- ggplot(mtcars, aes_string(x='factor(cyl)', y='mpg')) +
   geom_bar(stat="identity", position='identity', alpha=0.8) + aes_string(fill='factor(gear)')
 p <- ggplot(mtcars, aes_string(x='mpg')) +
@@ -51,8 +38,10 @@ p <- ggplot(mtcars, aes_string(x='mpg', y='wt')) + geom_point() +
   theme(text=do.call(element_text, list(theme_attrs)))
 p$rappy$theme_attrs <- theme_attrs
 
+
+#### check ####
 p$rappy$dataset_name <- 'mtcars'
 print(generate_code(p, input))
-eval(parse(text=generate_code(p, input)))  # robust test
+eval(parse(text=generate_code(p, input)))  # robust
 
 

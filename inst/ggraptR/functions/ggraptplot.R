@@ -29,19 +29,7 @@ clist <- function(arg_lst) {
 }
 
 generateCode <- function(p) {
-  # useful thing: geom_bar(alpha=0.8)$print
-  
-  # reorder inner aes arguments
-  for (sorted_arg in c('y', 'x')) {
-    if (names(p$mapping)[1] != sorted_arg && sorted_arg %in% names(p$mapping)) {
-      arg <- p$mapping[sorted_arg]
-      ind <- which(sorted_arg == names(p$mapping))
-      p$mapping[[ind]] <- p$mapping[[1]]
-      p$mapping[[1]] <- arg[[1]]
-      names(p$mapping)[ind] <- names(p$mapping)[[1]]
-      names(p$mapping)[1] <- sorted_arg
-    }
-  }
+  p$mapping <- rev(p$mapping)
   res <- sprintf('ggplot(%s, aes(%s))', p$rappy$dataset_name, clist(p$mapping))
   
   for (layer in p$layers) {
