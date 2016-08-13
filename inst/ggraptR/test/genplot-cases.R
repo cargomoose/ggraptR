@@ -1,4 +1,5 @@
 rm(list=ls())
+gDefaultDataFrame <- 'mtcars'
 shiny::runApp('D:/dev/projects/R/raptR/inst/ggraptR')#, display.mode="showcase")
 ggraptR::ggraptR()
 

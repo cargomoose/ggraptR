@@ -256,11 +256,13 @@ plotDF <- reactive({
     if (xType()=='continuous'){
       flog.debug("dataset::plotDF() - xType()=='continuous'", name='all')
       dataset <- dataset[dataset[[x]] >= xlim()[1] & dataset[[x]] <= xlim()[2], ]
-    }
-    else if (xType()=='discrete'){
+    } else if (xType()=='discrete'){
       flog.debug("dataset::plotDF() - xType()=='discrete'", name='all')
       dataset <- dataset[dataset[[x]] %in% xlim(), ]
     }
+    lim_range <<- list()
+    lim_range$x$val <<- xlim()
+    lim_range$x$type <<- xType()
   }
   
   ## subset with ylim filter (if applicable)
@@ -280,12 +282,14 @@ plotDF <- reactive({
       if (yType()=='continuous'){
         flog.debug("dataset::plotDF() - yType()=='continuous'", name='all')
         dataset <- dataset[dataset[[y]] >= ylim()[1] & dataset[[y]] <= ylim()[2], ]
-      }
-      else if (yType()=='discrete'){
+      } else if (yType()=='discrete'){
         flog.debug("dataset::plotDF() - yType()=='discrete'", name='all')
         dataset <- dataset[dataset[[y]] %in% ylim(), ]
       }
     }
+    if (!exists('lim_range')) lim_range <<- list()
+    lim_range$y$val <<- ylim()
+    lim_range$y$type <<- yType()
   }
   
   flog.debug("dataset::plotDF() - End", name='all')

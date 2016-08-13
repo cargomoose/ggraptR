@@ -30,7 +30,20 @@ clist <- function(arg_lst) {
 
 generateCode <- function(p) {
   p$mapping <- rev(p$mapping)
-  res <- sprintf('ggplot(%s, aes(%s))', p$rappy$dataset_name, clist(p$mapping))
+  res_dataset_name <- p$rappy$dataset_name
+  
+  if (exists('lim_range')) {
+    res_dataset_name <- sprintf('data.table(%s)', res_dataset_name)
+    for (i in 1:length(lim_range)) {
+      ax <- lim_range[[i]]
+      ax_name <- names(lim_range)[[i]]
+      res_dataset_name <- sprintf('%s[%s %s c(%s)]',
+        res_dataset_name, as.character(p$mapping[[ax_name]]), 
+        if (ax$type == 'continuous') '%between%' else '%in%',
+        paste(round(ax$val, 2), collapse=', '))
+    }
+  }
+  res <- sprintf('ggplot(%s, aes(%s))', res_dataset_name, clist(p$mapping))
   
   for (layer in p$layers) {
     if (any(class(layer$geom) == 'Geom')) {
@@ -67,7 +80,7 @@ generateCode <- function(p) {
     for (guide_i in 1:length(p$guides)) {
       guide_name <- names(p$guides)[guide_i]
       guide <- p$guides[[guide_i]]
-      if (guide_name != guide$title) {
+      if (!is.null(guide$title) && guide_name != guide$title) {
         guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', guide_name, guide$title))
       }
     }
@@ -111,7 +124,10 @@ generateCode <- function(p) {
   }
   
   if (all(class(p$facet) != 'null')) {
-    res <- sprintf('%s + %s', res, gsub(',', ' +', format(p$facet)))
+    res <- sprintf('%s + %s', res, format(p$facet) %>% 
+                     gsub(',', ' +', .) %>% 
+                     gsub('\\( ~', '(. ~', .) %>% 
+                     gsub('~ \\)', '~ .)', .))
     free_mask <- unlist(p$facet$free)
     if (any(free_mask)) {
       res <- sub(')$', sprintf(
