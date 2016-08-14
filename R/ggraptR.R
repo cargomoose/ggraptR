@@ -18,9 +18,18 @@ ggraptR <- function(df="diamonds") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
   }
 
-  gDefaultDataFrame <<- df
+  if (typeof(df) == "character")
+  {
+    gDefaultDataFrame <<- df    
+  }
+  else
+  {
+    gDefaultDataFrame <<- list(deparse(substitute(df)))
+  }
 
-  shiny::runApp("/home/juliux/raptr/inst/ggraptR", display.mode = "normal") #appDir
+  shiny::runApp(appDir, display.mode = "normal")
   
 }
+
+ggraptR(iris)
 
