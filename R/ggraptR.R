@@ -11,17 +11,16 @@
 #prep the default data frame global variable to be used by ggraptR (see generalWidgets.R)
 gDefaultDataFrame <<- ""
 
-ggraptR <- function(...) {
+ggraptR <- function(df) {
   
   appDir <- system.file("ggraptR", package = "ggraptR")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
   }
 
-  defaultDataFrame <- list(deparse(substitute(...)))
-  gDefaultDataFrame <<- gsub("[^[:alnum:] ]", "", defaultDataFrame)
+  gDefaultDataFrame <<- df
 
-  shiny::runApp(appDir, display.mode = "normal")
+  shiny::runApp("/home/juliux/raptr/inst/ggraptR", display.mode = "normal") #appDir
   
 }
 
