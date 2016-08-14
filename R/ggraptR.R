@@ -30,6 +30,3 @@ ggraptR <- function(df="diamonds") {
   shiny::runApp(appDir, display.mode = "normal")
   
 }
-
-ggraptR(iris)
-
