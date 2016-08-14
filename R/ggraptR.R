@@ -11,7 +11,7 @@
 #prep the default data frame global variable to be used by ggraptR (see generalWidgets.R)
 gDefaultDataFrame <<- ""
 
-ggraptR <- function(df) {
+ggraptR <- function(df="diamonds") {
   
   appDir <- system.file("ggraptR", package = "ggraptR")
   if (appDir == "") {
