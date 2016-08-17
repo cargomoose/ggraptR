@@ -110,9 +110,7 @@ jitterOrig <- reactive({
   input$jitter
 })
 
-## jitter 
-## should return either "jitter" or NULL
-## 07/01/2016 - jitter has become broken. for now we will always jitter
+## jitter
 jitter <- reactive({
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
 })

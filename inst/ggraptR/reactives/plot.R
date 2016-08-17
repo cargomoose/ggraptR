@@ -162,15 +162,16 @@ boxPlot <- reactive({
 ## path plot 
 pathPlot <- reactive({
   flog.debug("plot::pathPlot() - Begin", name='all')
-  dataset <- plotDF(); if (is.null(dataset)) return()
-  if (!pathWidgetsLoaded()) return()
-  if (!(y() %in% finalDFVars())) return()
+  dataset <- plotDF()
+  if (is.null(dataset) || !pathWidgetsLoaded() || !(y() %in% finalDFVars())) return()
   p <- plotPath(dataset, pathPlotInputs())
   
   ## path plot with points overlay
   if (!pathPtsOverlayWidgetsLoaded()) return(p)
-  if (input$ptsOverlayCond)
+  if (!is.null(input$ptsOverlayCond) && input$ptsOverlayCond) {
     p <- plotPointsOverlay(p, pathPtsOverlayInputs())
+  }
+  
   flog.debug("plot::pathPlot() - End", name='all')
   p
 })
