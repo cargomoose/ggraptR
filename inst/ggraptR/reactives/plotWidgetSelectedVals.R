@@ -46,7 +46,7 @@ color_sel <- reactive({
 # output$treatAsFacVarColCtrl <- renderUI({
 #   if (is.null(displayTreatAsFacVarColCond())) return()
 #   if (displayTreatAsFacVarColCond()) {
-#     checkboxInput('treatAsFacVarCol', 'Treat as a factor variable.', value=treatAsFacVarColOrig())
+#     checkboxInput('treatAsFacVarCol', 'Treat as a factor variable', value=treatAsFacVarColOrig())
 #   }
 # })
 

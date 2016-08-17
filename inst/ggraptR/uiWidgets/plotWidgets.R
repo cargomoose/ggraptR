@@ -58,7 +58,7 @@ output$colCtrl <- renderUI({
 output$treatAsFacVarColCtrl <- renderUI({
   if (is.null(displayTreatAsFacVarColCond())) return()
   if (displayTreatAsFacVarColCond()) {
-    checkboxInput('treatAsFacVarCol', 'Treat as a factor variable.', 
+    checkboxInput('treatAsFacVarCol', 'Treat as a factor variable', 
                   value=isolate(treatAsFacVarCol()))
   }
 })

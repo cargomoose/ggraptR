@@ -17,6 +17,7 @@ source('./debug/debug.R')
 source('./functions/helper.R')
 source('./functions/plot.R')
 source('./functions/aggregate.R')
+source('./functions/ggraptplot.R')
 
 ## import global constants
 source('./global_constants.R')
