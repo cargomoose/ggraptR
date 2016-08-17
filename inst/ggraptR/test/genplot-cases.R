@@ -1,6 +1,5 @@
 rm(list=ls())
-gDefaultDataFrame <- 'mtcars'
-shiny::runApp('D:/dev/projects/R/raptR/inst/ggraptR')#, display.mode="showcase")
+shiny::runApp('C:/GoogleDrive/dev/R/raptR/inst/ggraptR')
 ggraptR::ggraptR()
 
 library(ggplot2)

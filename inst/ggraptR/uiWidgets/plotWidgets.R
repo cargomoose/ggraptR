@@ -58,7 +58,8 @@ output$colCtrl <- renderUI({
 output$treatAsFacVarColCtrl <- renderUI({
   if (is.null(displayTreatAsFacVarColCond())) return()
   if (displayTreatAsFacVarColCond()) {
-    checkboxInput('treatAsFacVarCol', 'Treat as a factor variable.', value=isolate(treatAsFacVarCol()))
+    checkboxInput('treatAsFacVarCol', 'Treat as a factor variable.', 
+                  value=isolate(treatAsFacVarCol()))
   }
 })
 
@@ -293,7 +294,8 @@ output$labelFontFamilyCtrl <- renderUI({
   if (displayThemeWgts()) {
     labelFontFamilyOpts <- c('Calibri', 'sans', 'serif', 'mono', 
                              'Times', 'Helvetica', 'Courier')
-    selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, isolate(labelFontFamily()))
+    selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
+                isolate(labelFontFamily()))
   }
 })
 
@@ -310,7 +312,8 @@ output$labelFontFaceCtrl <- renderUI({
 output$labelFontSizeCtrl <- renderUI({
   if (is.null(displayThemeWgts())) return()
   if (displayThemeWgts())
-    numericInput('labelFontSize', 'Label Font Size', value=isolate(labelFontSize()), min=7, max=30, step=1)
+    numericInput('labelFontSize', 'Label Font Size', value=isolate(labelFontSize()), 
+                 min=7, max=30, step=1)
 })
 
 ## label font color

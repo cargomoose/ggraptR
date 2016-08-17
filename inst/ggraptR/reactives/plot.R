@@ -177,7 +177,6 @@ pathPlot <- reactive({
 
 ## plot reactive
 plotInput <- reactive({
-
   flog.debug("plot::plotInput() - Begin", name='all')
   flog.debug("systime - begin", name='all')
   start.time <- Sys.time()
@@ -244,6 +243,17 @@ plotInput <- reactive({
   time.taken <- end.time - start.time
   flog.debug("time.taken", name='all')
   flog.debug(time.taken , name='all')
+  
+  if (!is.null(p)) {
+    # browser()
+    logEntry <- generateCode(p)
+    curLog <- isolate(log$plot)
+    isFirstEntry <- is.null(curLog)
+    
+    if (isFirstEntry || curLog[[length(curLog)]] != logEntry) {
+      log$plot <- if (isFirstEntry) logEntry else c(curLog, logEntry)
+    }
+  }
 
   p
 })

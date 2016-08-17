@@ -27,3 +27,7 @@ output$submitCtrl <- renderUI({
   shinyBS::bsButton("submit", label="Submit", icon=icon("refresh"), type = "action", 
                     block=TRUE)
 })
+
+output$plotLog <- renderText({
+  paste(log$plot, collapse='\n<hr>')
+})

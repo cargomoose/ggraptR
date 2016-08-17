@@ -214,4 +214,4 @@ semiAutoAggOn <- reactive({
   tolower(plotAggMeth()) != 'none'
 })
 
-
+log <- reactiveValues()

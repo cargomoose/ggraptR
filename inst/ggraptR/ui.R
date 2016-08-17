@@ -38,7 +38,6 @@ shinyUI(bootstrapPage(
       ## view plot button
       actionButton("viewPlot", label = "View Plot")
     ),
-    
     hr(),
     
     ## file input/upload panel
@@ -72,26 +71,26 @@ shinyUI(bootstrapPage(
                                   column(2, uiOutput('generatePlotCodeCtl'))),
                          br(),
                          plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=TRUE)),
-                         value='plotTab'
-                ),
-                tabPanel("Table", 
+                         value='plotTab'),
+                tabPanel("Table",
                          br(),
                          uiOutput('dlBtnCSV'),
                          br(),
                          DT::dataTableOutput("displayTable"),
-                         value='tableTab'
-                ),
+                         value='tableTab'),
                 tabPanel('Import',
                          tags$head(tags$script('
                                      Shiny.addCustomMessageHandler("myCallbackHandler",
                                        function(typeMessage) {
                                           if(typeMessage == 1){
-                                          $("a:contains(Plot)").click();
+                                            $("a:contains(Plot)").click();
                                           }
-                                          });
-                                          ')),
-                         value='importTab'
-                ),
+                                       });')),
+                         value='importTab'),
+                tabPanel('Log',
+                         br(),
+                         htmlOutput('plotLog'),
+                         value='logTab'),
                 id = "conditionedPanels"
     )
   )  
