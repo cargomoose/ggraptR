@@ -250,7 +250,7 @@ plotInput <- reactive({
     curLog <- isolate(log$plot)
     isFirstEntry <- is.null(curLog)
     
-    if (isFirstEntry || curLog[[length(curLog)]] != logEntry) {
+    if (isFirstEntry || curLog[[1]] != logEntry) {
       log$plot <- if (isFirstEntry) logEntry else c(logEntry, curLog)
     }
   }
