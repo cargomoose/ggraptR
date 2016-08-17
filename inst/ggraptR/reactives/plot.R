@@ -245,13 +245,12 @@ plotInput <- reactive({
   flog.debug(time.taken , name='all')
   
   if (!is.null(p)) {
-    # browser()
     logEntry <- generateCode(p)
     curLog <- isolate(log$plot)
     isFirstEntry <- is.null(curLog)
     
     if (isFirstEntry || curLog[[length(curLog)]] != logEntry) {
-      log$plot <- if (isFirstEntry) logEntry else c(curLog, logEntry)
+      log$plot <- if (isFirstEntry) logEntry else c(logEntry, curLog)
     }
   }
 
