@@ -4,7 +4,8 @@ shinyUI(bootstrapPage(
   
   tags$head(tags$style(
     type="text/css",
-    "#rappy img {max-width: 95%; max-height: 140px;}" #height: 100%; width: 100%
+    #"#rappy img {max-width: 95%; max-height: 140px;}", #height: 100%; width: 100%
+    ".widblock {background-color: #F9F9F9; padding: 2px 10px; margin:5px}"
   )),  
   
   sidebarPanel(

@@ -207,7 +207,7 @@ output$sizeMagCtrl <- renderUI({
 output$coordFlipCtrl <- renderUI({
   if (is.null(input$showAesWgts)) return()
   if (input$showAesWgts) {
-    checkboxInput('coordFlip', 'Flip X and Y coordinates.', value=isolate(coordFlip()))
+    checkboxInput('coordFlip', 'Flip X and Y axis', value=isolate(coordFlip()))
   }
 })
 
