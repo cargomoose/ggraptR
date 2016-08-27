@@ -1,4 +1,3 @@
-
 #### widgets loaded conditional reactives
 
 ## universal plot widgets loaded
@@ -9,62 +8,76 @@ universalPlotWidgetsLoaded <- reactive({
 
 ## scatter plot widgets loaded
 scatterWidgetsLoaded <- reactive({
-  if (is.null(scatterWidgets())) return()
-  checkWidgetsLoaded(input, scatterWidgets())
+  if (!is.null(scatterWidgets())) {
+    checkWidgetsLoaded(input, scatterWidgets())
+  }
 })
 
 ## line widgets loaded
 lineWidgetsLoaded <- reactive({
-  if (is.null(lineWidgets())) return()
-  checkWidgetsLoaded(input, lineWidgets())
+  if (!is.null(lineWidgets())) {
+    checkWidgetsLoaded(input, lineWidgets())
+  }
 })
 
 ## line plot points overlay widgets loaded
 linePtsOverlayWidgetsLoaded <- reactive({
-  if (is.null(linePtsOverlayWidgets())) return()
-  checkWidgetsLoaded(input, linePtsOverlayWidgets())
+  if (!is.null(linePtsOverlayWidgets())) {
+    checkWidgetsLoaded(input, linePtsOverlayWidgets())
+  }
 })
 
 ## bar plot widgets loaded
 barWidgetsLoaded <- reactive({
-  if (is.null(barWidgets())) return()
-  checkWidgetsLoaded(input, barWidgets())
+  if (!is.null(barWidgets())) {
+    checkWidgetsLoaded(input, barWidgets())
+  }
 })
 
 ## histogram widgets loaded
 histogramWidgetsLoaded <- reactive({
-  if (is.null(histogramWidgets())) return()
-  checkWidgetsLoaded(input, histogramWidgets())
+  if (!is.null(histogramWidgets())) {
+    checkWidgetsLoaded(input, histogramWidgets())
+  }
 })
 
 ## density plot widgets loaded
 densityWidgetsLoaded <- reactive({
-  if (is.null(densityWidgets())) return()
-  checkWidgetsLoaded(input, densityWidgets())
+  if (!is.null(densityWidgets())) {
+    checkWidgetsLoaded(input, densityWidgets())
+  }
 })
 
 ## box plot widgets loaded
 boxWidgetsLoaded <- reactive({
-  if (is.null(boxWidgets())) return()
-  checkWidgetsLoaded(input, boxWidgets())
+  if (!is.null(boxWidgets())) {
+    checkWidgetsLoaded(input, boxWidgets())
+  }
 })
 
 ## path plot widgets loaded
 pathWidgetsLoaded <- reactive({
-  if (is.null(pathWidgets())) return()
-  checkWidgetsLoaded(input, pathWidgets())
+  if (!is.null(pathWidgets())) {
+    checkWidgetsLoaded(input, pathWidgets())
+  }
 })
 
 ## path plot points overlay widgets loaded
 pathPtsOverlayWidgetsLoaded <- reactive({
-  if (is.null(pathPtsOverlayWidgets())) return()
-  checkWidgetsLoaded(input, pathPtsOverlayWidgets())
+  if (!is.null(pathPtsOverlayWidgets())) {
+    checkWidgetsLoaded(input, pathPtsOverlayWidgets())
+  }
 })
 
+pairsWidgetsLoaded <- reactive({
+  if (!is.null(pairsWidgets())) {
+    checkWidgetsLoaded(input, pairsWidgets())
+  }
+})
 
 ## theme widgets loaded
 themeWidgetsLoaded <- reactive({
-  wgts <- c('plotTitle', 'xLabel', 'yLabel', 'hjust', 'vjust',
-            'labelFontFamily', 'labelFontFace', 'labelFontColor', 'labelFontSize')
-  checkWidgetsLoaded(input, wgts)
+  checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel', 'hjust', 'vjust',
+                              'labelFontFamily', 'labelFontFace', 
+                              'labelFontColor', 'labelFontSize'))
 })

@@ -1,8 +1,6 @@
 get_ggplot <- function(dataset, aes_obj) {
-  p <- ggplot(dataset, aes_obj)
-  class(p) <- append(class(p), "rappy")
-  p$rappy$dataset_name <- dataset_name
-  p
+  assign('state', list())
+  ggplot(dataset, aes_obj)
 }
 
 snakeize <- function(camel_str) {
@@ -28,11 +26,24 @@ clist <- function(arg_lst) {
     sprintf('%s=%s', names(arg_lst)[par_i], wrap_quote(arg_lst[[par_i]]))), collapse=', ')
 }
 
+generatePairsCode <- function(p) {
+  # browser()
+  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s))', 
+          state$dataset_name,
+          paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', '), 
+          clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))]))
+}
+
 generateCode <- function(p) {
-  p$mapping <- rev(p$mapping)
-  res_dataset_name <- p$rappy$dataset_name
+  if ('ggmatrix' %in% class(p)) {
+    return(generatePairsCode(p))
+  }
   
-  if (exists('lim_range')) {
+  p$mapping <- rev(p$mapping)
+  res_dataset_name <- state$dataset_name
+  
+  if (!is.null(state$lim_range)) {
+    lim_range <- state$lim_range
     res_dataset_name <- sprintf('data.table(%s)', res_dataset_name)
     for (i in 1:length(lim_range)) {
       ax <- lim_range[[i]]
@@ -56,7 +67,8 @@ generateCode <- function(p) {
       if (!is.null(layer$mapping) && length(layer$mapping)) {
         aes_mapping_mask <- sapply(layer$mapping, function(x) !is.null(x))
         if (any(aes_mapping_mask)) {
-          geom_params <- sprintf('aes(%s), %s', clist(layer$mapping[aes_mapping_mask]), geom_params)
+          geom_params <- sprintf('aes(%s), %s', clist(layer$mapping[aes_mapping_mask]), 
+                                 geom_params)
         }
       }
       # for (params in c(layer$stat_params, layer$geom_params)) {
@@ -81,7 +93,8 @@ generateCode <- function(p) {
       guide_name <- names(p$guides)[guide_i]
       guide <- p$guides[[guide_i]]
       if (!is.null(guide$title) && guide_name != guide$title) {
-        guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', guide_name, guide$title))
+        guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', 
+                                                guide_name, guide$title))
       }
     }
     if (length(guide_params)) {
@@ -108,11 +121,11 @@ generateCode <- function(p) {
     res <- sprintf('%s + %s()', res, snakeize(class(p$coordinates)[1]))
   }
   
-  if (!is.null(p$rappy$theme_name)) {
-    res <- sprintf('%s + theme_%s()', res, p$rappy$theme_name)
+  if (!is.null(state$theme_name)) {
+    res <- sprintf('%s + theme_%s()', res, state$theme_name)
   }
-  if (!is.null(p$rappy$theme_attrs)) {
-    res <- sprintf('%s + theme(text=element_text(%s))', res, clist(p$rappy$theme_attrs))
+  if (!is.null(state$theme_attrs)) {
+    res <- sprintf('%s + theme(text=element_text(%s))', res, clist(state$theme_attrs))
   }
   
   for (lab in c('title', 'x', 'y')) {

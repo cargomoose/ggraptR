@@ -3,13 +3,10 @@ verticalLayout(
   uiOutput('plotTypeCtrl'),
   
   fluidRow(
-    column(6,
-           uiOutput('xCtrl')             
-    ),
-    column(6,
-           uiOutput('yCtrl')
-    )
-  ),
+    column(6, uiOutput('xCtrl')),
+    column(6, uiOutput('yCtrl'))),
+  
+  uiOutput('columnsCtrl'),
   
   ## widgets to show/hide advanced control widgets
   div(

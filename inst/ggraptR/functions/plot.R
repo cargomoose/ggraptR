@@ -1,26 +1,9 @@
-## function for line plot
-plotLine <- function(dataset, ls) {
-  flog.debug("plot::plotLine() - Begin", name='all')
-  
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y))
-  if (is.null(ls$color))  {
-    p <- p + geom_line(aes(group=1), alpha=ls$alpha) 
-  } else {
-    p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
-      aes_string(color=ls$colorAsFactor) + 
-      guides(color=guide_legend(title=ls$color))
-  }
-  
-  flog.debug("plot::plotLine() - End", name='all')
-  p
-}
-
 ## function for scatter plot
 plotScatter <- function(dataset, ls) {
   flog.debug("plot::plotScatter() - Begin", name='all')  
   
-  #stopifnot(all.equal(ggplot(mtcars, aes(cyl, mpg)), ggplot(mtcars, aes(cyl, mpg))+if(F)1))
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + if (is.null(ls$size)) 
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+    if (is.null(ls$size)) 
     geom_point(aes_string(shape=ls$shapeAsFactor), 
                alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
     geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
@@ -56,6 +39,40 @@ plotPointsOverlay <- function(plot, ls) {
   p
 }
 
+## function for line plot
+plotLine <- function(dataset, ls) {
+  flog.debug("plot::plotLine() - Begin", name='all')
+  
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y))
+  if (is.null(ls$color))  {
+    p <- p + geom_line(aes(group=1), alpha=ls$alpha) 
+  } else {
+    p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
+      aes_string(color=ls$colorAsFactor) + 
+      guides(color=guide_legend(title=ls$color))
+  }
+  
+  flog.debug("plot::plotLine() - End", name='all')
+  p
+}
+
+## function for path plot
+plotPath <- function(dataset, ls) {
+  flog.debug("plot::plotPath() - Begin", name='all')   
+  
+  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+    geom_path(alpha=ls$alpha) + 
+    if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
+      geom_line(aes_string(group=ls$color), alpha=ls$alpha)
+  if (!is.null(ls$color)) {
+    p <- p + aes_string(color=ls$colorAsFactor) + 
+      guides(color=guide_legend(title=ls$color))
+  }
+  
+  flog.debug("plot::plotPath() - End", name='all')    
+  p
+}
+
 ## function for histogram
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
@@ -87,19 +104,6 @@ plotDensity <- function(dataset, ls) {
   p
 }
 
-## function for bar plot
-plotBar <- function(dataset, ls) {
-  flog.debug("plot::plotBar() - Begin", name='all')   
-
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
-    aes_string(fill=ls$fillAsFactor) +  # ls$position
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  
-  flog.debug("plot::plotBar() - End", name='all')
-  p
-}
-
 ## function for box plot
 plotBox <- function(dataset, ls) {
   flog.debug("plot::plotBox() - Begin", name='all')     
@@ -113,21 +117,31 @@ plotBox <- function(dataset, ls) {
   p
 }
 
+## function for bar plot
+plotBar <- function(dataset, ls) {
+  flog.debug("plot::plotBar() - Begin", name='all')   
 
-## function for path plot
-plotPath <- function(dataset, ls) {
-  flog.debug("plot::plotPath() - Begin", name='all')   
-  
   p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_path(alpha=ls$alpha) + 
-    if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
-                           geom_line(aes_string(group=ls$color), alpha=ls$alpha)
-  if (!is.null(ls$color)) {
-    p <- p + aes_string(color=ls$colorAsFactor) + 
-      guides(color=guide_legend(title=ls$color))
-  }
+    geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
+    aes_string(fill=ls$fillAsFactor) +  # ls$position
+    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   
-  flog.debug("plot::plotPath() - End", name='all')    
+  flog.debug("plot::plotBar() - End", name='all')
   p
 }
 
+## function for scatter plot
+plotPairs <- function(dataset, ls) {
+  flog.debug("plot::plotPairs() - Begin", name='all')  
+  
+  # browser()
+  assign('state', list())
+  
+  p <- do.call(ggpairs, Filter(function(x) !is.null(x), 
+               list(dataset, columns=ls$columns,
+                    mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
+                    upper=ls$up, diag=ls$diag, low=ls$low)))
+  
+  flog.debug("plot::plotPairs() - End", name='all')  
+  p
+}

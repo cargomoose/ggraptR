@@ -3,43 +3,52 @@
 x_sel <- reactive({
   if (is.null(input$dataset)) return()
   
-  if (!is.null(x()) & !is.null(xOpts()))
-    if (x() %in% xOpts())
+  if (!is.null(x()) && !is.null(colnamesOpts()) && x() %in% colnamesOpts()) {
       return(x())
+  }
   
-  selected <- NULL
-  if (input$dataset=='diamonds') 
-    selected <- 'carat'
-  else if (input$dataset=='mtcars')
-    selected <- 'mpg'
-  else if (input$dataset=='rock')
-    selected <- 'area'
-  return(selected)
+  default_choice <- list(diamonds='carat',
+                         mtcars='mpg',
+                         rock='area',
+                         iris='Pental.Length')
+  return(default_choice[[input$dataset]])
 })
 
 ## y selected
 y_sel <- reactive({
   if (is.null(input$dataset)) return()
   
-  if (!is.null(yOrig()) & !is.null(yOpts()))
-    if (yOrig() %in% yOpts())
+  if (!is.null(yOrig()) && !is.null(colnamesOpts()) && yOrig() %in% colnamesOpts()) {
       return(yOrig())
+  }
+      
+  default_choice <- list(diamonds='price',
+                         mtcars='hp',
+                         rock='peri',
+                         iris='Pental.Sepal.Width')
+  return(default_choice[[input$dataset]])
+})
+
+## pairsPlot columns selected
+columns_sel <- reactive({
+  if (is.null(input$dataset)) return()
   
-  selected <- NULL
-  if (input$dataset=='diamonds')
-    selected <- 'price'
-  else if (input$dataset=='mtcars')
-    selected <- 'hp'
-  else if (input$dataset=='rock')
-    selected <- 'peri'
-  return(selected)
+  if (!is.null(columns()) && !is.null(colnamesOpts()) && columns() %in% colnamesOpts()) {
+      return(columns())
+  }
+  
+  default_choice <- list(diamonds='price',
+                         mtcars='hp',
+                         rock='peri',
+                         iris='Pental.Sepal.Width')
+  return(default_choice[[input$dataset]])
 })
 
 ## color selected
 color_sel <- reactive({
-  if (!is.null(colorOrig()) & !is.null(colOpts()))
-    if (colorOrig() %in% colOpts())
-      return(colorOrig())      
+  if (!is.null(colorOrig()) && !is.null(colOpts()) && colorOrig() %in% colOpts()) {
+      colorOrig()
+  }
 })
 
 # ## treat-as-a-factor-variable option for color
@@ -52,49 +61,50 @@ color_sel <- reactive({
 
 ## fill selected
 fill_sel <- reactive({
-  if (!is.null(fillOrig()) & !is.null(fillOpts()))
-    if (fillOrig() %in% fillOpts()) 
-      return(fillOrig())
+  if (!is.null(fillOrig()) && !is.null(fillOpts()) && fillOrig() %in% fillOpts()) {
+      fillOrig()
+  }
 })
 
 ## size selected
 size_sel <- reactive({
-  if (!is.null(sizeOrig()) & !is.null(sizeOpts()))
-    if (sizeOrig() %in% sizeOpts())
-      return(sizeOrig())
+  if (!is.null(sizeOrig()) && !is.null(sizeOpts()) && sizeOrig() %in% sizeOpts()) {
+      sizeOrig()
+  }
 })
 
 ## shape selected
 shape_sel <- reactive({
-  if (!is.null(shapeOrig()) & !is.null(shapeOpts()))
-    if (shapeOrig() %in% shapeOpts())
-      return(shapeOrig())
+  if (!is.null(shapeOrig()) && !is.null(shapeOpts()) && shapeOrig() %in% shapeOpts()) {
+      shapeOrig()
+  }
 })
 
 ## facet row selected
 facetRow_sel <- reactive({
-  if (!is.null(facetRowOrig()) & !is.null(facetOpts()))
-    if (facetRowOrig() %in% facetOpts())
-      return(facetRowOrig())
+  if (!is.null(facetRowOrig()) && !is.null(facetOpts()) && facetRowOrig() %in% facetOpts()) {
+    facetRowOrig()
+  }
 })
 
 ## facet col selected
 facetCol_sel <- reactive({
-  if (!is.null(facetColOrig()) & !is.null(facetOpts()))
-    if (facetColOrig() %in% facetOpts())
-      return(facetColOrig())
+  if (!is.null(facetColOrig()) && !is.null(facetOpts()) && facetColOrig() %in% facetOpts()) {
+      facetColOrig()
+  }
 })
 
 ## facet wrap selected
 facetWrap_sel <- reactive({
-  if (!is.null(facetWrapOrig()) & !is.null(facetOpts()))
-    if (facetWrapOrig() %in% facetOpts())
-      return(facetWrapOrig())
+  if (!is.null(facetWrapOrig()) && !is.null(facetOpts()) && facetWrapOrig() %in% facetOpts()) {
+      facetWrapOrig()
+  }
 })
 
 ## plot addition aggregation-by
 plotAddAggBy_sel <- reactive({
-  if (!is.null(plotAddAggBy()) & !is.null(plotAddAggByOpts()))
-    if (all(plotAddAggBy() %in% plotAddAggByOpts()))
-      return(plotAddAggBy())
+  if (!is.null(plotAddAggBy()) && !is.null(plotAddAggByOpts()) 
+      && all(plotAddAggBy() %in% plotAddAggByOpts())) {
+      plotAddAggBy()
+  }
 })

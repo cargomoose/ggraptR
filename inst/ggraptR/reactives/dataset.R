@@ -49,7 +49,7 @@ rawDatasetNames <- reactive({
   
   flog.debug("dataset::rawDatasetNames() - End", name='all')
   
-  c("diamonds", "mtcars", "rock", 
+  c("diamonds", "mtcars", "rock", "iris",
     customDatasetName(),
     getLoadedDataFrameNames())
 })
@@ -65,7 +65,7 @@ rawDataset <- reactive({
     return()
   }
   
-  dataset_name <<- input$dataset
+  state$dataset_name <<- input$dataset
   
   ## if no custom dataset was uploaded, then set one of the preloaded datasets as raw dataset
   if (is.null(input$file)) {
@@ -260,9 +260,8 @@ plotDF <- reactive({
       flog.debug("dataset::plotDF() - xType()=='discrete'", name='all')
       dataset <- dataset[dataset[[x]] %in% xlim(), ]
     }
-    lim_range <<- list()
-    lim_range$x$val <<- xlim()
-    lim_range$x$type <<- xType()
+    state$lim_range$x$val <<- xlim()
+    state$lim_range$x$type <<- xType()
   }
   
   ## subset with ylim filter (if applicable)
@@ -287,9 +286,8 @@ plotDF <- reactive({
         dataset <- dataset[dataset[[y]] %in% ylim(), ]
       }
     }
-    if (!exists('lim_range')) lim_range <<- list()
-    lim_range$y$val <<- ylim()
-    lim_range$y$type <<- yType()
+    state$lim_range$y$val <<- ylim()
+    state$lim_range$y$type <<- yType()
   }
   
   flog.debug("dataset::plotDF() - End", name='all')

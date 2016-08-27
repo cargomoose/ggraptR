@@ -99,8 +99,9 @@ finalDFNumericVars <- reactive({
 xRange <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && !is.null(input$x)) {
-    if (input$x %in% finalDFNumericVars())
+    if (input$x %in% finalDFNumericVars()) {
       range <- range(dataset[input$x], na.rm=TRUE)
+    }
     range[1] <- range[1] - 1
     range[2] <- range[2] + 1
     range
@@ -119,8 +120,9 @@ xRange <- reactive({
 yRange <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && !is.null(y())) {
-    if (y() %in% finalDFNumericVars())
+    if (y() %in% finalDFNumericVars()) {
       range <- range(dataset[[y()]], na.rm=TRUE)
+    }
     range[1] <- range[1] - 1
     range[2] <- range[2] + 1
     range
@@ -178,7 +180,7 @@ facetWrapSelected <- reactive({
 ## reactive that returns TRUE if plot utilizes both x and y controls
 isXYCtrlPlot <- reactive({
   if (!is.null(plotType())) {
-    return(plotType() %in% c('line', 'scatter', 'bar', 'box', 'path'))
+    plotType() %in% c('line', 'scatter', 'bar', 'box', 'path')
   }
 })
 
@@ -187,7 +189,7 @@ isXYCtrlPlot <- reactive({
 xType <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && !is.null(x())) {
-    return(if (x() %in% finalDFNumericVars()) 'continuous' else 'discrete')
+    if (x() %in% finalDFNumericVars()) 'continuous' else 'discrete'
   }
 })
 
@@ -196,7 +198,7 @@ xType <- reactive({
 yType <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && isXYCtrlPlot() && !is.null(y())) {
-    return(if (y() %in% finalDFNumericVars()) 'continuous' else 'discrete')
+    if (y() %in% finalDFNumericVars()) 'continuous' else 'discrete'
   }
 })
 
@@ -204,14 +206,23 @@ yType <- reactive({
 colorType <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && !is.null(color())) {
-    return(if (color() %in% finalDFNumericVars()) 'continuous' else 'discrete')
+    if (color() %in% finalDFNumericVars()) 'continuous' else 'discrete'
   }
 })
 
 ## conditional reactive: semi-automatic aggregation is on
 semiAutoAggOn <- reactive({
-  if (is.null(plotAggMeth())) return(FALSE)
-  tolower(plotAggMeth()) != 'none'
+  if (is.null(plotAggMeth())) FALSE else tolower(plotAggMeth()) != 'none'
+})
+
+generateCodeReactive <- reactive({
+  flog.debug("plot::generateCode() - Begin", name='all')
+  res <- generateCode(plotInput())
+  flog.debug("plot::generateCode() - res", name='all')
+  flog.debug(res, name='all')
+  flog.debug("plot::generateCode() - End", name='all')
+  res
 })
 
 log <- reactiveValues()
+

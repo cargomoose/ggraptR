@@ -9,6 +9,7 @@ library(shinyjs)
 library(ggthemes)
 library(jsonlite)
 library(futile.logger)
+library(GGally)
 
 ## set debug logs
 source('./debug/debug.R')
@@ -25,11 +26,14 @@ source('./global_constants.R')
 ## file size options
 # by default, the file size limit is 5MB. It can be changed by
 # setting this option. Here we'll raise limit to 10GB.
-options(shiny.maxRequestSize = 10000*1024^2)
+options(shiny.maxRequestSize = 10000 * 1024^2)
 
 if (!exists('gDefaultDataFrame')) {  # to have opportunity to launch app without ggraptR()
   gDefaultDataFrame <<- ""
 }
+state <<- list()
+suppressWarnings(rm(plotLog, p, envir=.GlobalEnv))
+
 
 
 shinyServer(function(input, output, session) {
@@ -43,6 +47,7 @@ shinyServer(function(input, output, session) {
   source('./reactives/plotWidgetsLoadedCond.R', local=TRUE)  # plot widgets load conditions
   source('./reactives/plotWidgetSelectedVals.R', local=TRUE)  # plot widget selected values
   source('./reactives/plot.R', local=TRUE)  # plot
+  source('./reactives/plotInput.R', local=TRUE)
   
   ## UI controls
   source('./uiWidgets/generalWidgets.R', local=TRUE)
