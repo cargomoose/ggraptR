@@ -6,7 +6,7 @@ verticalLayout(
     column(6, uiOutput('xCtrl')),
     column(6, uiOutput('yCtrl'))),
   
-  uiOutput('columnsCtrl'),
+  uiOutput('columnsCtrl'),  # for ggpairs
   
   ## widgets to show/hide advanced control widgets
   div(

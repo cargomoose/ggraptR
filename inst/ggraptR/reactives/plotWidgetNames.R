@@ -149,7 +149,8 @@ barWidgets <- reactive({
 pairsWidgets <- reactive({
   flog.debug("plotWidgetNames::pairshWidgets() - Start", name='all')
   
-  wgts <- c('plotType', 'columns', if (input$showAesWgts) c('color', 'fill', 'alpha'))
+  wgts <- c('plotType', 'columns', 
+            if (input$showAesWgts) c('fill', 'color', 'alpha'))
   
   flog.debug("plotWidgetNames::pairshWidgets() - End", name='all')
   wgts

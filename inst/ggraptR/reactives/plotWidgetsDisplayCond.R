@@ -110,6 +110,11 @@ displayJitCond <- reactive({
   display
 })
 
+displayCoordFlipCond <- reactive({
+  !is.null(input$plotType) && !is.null(input$showAesWgts) &&
+    input$showAesWgts && input$plotType != 'pairs'
+})
+
 ## display size magnifier condition reactive (belongs to advanced control widgets)
 displaySizeMagCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()

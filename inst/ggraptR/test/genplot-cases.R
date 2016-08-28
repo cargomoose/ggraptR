@@ -39,7 +39,13 @@ p <- ggplot(mtcars, aes_string(x='mpg', y='wt')) + geom_point() +
   theme(text=do.call(element_text, list(theme_attrs)))
 p$rappy$theme_attrs <- theme_attrs
 
-p <- ggpairs(iris, columns=2:5, mapping=aes(colour=Species, fill=Species, alpha=0.5),
+#### check ####
+p$rappy$dataset_name <- 'mtcars'
+print(generate_code(p, input))
+eval(parse(text=generate_code(p, input)))
+
+#### pairs ####
+p <- ggpairs(iris, columns=2:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
              upper=list(continuous='density'))
 which(names(iris) %in% p$xAxisLabels)
 clist(p$plots[[2]]$mapping[setdiff(names(p$plots[[2]]$mapping), c('x', 'y'))])
@@ -51,8 +57,4 @@ gen_pairs_code <- function(p) {
           clist(p$plots[[2]]$mapping[setdiff(names(p$plots[[2]]$mapping), c('x', 'y'))]))
 }
 
-#### check ####
-p$rappy$dataset_name <- 'mtcars'
-print(generate_code(p, input))
-eval(parse(text=generate_code(p, input)))
 eval(parse(text=gen_pairs_code(p)))
