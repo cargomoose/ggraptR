@@ -135,12 +135,29 @@ plotPairs <- function(dataset, ls) {
   flog.debug("plot::plotPairs() - Begin", name='all')  
   
   # browser()
-  assign('state', list())
+  # assign('state', list())  # , envir=.GlobalEnv)  # set up a breakpoint generateCode
   
-  p <- do.call(ggpairs, Filter(function(x) !is.null(x), 
-               list(dataset, columns=ls$columns,
-                    mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
-                    upper=ls$up, diag=ls$diag, low=ls$low)))
+  ggpairs_pars <- Filter(
+    function(x) !is.null(x), 
+    list(dataset, columns=ls$columns,
+         mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
+         upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
+         diag=ls$diag, lower=ls$low))
+  
+  # prevent warn `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+  if (is.null(ggpairs_pars$lower)) {
+    ggpairs_pars$lower <- list(combo='facethist')
+    # ggpairs_pars$lower <- list(combo=facethist)
+    # ggpairs_pars$lower <- list(combo=wrap(ggally_facethist, binwidth=0.2))
+  }
+  ggpairs_pars <- lapply(ggpairs_pars, function(par) {
+    if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
+      par$combo <- wrap('facethist', binwidth=30)
+    }
+    par
+  })
+
+  p <- do.call(ggpairs, ggpairs_pars)
   
   flog.debug("plot::plotPairs() - End", name='all')  
   p

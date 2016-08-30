@@ -195,7 +195,19 @@ smooth <- reactive({
 
 ## coordinate flip
 coordFlip <- reactive({
-  if (is.null(input$coordFlip)) FALSE else input$coordFlip
+  if (is.null(input$coordFlip) || !displayCoordFlipCond()) FALSE else input$coordFlip
+})
+
+ggpairsUpCont <- reactive({
+  input$ggpairsUpCont  # if (!is.null(input$ggpairsUpCont)) 
+})
+
+ggpairsUpCombo <- reactive({
+  if (!is.null(input$ggpairsUpCombo)) input$ggpairsUpCombo
+})
+
+ggpairsUpDiscr <- reactive({
+  if (!is.null(input$ggpairsUpDiscr)) input$ggpairsUpDiscr
 })
 
 ## bin width

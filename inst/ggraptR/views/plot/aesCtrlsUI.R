@@ -25,6 +25,10 @@ verticalLayout(
   uiOutput('sizeMagCtrl'),
   uiOutput('binWidthCtrl'),
   
-  uiOutput('densBlkLineCondCtrl')
+  uiOutput('densBlkLineCondCtrl'),
+  
+  uiOutput('ggpairsUpContCtrl'),
+  uiOutput('ggpairsUpComboCtrl'),
+  uiOutput('ggpairsUpDiscrCtrl')
   
 )

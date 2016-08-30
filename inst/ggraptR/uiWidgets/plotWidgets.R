@@ -196,6 +196,29 @@ output$coordFlipCtrl <- renderUI({
   }
 })
 
+output$ggpairsUpContCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsUpCont', 'Upper plots continuous variables', 
+                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                selected='cor')
+  }
+})
+
+output$ggpairsUpComboCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsUpCombo', 'Upper plots combo', 
+                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip', 'blank'),
+                selected='box')
+  }
+})
+
+output$ggpairsUpDiscrCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsUpDiscr', 'Upper plots discrete variables', 
+                choices=c('facetbar', 'ratio', 'blank'),
+                selected='facetbar')
+  }
+})
 
 # additional aggregation by options
 output$plotAddAggByCtrl <- renderUI({
