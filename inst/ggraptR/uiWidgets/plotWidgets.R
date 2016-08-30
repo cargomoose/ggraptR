@@ -1,7 +1,8 @@
 ## plot type options
 output$plotTypeCtrl <- renderUI({
   selectInput(inputId = "plotType", label = "Plot Type", 
-              choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Line'='line', 'Path'='path',
+              choices = c('Scatter'='scatter', 'Pairs'='pairs', 
+                          'Line'='line', 'Path'='path',
                           'Histogram'='histogram', 'Density'='density', 
                           'Box'='box', 'Bar'='bar'))
                           #'Violin'='violin', 
@@ -82,7 +83,8 @@ output$posCtrl <- renderUI({
 output$jitCtrl <- renderUI({
   flog.debug("plotWidgets::output$jitCtrl() - Begin", name='all')
   if (is.null(displayJitCond())){
-    flog.debug("plotWidgets::output$jitCtrl() - is.null(displayJitCond()) - End", name='all')
+    flog.debug("plotWidgets::output$jitCtrl() - is.null(displayJitCond()) - End", 
+               name='all')
     return()
   }
   if (displayJitCond()) {
@@ -128,7 +130,8 @@ output$binWidthCtrl <- renderUI({
 ## density line color options
 output$densBlkLineCondCtrl <- renderUI({
   if (!is.null(displayDensBlkLineCond()) && displayDensBlkLineCond()) {
-    checkboxInput('densBlkLineCond', 'Draw black outline', value=isolate(densBlkLineCond()))
+    checkboxInput('densBlkLineCond', 'Draw black outline', 
+                  value=isolate(densBlkLineCond()))
   }
 })
 
@@ -199,7 +202,8 @@ output$coordFlipCtrl <- renderUI({
 output$ggpairsUpContCtrl <- renderUI({
   if (displayGgpairsCond()) {
     selectInput('ggpairsUpCont', 'Upper plots continuous variables', 
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                choices=c('points', 'smooth', 'smooth_loess', 'density', 
+                          'cor', 'blank'),
                 selected='cor')
   }
 })
@@ -207,7 +211,8 @@ output$ggpairsUpContCtrl <- renderUI({
 output$ggpairsUpComboCtrl <- renderUI({
   if (displayGgpairsCond()) {
     selectInput('ggpairsUpCombo', 'Upper plots combo', 
-                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip', 'blank'),
+                choices=c('box', 'dot', 'facethist', 'facetdensity', 
+                          'denstrip', 'blank'),
                 selected='box')
   }
 })
@@ -305,7 +310,8 @@ output$labelFontFamilyCtrl <- renderUI({
 output$labelFontFaceCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts()) {
     labelFontFaceOpts <- c('plain', 'bold', 'italic', 'bold.italic')
-    selectInput('labelFontFace', 'Label Font Face', labelFontFaceOpts, isolate(labelFontFace()))
+    selectInput('labelFontFace', 'Label Font Face', 
+                labelFontFaceOpts, isolate(labelFontFace()))
   }
 })
 
@@ -319,19 +325,22 @@ output$labelFontSizeCtrl <- renderUI({
 ## label font color
 output$labelFontColorCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
-    shinyjs::colourInput('labelFontColor', 'Label Font Color', value=isolate(labelFontColor()))
+    shinyjs::colourInput('labelFontColor', 'Label Font Color', 
+                         value=isolate(labelFontColor()))
 })
 
 ## hjust
 output$hjustCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
-    numericInput('hjust', 'Horizontal Adjust', value=isolate(hjust()), min=0, max=1, step=0.1)
+    numericInput('hjust', 'Horizontal Adjust', value=isolate(hjust()), 
+                 min=0, max=1, step=0.1)
 })
 
 ## vjust
 output$vjustCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
-    numericInput('vjust', 'Vertical Adjust', value=isolate(vjust()), min=0, max=1, step=0.1)
+    numericInput('vjust', 'Vertical Adjust', value=isolate(vjust()), 
+                 min=0, max=1, step=0.1)
 })
 
 ## plot theme

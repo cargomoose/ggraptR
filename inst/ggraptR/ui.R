@@ -9,7 +9,6 @@ shinyUI(bootstrapPage(
   )),  
   
   sidebarPanel(
-    
     splitLayout(cellWidths = c("25%", "75%"),
     
     imageOutput("rappy", height = "100%", width = "100%"),
@@ -19,23 +18,25 @@ shinyUI(bootstrapPage(
         
         uiOutput('resetable_input'),
         actionButton("reset_input", "Reset inputs", width = '50%'),
-        
         br(),
         br(),
-        
         ## reactive vs. upon-manual-submit calculations
         uiOutput('submitCtrl'),
-        
         ## enable reactive option
         uiOutput('reactiveCtrl'))
     ),
     hr(),
     
     ## dataset selection
-    uiOutput('datasetCtrl'),
+    conditionalPanel(
+      condition = 'input.conditionedPanels != "logTab"',
+      uiOutput('datasetCtrl')
+    ),
+    
+    
     ## "view plot" button if import tab
     conditionalPanel(
-      condition = 'input.conditionedPanels=="importTab"',
+      condition = 'input.conditionedPanels == "importTab"',
       ## view plot button
       actionButton("viewPlot", label = "View Plot")
     ),
@@ -43,19 +44,19 @@ shinyUI(bootstrapPage(
     
     ## file input/upload panel
     conditionalPanel(
-      condition = 'input.conditionedPanels=="importTab"',
+      condition = 'input.conditionedPanels == "importTab"',
       source('./views/import/dataImportCtrlsUI.R', local=TRUE)$value
     ),  # end of file input/upload panel
     
     ## aggregation options
     conditionalPanel(
-      condition = 'input.conditionedPanels=="tableTab"',
+      condition = 'input.conditionedPanels == "tableTab"',
       source('./views/table/manAggCtrlsUI.R', local=TRUE)$value
     ),  # end of conditionalPanel for aggregation options
     
     ## plot options
     conditionalPanel(
-      condition = 'input.conditionedPanels=="plotTab"',
+      condition = 'input.conditionedPanels == "plotTab"',
       source('./views/plot/plotCtrlsUI.R', local=TRUE)$value
     )  # end of conditionalPanel for plot options
 
@@ -71,7 +72,8 @@ shinyUI(bootstrapPage(
                          fluidRow(column(2, uiOutput('exportPlotCtl')),
                                   column(2, uiOutput('generatePlotCodeCtl'))),
                          br(),
-                         plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=TRUE)),
+                         plotOutput("plot", brush=brushOpts(id="zoom_brush", 
+                                                            resetOnNew=T)),
                          value='plotTab'),
                 tabPanel("Table",
                          br(),

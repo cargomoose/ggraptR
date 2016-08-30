@@ -11,6 +11,9 @@ library(jsonlite)
 library(futile.logger)
 library(GGally)
 
+## import global variables
+source('./global_variables.R')
+
 ## set debug logs
 source('./debug/debug.R')
 
@@ -20,21 +23,10 @@ source('./functions/plot.R')
 source('./functions/aggregate.R')
 source('./functions/ggraptplot.R')
 
-## import global constants
-source('./global_constants.R')
-
 ## file size options
 # by default, the file size limit is 5MB. It can be changed by
 # setting this option. Here we'll raise limit to 10GB.
 options(shiny.maxRequestSize = 10000 * 1024^2)
-
-if (!exists('gDefaultDataFrame')) {  # to have opportunity to launch app without ggraptR()
-  gDefaultDataFrame <<- ""
-}
-state <<- list()
-suppressWarnings(rm(plotLog, p, envir=.GlobalEnv))
-
-
 
 shinyServer(function(input, output, session) {
   ## reactive variables
