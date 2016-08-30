@@ -144,7 +144,7 @@ plotInput <- reactive({
       state$theme_name <<- theme_name
       color_type_flag <- !is.null(colorType()) && colorType() == 'discrete'
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
-        scale_color_name <- sprintf('scale_colour_%s()', theme_name)
+        scale_color_name <- sprintf('scale_colour_%s', theme_name)
         if (theme_name == 'calc') {
           scale_color_name <- sub('u', '', scale_color_name)
         }

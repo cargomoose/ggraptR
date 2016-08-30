@@ -293,7 +293,8 @@ output$yLabelCtrl <- renderUI({
 ## label font family 
 output$labelFontFamilyCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts()) {
-    labelFontFamilyOpts <- c('Calibri', 'sans', 'serif', 'mono', 
+    # first 3 fonts are available on Windows machine. Next ones generate warnings
+    labelFontFamilyOpts <- c('sans', 'serif', 'mono', 'Calibri', 
                              'Times', 'Helvetica', 'Courier')
     selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
                 isolate(labelFontFamily()))
