@@ -45,8 +45,20 @@ print(generate_code(p, input))
 eval(parse(text=generate_code(p, input)))
 
 #### pairs ####
-p <- ggpairs(iris, columns=2:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
-             upper=list(continuous='density'))
+
+ggpairs_pars <- list(iris, columns=1:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
+             upper=list(continuous='density'), lower=list(combo="facethist"))
+# ggpairs_pars <- list(iris, columns=1:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
+#              upper=list(continuous='density'), lower=list(combo=wrap("facethist", binwidth=0.2)))
+ggpairs_pars <- lapply(ggpairs_pars, function(par) {
+  if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
+    par$combo <- wrap('facethist', binwidth=0.2)
+  }
+  par 
+})
+
+p <- do.call(ggpairs, ggpairs_pars)
+
 which(names(iris) %in% p$xAxisLabels)
 clist(p$plots[[2]]$mapping[setdiff(names(p$plots[[2]]$mapping), c('x', 'y'))])
 # attr(p$plots[[2]]$fn, 'name') %>% str_split('_') %>% unlist %>% `[[`(2)

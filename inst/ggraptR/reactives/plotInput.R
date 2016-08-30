@@ -95,7 +95,8 @@ pairsPlotInputs <- reactive({
   flog.debug("plot::pairsPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
 
-  pil <- list(columns=columns(), color=color(), fill=fill(), alpha=alpha())
+  pil <- list(columns=columns(), color=color(), fill=fill(), alpha=alpha(),
+              upCont=ggpairsUpCont(), upCombo=ggpairsUpCombo(), upDiscr=ggpairsUpDiscr())
   flog.debug("plot::pairsPlotInputs() - End", name='all')
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
@@ -113,9 +114,10 @@ plotInput <- reactive({
   ## don't plot anything if x hasn't been updated according to new dataset
   if (!(x() %in% colnamesOpts())) return()
   
-  p <- do.call(paste0(plotType(), if (plotType() == 'histogram') '' else 'Plot'), list())
+  ptype <- plotType()
+  p <- do.call(paste0(ptype, if (ptype == 'histogram') '' else 'Plot'), list())
   
-  if (plotType() != 'pairs') {
+  if (ptype != 'pairs') {
     ## plot facet controls
     if (!noFacetSelected()) {
       ## facet grids

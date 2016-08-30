@@ -3,13 +3,10 @@ output$plotTypeCtrl <- renderUI({
   selectInput(inputId = "plotType", label = "Plot Type", 
               choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Line'='line', 'Path'='path',
                           'Histogram'='histogram', 'Density'='density', 
-                          'Box'='box', 'Bar'='bar'
-                          
+                          'Box'='box', 'Bar'='bar'))
                           #'Violin'='violin', 
                           #'Image'='image', 
                           #'2-Density', 'density2d'
-                          )
-              )
 })
 
 ## dataset type options (raw vs. manually aggregated)
@@ -24,8 +21,9 @@ output$rawVsManAggCtrl <- renderUI({
 ## aggregation method options (for plot view only)
 output$plotAggMethCtrl <- renderUI({
   if (!is.null(displayPlotAggMeth()) && displayPlotAggMeth()) {
-    aggMethOpts <- c('None', 'sum', 'mean', 'count', 'min', 'max', 'median')
-    selectInput('plotAggMeth', 'Aggregation Method', aggMethOpts, isolate(plotAggMeth()))
+    selectInput('plotAggMeth', 'Aggregation Method', 
+                c('None', 'sum', 'mean', 'count', 'min', 'max', 'median'),
+                isolate(plotAggMeth()))
   }
 })
 
