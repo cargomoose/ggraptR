@@ -277,14 +277,14 @@ facetGrids <- reactive({
 
 ## xlim
 xlim <- reactive({
-  if (!is.null(input$xlim)) {
+  if (!is.null(displayXlim()) && displayXlim() && !is.null(input$xlim)) {
     input$xlim
   }
 })
 
 ## ylim
 ylim <- reactive({
-  if (!is.null(input$ylim)) {
+  if (!is.null(displayYlim()) && displayYlim() && !is.null(input$ylim)) {
     input$ylim
   }
 })
