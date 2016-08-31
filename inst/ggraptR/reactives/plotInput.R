@@ -155,12 +155,12 @@ plotInput <- reactive({
     }
     
     ## plot label styles
-    state$theme_attrs <- list(family = labelFontFamily(),
-                              face = labelFontFace(),
-                              color = labelFontColor(),
-                              size = labelFontSize(),
-                              hjust = hjust(),
-                              vjust = vjust())
+    state$theme_attrs <<- list(family = labelFontFamily(),
+                               face = labelFontFace(),
+                               color = labelFontColor(),
+                               size = labelFontSize(),
+                               hjust = hjust(),
+                               vjust = vjust())
     p <- p + theme(text=do.call(element_text, state$theme_attrs))
   }
   
