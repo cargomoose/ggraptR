@@ -1,7 +1,7 @@
-get_ggplot <- function(dataset, aes_obj) {
-  assign('state', list())
-  ggplot(dataset, aes_obj)
-}
+# get_ggplot <- function(dataset, aes_obj) {
+#   # assign('state', list())
+#   ggplot(dataset, aes_obj)
+# }
 
 snakeize <- function(camel_str) {
   s <- gsub("([a-z])([A-Z])", "\\1_\\L\\2", camel_str, perl = TRUE)
@@ -12,26 +12,28 @@ parse_kv <- function(str, sep='_') {
   do.call(sprintf, as.list(unlist(c('%s="%s"', str_split(str, sep)))))
 }
 
-wrap_quote <- function(el) {
-  if (is.character(el)) {
+wrap_quote <- function(el, need_quote) {
+  if (is.character(el) && need_quote) {
     sprintf('"%s"', el)
   } else if (is.language(el)) {
     as.character(list(el))
   } else as.character(el)
 }
 
-clist <- function(arg_lst) {
+clist <- function(arg_lst, need_quote=T) {
   arg_lst <- arg_lst[!sapply(arg_lst, is.null)]
-  paste(sapply(1:length(arg_lst), function(par_i) 
-    sprintf('%s=%s', names(arg_lst)[par_i], wrap_quote(arg_lst[[par_i]]))), collapse=', ')
+  paste(
+    sapply(1:length(arg_lst), function(par_i) 
+    sprintf('%s=%s', names(arg_lst)[par_i], wrap_quote(arg_lst[[par_i]], need_quote))),
+    collapse=', ')
 }
 
 generatePairsCode <- function(p) {
-  # browser()
-  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s))', 
+  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s), %s)',  #, %s
           state$dataset_name,
           paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', '), 
-          clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))]))
+          clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))]),
+          clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
 }
 
 generateCode <- function(p) {

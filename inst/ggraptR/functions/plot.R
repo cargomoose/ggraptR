@@ -2,7 +2,7 @@
 plotScatter <- function(dataset, ls) {
   flog.debug("plot::plotScatter() - Begin", name='all')  
   
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     if (is.null(ls$size)) 
     geom_point(aes_string(shape=ls$shapeAsFactor), 
                alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
@@ -43,7 +43,7 @@ plotPointsOverlay <- function(plot, ls) {
 plotLine <- function(dataset, ls) {
   flog.debug("plot::plotLine() - Begin", name='all')
   
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y))
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y))
   if (is.null(ls$color))  {
     p <- p + geom_line(aes(group=1), alpha=ls$alpha) 
   } else {
@@ -60,7 +60,7 @@ plotLine <- function(dataset, ls) {
 plotPath <- function(dataset, ls) {
   flog.debug("plot::plotPath() - Begin", name='all')   
   
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_path(alpha=ls$alpha) + 
     if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
       geom_line(aes_string(group=ls$color), alpha=ls$alpha)
@@ -77,7 +77,7 @@ plotPath <- function(dataset, ls) {
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
   
-  p <- get_ggplot(dataset, aes_string(x=ls$x)) + 
+  p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_histogram(alpha=ls$alpha, position='identity', binwidth=ls$binWidth) + 
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
@@ -90,7 +90,7 @@ plotHistogram <- function(dataset, ls) {
 plotDensity <- function(dataset, ls) {
   flog.debug("plot::plotDensity() - Begin", name='all')      
 
-  p <- get_ggplot(dataset, aes_string(x=ls$x)) + 
+  p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_density(alpha=ls$alpha,
                  mapping=do.call(aes_string, 
                                  c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
@@ -108,7 +108,7 @@ plotDensity <- function(dataset, ls) {
 plotBox <- function(dataset, ls) {
   flog.debug("plot::plotBox() - Begin", name='all')     
   
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
@@ -121,7 +121,7 @@ plotBox <- function(dataset, ls) {
 plotBar <- function(dataset, ls) {
   flog.debug("plot::plotBar() - Begin", name='all')   
 
-  p <- get_ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
@@ -134,9 +134,6 @@ plotBar <- function(dataset, ls) {
 plotPairs <- function(dataset, ls) {
   flog.debug("plot::plotPairs() - Begin", name='all')  
   
-  # browser()
-  # assign('state', list())  # , envir=.GlobalEnv)  # set up a breakpoint generateCode
-  
   ggpairs_pars <- Filter(
     function(x) !is.null(x), 
     list(dataset, columns=ls$columns,
@@ -144,18 +141,24 @@ plotPairs <- function(dataset, ls) {
          upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
          diag=ls$diag, lower=ls$low))
   
-  # prevent warn `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+  # prevents warn `stat_bin()` using `bins = 30`. Pick better value with `binwidth`
+  # & saves state of lower, upper and diag plots
   if (is.null(ggpairs_pars$lower)) {
     ggpairs_pars$lower <- list(combo='facethist')
-    # ggpairs_pars$lower <- list(combo=facethist)
-    # ggpairs_pars$lower <- list(combo=wrap(ggally_facethist, binwidth=0.2))
   }
-  ggpairs_pars <- lapply(ggpairs_pars, function(par) {
-    if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
-      par$combo <- wrap('facethist', binwidth=30)
+  wrap_expr <- quote(wrap('facethist', binwidth=30))
+  for(i in 1:length(ggpairs_pars)) {
+    par <- ggpairs_pars[[i]]
+    par_name <- names(ggpairs_pars)[[i]]
+    if (par_name %in% c('upper', 'diag', 'lower')) {
+      state$pairs[[par_name]] <<- par
+      if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
+        par$combo <- eval(wrap_expr)
+        state$pairs[[par_name]]$combo <<- wrap_expr
+      }
+      ggpairs_pars[[i]] <- par
     }
-    par
-  })
+  }
 
   p <- do.call(ggpairs, ggpairs_pars)
   

@@ -1,3 +1,6 @@
+# remove redundant ui controls for ggpairs
+# mtcars range scale
+
 rm(list=ls())
 shiny::runApp('C:/GoogleDrive/dev/R/raptR/inst/ggraptR')
 # ggraptR::ggraptR()
@@ -11,7 +14,8 @@ library(GGally)
 
 #### test cases ####
 p <- ggplot(mtcars, aes_string(x='factor(cyl)', y='mpg')) +
-  geom_bar(stat="identity", position='identity', alpha=0.8) + aes_string(fill='factor(gear)')
+  geom_bar(stat="identity", position='identity', alpha=0.8) + aes_string(
+    fill='factor(gear)')
 p <- ggplot(mtcars, aes_string(x='mpg')) +
   geom_histogram(binwidth=5) + coord_flip()
 p <- ggplot(mtcars, aes_string(x='factor(cyl)', y='mpg')) +
@@ -22,17 +26,19 @@ p <- ggplot(mtcars, aes_string(x='mpg')) +
   geom_density(aes_string(color='factor(am)', fill='factor(cyl)'), alpha=0.5) +
   guides(color=guide_legend(title='col'), fill=guide_legend(title='fil'))
 p <- ggplot(mtcars, aes_string(x='hp', y='mpg')) +
-  geom_point(aes_string(color='factor(cyl)', size='disp', shape='factor(am)'), alpha=0.5) +
+  geom_point(aes_string(color='factor(cyl)', size='disp', shape='factor(am)'),alpha=0.5)+
   stat_smooth(method='lm') +
   scale_size(range=c(0.5, 8))
 
 theme_name='fivethirtyeight'
 p <- ggplot(mtcars, aes_string(x='mpg', y='wt')) + geom_point() +
   facet_grid(vs + am ~ gear, scales="free_x") +
-  do.call(sprintf('theme_%s', theme_name), list()) + ggtitle('titit') + xlab('xxlb') + ylab('yylb')
+  do.call(sprintf('theme_%s', theme_name), list()) + ggtitle('titit') + xlab('xxlb') + 
+  ylab('yylb')
 p$rappy$theme_name <- theme_name
 
-theme_attrs=list(family='TT Arial', face='bold', color='red', size=12, hjust=0.8, vjust=0.3)
+theme_attrs=list(family='TT Arial', face='bold', color='red', size=12, 
+                 hjust=0.8, vjust=0.3)
 p <- ggplot(mtcars, aes_string(x='mpg', y='wt')) + geom_point() +
   facet_grid(facets=am ~ gear, scales="free_x") +
   scale_color_hc() +
@@ -45,17 +51,9 @@ print(generate_code(p, input))
 eval(parse(text=generate_code(p, input)))
 
 #### pairs ####
-
-ggpairs_pars <- list(iris, columns=1:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
-             upper=list(continuous='density'), lower=list(combo="facethist"))
-# ggpairs_pars <- list(iris, columns=1:5, mapping=aes(colour=Species, fill=Species, alpha=0.9),
-#              upper=list(continuous='density'), lower=list(combo=wrap("facethist", binwidth=0.2)))
-ggpairs_pars <- lapply(ggpairs_pars, function(par) {
-  if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
-    par$combo <- wrap('facethist', binwidth=0.2)
-  }
-  par 
-})
+ggpairs_pars <- list(iris, columns=1:5, mapping=aes(
+  colour=Species, fill=Species, alpha=0.9),
+  upper=list(continuous='density'), lower=list(combo=wrap("facethist", binwidth=30)))
 
 p <- do.call(ggpairs, ggpairs_pars)
 
