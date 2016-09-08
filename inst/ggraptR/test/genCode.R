@@ -1,9 +1,5 @@
-# remove redundant ui controls for ggpairs
-# mtcars range scale
-
 rm(list=ls())
 shiny::runApp('C:/GoogleDrive/dev/R/raptR/inst/ggraptR')
-# ggraptR::ggraptR()
 
 library(ggplot2)
 library(ggthemes)
