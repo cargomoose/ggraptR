@@ -95,15 +95,15 @@ manAggDataset <- reactive({
   flog.debug("dataset::manAggDataset() - Begin", name='all')
   
   ## if all fields for manual aggregation are filled in
-  if (!is.null(input$aggBy) & !is.null(input$aggTarget) & !is.null(input$aggMeth)) {
+  if (!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)) {
     ## return manually aggregated dataset
-    flog.debug("dataset::manAggDataset() - !is.null(input$aggBy) & !is.null(input$aggTarget) & !is.null(input$aggMeth)", name='all')
+    flog.debug("dataset::manAggDataset() - !is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)", name='all')
     df <- aggregate(rawDataset(), input$aggBy, input$aggTarget, input$aggMeth)
   }
   
   ## else, return raw dataset  
   else {
-    flog.debug("dataset::manAggDataset() - !(!is.null(input$aggBy) & !is.null(input$aggTarget) & !is.null(input$aggMeth))", name='all')
+    flog.debug("dataset::manAggDataset() - !(!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth))", name='all')
     df <- rawDataset()
   }
 
