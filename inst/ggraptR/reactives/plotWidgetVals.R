@@ -27,7 +27,7 @@ yOrig <- reactive({
   }
 })
 
-## y original 
+## columns for pairsPlot
 columns <- reactive({
   if (!is.null(input$columns)) {
     input$columns

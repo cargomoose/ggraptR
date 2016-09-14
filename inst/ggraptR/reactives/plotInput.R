@@ -108,19 +108,16 @@ plotInput <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  ## don't plot anything if any of universal control widgets is not loaded
-  if (!universalPlotWidgetsLoaded()) return()
-  
-  ## don't plot anything if x hasn't been updated according to new dataset
-  if (!(x() %in% colnamesOpts())) return()
-  
   ptype <- plotType()
+  is_horis_axis_actual <- if (ptype == 'pairs') 
+    !is.null(columns()) && columns() %in% colnamesOpts() else 
+      !is.null(x()) && x() %in% colnamesOpts()
+  if (!universalPlotWidgetsLoaded() || !is_horis_axis_actual) return()
+  
   p <- do.call(paste0(ptype, if (ptype == 'histogram') '' else 'Plot'), list())
   
   if (ptype != 'pairs') {
-    ## plot facet controls
     if (!noFacetSelected()) {
-      ## facet grids
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
       } else if (facetWrapSelected()) {  ## facet wrap
@@ -128,7 +125,6 @@ plotInput <- reactive({
       }
     }
     
-    ## plot coord flip control 
     p <- p + if (coordFlip()) coord_flip()
     
     ## plot labels 
