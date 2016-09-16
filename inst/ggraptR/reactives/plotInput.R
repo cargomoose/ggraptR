@@ -144,7 +144,8 @@ plotInput <- reactive({
         if (theme_name == 'calc') {
           scale_color_name <- sub('u', '', scale_color_name)
         }
-        p <- p + if (color_type_flag) do.call(scale_color_name, list())
+        p <- p + if (color_type_flag && theme_name != 'tufte') 
+          do.call(scale_color_name, list())
       } else if (theme_name == 'economist') {
         p <- p + scale_colour_economist() + if (color_type_flag) scale_color_calc()
       }
