@@ -141,25 +141,7 @@ plotPairs <- function(dataset, ls) {
          upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
          diag=ls$diag, lower=ls$low))
   
-  # prevents warn `stat_bin()` using `bins = 30`. Pick better value with `binwidth`
-  # & saves state of lower, upper and diag plots
-  if (is.null(ggpairs_pars$lower)) {
-    ggpairs_pars$lower <- list(combo='facethist')
-  }
-  wrap_expr <- quote(wrap('facethist', binwidth=30))
-  for(i in 1:length(ggpairs_pars)) {
-    par <- ggpairs_pars[[i]]
-    par_name <- names(ggpairs_pars)[[i]]
-    if (par_name %in% c('upper', 'diag', 'lower')) {
-      state$pairs[[par_name]] <<- par
-      if (!is.null(names(par)) && 'combo' %in% names(par) && par$combo == 'facethist') {
-        par$combo <- eval(wrap_expr)
-        state$pairs[[par_name]]$combo <<- wrap_expr
-      }
-      ggpairs_pars[[i]] <- par
-    }
-  }
-
+  # print.ggmatrix is overrided in helper.R script
   p <- do.call(ggpairs, ggpairs_pars)
   
   flog.debug("plot::plotPairs() - End", name='all')  

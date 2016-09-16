@@ -184,6 +184,14 @@ rmElemsNotInDatasetCols <- function(elems, dataset) {
 }
 
 
+## override GGally:::print.ggmatrix to prevent messages about binwidth
+print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
+                           spacingProportion = 0.03, gridNewPage = TRUE, ...) {
+  suppressMessages(GGally:::print.ggmatrix(
+    x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
+    spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
+}
+
 ## this function takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;
 ## for e.g. if x is a continuous variable, then xlim should be a numeric range;

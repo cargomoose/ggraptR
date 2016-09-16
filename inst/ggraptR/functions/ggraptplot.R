@@ -29,11 +29,12 @@ clist <- function(arg_lst, need_quote=T) {
 }
 
 generatePairsCode <- function(p) {
-  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s), %s)',  #, %s
+  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s)%s)',  #, %s
           state$dataset_name,
           paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', '), 
           clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))]),
-          clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
+          if (is.null(state$pairs)) '' else paste0(', ', 
+            clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F)))
 }
 
 generateCode <- function(p) {
