@@ -1,8 +1,3 @@
-# get_ggplot <- function(dataset, aes_obj) {
-#   # assign('state', list())
-#   ggplot(dataset, aes_obj)
-# }
-
 snakeize <- function(camel_str) {
   s <- gsub("([a-z])([A-Z])", "\\1_\\L\\2", camel_str, perl = TRUE)
   sub("^(.[a-z])", "\\L\\1", s, perl = TRUE) # make 1st char lower case

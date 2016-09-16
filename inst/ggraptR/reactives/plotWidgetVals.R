@@ -1,11 +1,4 @@
 #### current widget values
-
-## dataset name
-# datasetName <- reactive({
-#   if (is.null(input$dataset)) return()
-#   input$datasetName
-# })
-
 ## plot type 
 plotType <- reactive({
   if (!is.null(input$plotType)) {
