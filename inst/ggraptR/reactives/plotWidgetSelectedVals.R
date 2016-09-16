@@ -39,7 +39,7 @@ columns_sel <- reactive({
   default_choice <- list(diamonds='price',
                          mtcars='hp',
                          rock='peri',
-                         iris='Pental.Sepal.Width')
+                         iris=c('Sepal.Length', 'Species'))
   return(default_choice[[input$dataset]])
 })
 
