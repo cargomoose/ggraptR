@@ -31,7 +31,9 @@ output$plotAggMethCtrl <- renderUI({
 ## x-axis options
 output$xCtrl <- renderUI({
   if (!is.null(input$dataset) && displayXCond()) {
-    selectInput('x', 'X', choices=colnamesOpts(), selected=isolate(x_sel()))
+    selectInput('x', 'X', choices= 
+      colnamesOpts()[if (plotType() == 'histogram') !sapply(dataset(), is.factor) else T], 
+                selected=isolate(x_sel()))
   }
 })
 
