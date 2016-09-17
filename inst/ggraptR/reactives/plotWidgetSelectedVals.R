@@ -24,7 +24,7 @@ y_sel <- reactive({
   default_choice <- list(diamonds='price',
                          mtcars='hp',
                          rock='peri',
-                         iris='Pental.Sepal.Width')
+                         iris='Sepal.Width')
   return(default_choice[[input$dataset]])
 })
 

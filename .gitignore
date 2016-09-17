@@ -2,7 +2,6 @@
 .Rhistory
 .RData
 .Rapp.history
-
 # Example code in package build process
 *-Ex.R
 # RStudio files
@@ -13,3 +12,5 @@ vignettes/*.pdf
 .Rproj.user
 inst/doc
 *.Rproj
+# for test files like 1.csv, 1.png, etc
+1.*  
