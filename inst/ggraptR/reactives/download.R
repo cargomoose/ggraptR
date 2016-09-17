@@ -39,7 +39,13 @@ output$dlPlot <- downloadHandler(
       inputHeight <- const$gcnFileDPIDefault
     }
     
-    ggsave(file, plot=plotInput(), width=inputWidth, height=inputHeight, 
+    if (plotType() == 'pairs') {
+      dev <- ggplot2:::plot_dev(NULL, file, inputDPI)
+      dev(file=file, width=inputWidth, height=inputHeight)
+      print(plotInput())
+      dev.off()
+    } else
+      ggsave(file, plot=plotInput(), width=inputWidth, height=inputHeight, 
            units="in", dpi=inputDPI)
   }
 )
