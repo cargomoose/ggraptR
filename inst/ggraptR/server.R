@@ -8,6 +8,7 @@ library(shinyBS)
 library(shinyjs)
 library(ggthemes)
 library(jsonlite)
+library(svglite)
 library(futile.logger)
 library(GGally)
 

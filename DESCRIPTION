@@ -46,6 +46,7 @@ Imports:
     reshape(>= 0.8.5),
     labeling(>= 0.3),
     colorspace(>= 1.2.6),
+    svglite(1.1.0),
     GGally (>= 1.2.0)
 BugReports: https://github.com/cargomoose/raptR/issues
 VignetteBuilder: rmarkdown
