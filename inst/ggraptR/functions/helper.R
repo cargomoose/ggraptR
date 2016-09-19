@@ -13,7 +13,7 @@ getYearColumnName <- function(df) {
       yearCol <- c(yearCol, col)
     }
   }
-  return(yearCol)
+  yearCol
 }
 
 
@@ -28,7 +28,7 @@ getMonthColumnName <- function(df) {
       yearMonthCol <- c(yearMonthCol, col)
     }
   }
-  return(yearMonthCol)
+  yearMonthCol
 }
 
 
@@ -43,29 +43,26 @@ getDateColumnName <- function(df) {
       dateCol <- c(dateCol, col)
     }
   }
-  return(dateCol)
+  dateCol
 }
 
 
 ## this function grabs the names of factor variables
 getFactorVarNames <- function(df) {
-  factorVars <- colnames(df)[sapply(df, is.factor)]
-  return(factorVars)
+  colnames(df)[sapply(df, is.factor)]
 }
 
 
 ## this function grabs the names of numeric variables
 getNumericVarNames <- function(df) {
-  numericVars <- colnames(df)[sapply(df, is.numeric)]
-  return(numericVars)
+  colnames(df)[sapply(df, is.numeric)]
 }
 
 
 ## this function grabs the names variables of whose number of unique values does not exceed 
 ## a specified threshold (LOE: less than or equal to)
 getVarNamesUniqValsCntLOEN <- function(df, n=100) {
-  vars <- colnames(df)[sapply(df, function(x) {length(unique(x)) <= n})]
-  return(vars)
+  colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
 }
 
 
@@ -79,7 +76,7 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
       dfNames <- c(dfNames, objName)
     } 
   }
-  return(dfNames)
+  dfNames
 }
 
 
@@ -92,21 +89,19 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   if (!(var %in% colnames)) {
     ## if semi-automatic aggregation is turned on
     if (semiAutoAggOn) {
-      if (aggMeth=='count')
-        return('count')
-      else
-        return(paste0(var, '_', aggMeth))
+      return (if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
     }
   } 
 
   ## if original variable name is found in dataset's column names
   else {
     varAgg <- paste0(var, '_', aggMeth)
-    if (varAgg %in% colnames)
+    if (varAgg %in% colnames) {
       return(varAgg)
+    }
   }
   
-  return(var)
+  var
 }
 
 
@@ -114,17 +109,13 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
 
 ## function to convert 'None' to NULL
 convertNoneToNULL <- function(var) {
-  if (tolower(var)=='none') {var <- NULL}; return(var)
+  if (tolower(var)=='none') NULL else var
 }
 
 
 ## 
 varNameAsFactorOrNULL <- function(var) {
-  if (!is.null(var)) 
-    ret <- paste0('as.factor(', var, ')')
-  else
-    ret <- NULL
-  return(ret)
+  if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
 }
 
 
@@ -135,7 +126,7 @@ checkWidgetsLoaded <- function(input, widgets) {
       return(FALSE)
     }
   }
-  return(TRUE)
+  TRUE
 }
 
 
@@ -151,7 +142,7 @@ cleanPlotAggBy <- function(x, y, aggBy) {
   if (x != y)
     aggBy <- setdiff(aggBy, y)
   
-  return(aggBy)
+  aggBy
 }
 
 
@@ -163,7 +154,7 @@ checkTwoRangesOverlap <- function(range1, range2) {
   upperRange1 <- range1[2]
   lowerRange2 <- range2[1]
   upperRange2 <- range2[2]
-  return(upperRange1 >= lowerRange2 & lowerRange1 <= upperRange2)
+  upperRange1 >= lowerRange2 & lowerRange1 <= upperRange2
 }
 
 
@@ -172,29 +163,34 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
     if (!is.null(plotInputsList[[name]])) {
-      if (any(name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap'))) {
-        if (!(plotInputsList[[name]] %in% colnames)) {
+      if (any(name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap')) &&
+          !(plotInputsList[[name]] %in% colnames)) {
           plotInputsList[name] <- list(NULL)
-        }
-      } else if (any(name %in% c('color', 'size', 'shape'))) {
-        if (!(plotInputsList[[name]] %in% colnames)) {
+      } else if (any(name %in% c('color', 'size', 'shape')) &&
+                 !(plotInputsList[[name]] %in% colnames)) {
           asFactorName <- paste0(name, 'AsFactor')
           plotInputsList[name] <- plotInputsList[asFactorName] <- list(NULL)
-        }
       }
     }
   }
   flog.debug("helper::ensureCorrectPlotInputs() - End", name='all')
-  return(plotInputsList)
+  plotInputsList
 }
 
 
 ## this function removes elements that are not part of a dataset's column variables
 rmElemsNotInDatasetCols <- function(elems, dataset) {
-  validElems <- elems[elems %in% colnames(dataset)]
-  return(validElems)
+  elems[elems %in% colnames(dataset)]
 }
 
+
+## override GGally:::print.ggmatrix to prevent messages about binwidth
+print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
+                           spacingProportion = 0.03, gridNewPage = TRUE, ...) {
+  suppressMessages(GGally:::print.ggmatrix(
+    x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
+    spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
+}
 
 ## this function takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;
@@ -218,6 +214,4 @@ rmElemsNotInDatasetCols <- function(elems, dataset) {
 #   
 #   return(compatCond)
 # }
-
-
 

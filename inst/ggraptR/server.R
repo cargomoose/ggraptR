@@ -8,7 +8,12 @@ library(shinyBS)
 library(shinyjs)
 library(ggthemes)
 library(jsonlite)
+library(svglite)
 library(futile.logger)
+library(GGally)
+
+## import global variables
+source('./global_variables.R')
 
 ## set debug logs
 source('./debug/debug.R')
@@ -17,18 +22,12 @@ source('./debug/debug.R')
 source('./functions/helper.R')
 source('./functions/plot.R')
 source('./functions/aggregate.R')
-
-## import global constants
-source('./global_constants.R')
+source('./functions/ggraptplot.R')
 
 ## file size options
 # by default, the file size limit is 5MB. It can be changed by
 # setting this option. Here we'll raise limit to 10GB.
-options(shiny.maxRequestSize = 10000*1024^2)
-
-if (!exists('gDefaultDataFrame')) {  # to have opportunity to launch app without ggraptR or using 'showcase'
-  gDefaultDataFrame <<- ""
-}
+options(shiny.maxRequestSize = 10000 * 1024^2)
 
 shinyServer(function(input, output, session) {
   ## reactive variables
@@ -41,6 +40,7 @@ shinyServer(function(input, output, session) {
   source('./reactives/plotWidgetsLoadedCond.R', local=TRUE)  # plot widgets load conditions
   source('./reactives/plotWidgetSelectedVals.R', local=TRUE)  # plot widget selected values
   source('./reactives/plot.R', local=TRUE)  # plot
+  source('./reactives/plotInput.R', local=TRUE)
   
   ## UI controls
   source('./uiWidgets/generalWidgets.R', local=TRUE)

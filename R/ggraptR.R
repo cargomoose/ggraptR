@@ -12,21 +12,16 @@
 gDefaultDataFrame <<- ""
 
 ggraptR <- function(df="diamonds") {
-  
   appDir <- system.file("ggraptR", package = "ggraptR")
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = FALSE)
   }
 
-  if (typeof(df) == "character")
-  {
-    gDefaultDataFrame <<- df    
-  }
-  else
-  {
-    gDefaultDataFrame <<- list(deparse(substitute(df)))
+  gDefaultDataFrame <<- if (typeof(df) == "character") {
+     df    
+  } else {
+    list(deparse(substitute(df)))
   }
 
-  shiny::runApp(appDir, display.mode = "normal")
-  
+  shiny::runApp(appDir, display.mode = "normal")  
 }

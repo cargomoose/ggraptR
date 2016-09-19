@@ -133,12 +133,7 @@ jitter <- reactive({
   if (is.null(input$jitter)) return()
   dput(input$jiter, file=jitterCacheFilePath)
   
-  jit <- input$jitter
-  if (jit) 
-    jit <- 'jitter' 
-  else 
-    jit <- NULL
-  jit
+  return(if (input$jitter) 'jitter' else NULL)
 })
 
 ## alpha (XXX)

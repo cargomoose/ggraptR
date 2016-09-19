@@ -1,35 +1,26 @@
 #### debugger configuration
 
 # prepare txtCfg to read configuration file
-txtCfg<-""
-tryCatch(
-{
-  txtCfg<-read.delim("./debug/debug.cfg.json", comment.char="#", quote="", header=FALSE)
-  txtCfg<-as.character(txtCfg$V1)
-},
-error = function(e)
-{}
-)
+tryCatch({
+  state$txtCfg <- read.delim("./debug/debug.cfg.json", comment.char="#", quote="", header=F)
+  state$txtCfg <- as.character(state$txtCfg$V1) 
+  }, error = function(e) {})
 
 # if txtCfg populated then logging is on, read extracted json record
-if(nchar(txtCfg) > 0)
-{
+if (nchar(state$txtCfg) > 0) {
   # read json configuration string
-  jsonCfg<-fromJSON(txtCfg)
+  jsonCfg <- fromJSON(state$txtCfg)
   
-  if (jsonCfg$logs == "all")
-  {
+  if (jsonCfg$logs == "all") {
     flog.appender(appender.file('./debug/debug.log'), name='all')
     flog.threshold(DEBUG, name='all')  
   }
   
-  if (jsonCfg$format == "simple")
-  {
+  if (jsonCfg$format == "simple") {
     flog.layout(layout.simple, name='all')
   }
   
-  if (jsonCfg$format == "json")
-  {
+  if (jsonCfg$format == "json") {
     flog.layout(layout.json, name='all')
   }
 } else {

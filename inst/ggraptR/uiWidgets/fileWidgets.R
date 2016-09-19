@@ -1,22 +1,20 @@
 ## file input select control
 output$fileInputSelectCtrl <- renderUI({
   fileInput('file', 'Choose file to upload',
-            accept = c(
+            accept=c(
               'text/csv',
               'text/comma-separated-values',
               'text/tab-separated-values',
               'text/plain',
               '.csv',
-              '.tsv'
-            )
-  )  
+              '.tsv'))  
 })
 
 ## file input header control
 output$fileInputHeaderCtrl <- renderUI({
   checkboxGroupInput('header', 'Header Options', 
-                     choices = c('Header'=TRUE),
-                     selected = c(TRUE))  
+                     choices=c('Header'=TRUE),
+                     selected=c(TRUE))  
 })
 
 ## file input quote control
@@ -61,28 +59,24 @@ output$exportPlotCtl <- renderUI({
 })
 
 output$fileTypeCtl <- renderUI({
-  selectInput(inputId = "fileType", label = "File Type", 
-              choices = c('PDF'='.pdf',
-                          'PNG'='.png',
-                          'JPG'='.jpg',
-                          'SVG'='.svg')
-              )
+  selectInput(inputId="fileType", label="File Type", 
+              choices=c('PDF'='.pdf',
+                        'PNG'='.png',
+                        'JPG'='.jpg',
+                        'SVG'='.svg'))
 })
 
 output$fileHeightCtl <- renderUI({
-  numericInput(inputId = "fileHeight", label = "Height (inches)", 
-               value = gcnFileWidthDefault, min = 0, max = gcnFileHeightMax
-               )
+  numericInput(inputId="fileHeight", label="Height (inches)", 
+               value=const$gcnFileWidthDefault, min=0, max=const$gcnFileHeightMax)
 })
 
 output$fileWidthCtl <- renderUI({
-  numericInput(inputId = "fileWidth", label = "Width (inches)", 
-              value = gcnFileHeightDefault, min = 0, max = gcnFileWidthMax
-              )
+  numericInput(inputId="fileWidth", label="Width (inches)", 
+              value=const$gcnFileHeightDefault, min=0, max=const$gcnFileWidthMax)
 })
 
 output$fileDPICtl <- renderUI({
-  numericInput(inputId = "fileDPI", label = "Dots Per Inch", 
-               value = gcnFileDPIDefault, min = 0, max = gcnFileDPIMax
-               )
+  numericInput(inputId="fileDPI", label="Dots Per Inch", 
+               value=const$gcnFileDPIDefault, min=0, max=const$gcnFileDPIMax)
 })

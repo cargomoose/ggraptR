@@ -1,4 +1,3 @@
-
 ## this function renames column names of aggregate df
 renameAggColNames <- function(df, aggBy, aggTarget, aggMeth) {
   cntInAggMeth <- 'count' %in% aggMeth
@@ -20,23 +19,13 @@ renameAggColNames <- function(df, aggBy, aggTarget, aggMeth) {
   return(df)
 }
 
-
-## this function appends na.rm=TRUE condition to aggregation methods
-## e.g. 'mean' to 'mean(., na.rm=TRUE)'
-appendNaRmToAggMeth <- function(aggMeth) {
-  aggMeth <- paste0(aggMeth, '(., na.rm=TRUE)')
-  return(aggMeth)
-}
-
-
 ## this function aggregates raw data using functions from dplyr
 aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
-  
   ## aggBy can contain duplicates when x and facet variables are the same
   aggBy <- unique(aggBy)
   
-  ## select independent/dependent variables
-  df <- df[, c(aggBy, aggTarget)]
+  ## filter non-na entries by target and select valuable variables
+  df <- df[apply(df, 1, function(x) all(!is.na(x))), c(aggBy, aggTarget)]
 
   ## conditional to perform count later
   cntInAggMeth <- 'count' %in% aggMeth
@@ -51,13 +40,12 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
   dots <- lapply(aggBy, as.symbol)
 
   ## group data
-  grp <- dplyr::group_by_(df, .dots=dots)
+  grp <- group_by_(df, .dots=dots)
 
   agg <- NULL
   if (length(aggMeth) != 0) {
     ## perform non-problematic aggregation by column
-    aggMethNaRm <- appendNaRmToAggMeth(aggMeth)
-    agg <- dplyr::summarise_each(grp, dplyr::funs_(aggMethNaRm ))
+    agg <- summarise_each(grp, aggMeth)
     
     ## convert to data frame
     agg <- as.data.frame(agg)
@@ -68,7 +56,7 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
 
   ## attach aggregate counts if requested
   if (cntInAggMeth) {
-    cnt <- dplyr::summarise(grp, count=n())
+    cnt <- summarise(grp, count=n())
     if (is.null(agg))
       agg <- cnt
     else
@@ -77,7 +65,8 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
 
   ## perform median aggregation by column
   if (medInAggMeth) {
-    medAgg <- dplyr::summarise_each(grp, ~ median(., na.rm=TRUE))
+    # https://github.com/hadley/dplyr/issues/1824
+    medAgg <- summarise_each(grp, funs('median'))
     nMedAggCol <- length(aggBy)
     ncol <- ncol(medAgg)
     colnames(medAgg) <- c(aggBy, paste0(colnames(medAgg)[(nMedAggCol+1):ncol], '_median'))
@@ -124,5 +113,3 @@ calcShare <- function(df, shareOf, shareTarget, nRndDeci=2, displayPerc=TRUE) {
 
   return(df)
 }
-
-
