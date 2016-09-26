@@ -49,4 +49,5 @@ Imports:
     svglite(>= 1.1.0),
     GGally (>= 1.2.0)
 BugReports: https://github.com/cargomoose/raptR/issues
-VignetteBuilder: rmarkdown
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
