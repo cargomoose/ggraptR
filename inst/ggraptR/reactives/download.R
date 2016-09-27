@@ -24,19 +24,19 @@ output$dlPlot <- downloadHandler(
     inputHeight <- input$fileHeight
     inputDPI <- input$fileDPI
     
-    if (inputWidth < 0 || inputWidth > const$gcnFileWidthMax 
+    if (inputWidth < 0 || inputWidth > fileDefault$widthMax 
         || !is.numeric(inputWidth)) {
-      updateNumericInput(session, "fileWidth", value=const$gcnFileWidthDefault)
-      inputWidth <- const$gcnFileWidthDefault
+      updateNumericInput(session, "fileWidth", value=fileDefault$width)
+      inputWidth <- fileDefault$width
     }
-    if (inputHeight < 0 || inputHeight > const$gcnFileHeightMax 
+    if (inputHeight < 0 || inputHeight > fileDefault$heightMax 
         || !is.numeric(inputHeight)) {
-      updateNumericInput(session, "fileHeight", value=const$gcnFileHeightDefault)
-      inputHeight <- const$gcnFileHeightDefault
+      updateNumericInput(session, "fileHeight", value=fileDefault$height)
+      inputHeight <- fileDefault$height
     }
-    if (inputDPI < 0 || inputDPI > const$gcnFileDPIMax || !is.numeric(inputDPI)) {
-      updateNumericInput(session, "fileDPI", value=const$gcnFileDPIDefault)
-      inputHeight <- const$gcnFileDPIDefault
+    if (inputDPI < 0 || inputDPI > fileDefault$DPIMax || !is.numeric(inputDPI)) {
+      updateNumericInput(session, "fileDPI", value=fileDefault$DPI)
+      inputHeight <- fileDefault$DPI
     }
     
     if (plotType() == 'pairs') {
