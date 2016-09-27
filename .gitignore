@@ -9,8 +9,9 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+vignettes/*.R
 .Rproj.user
 inst/doc
 *.Rproj
 # for test files like 1.csv, 1.png, etc
-1.*  
+1.*

@@ -23,18 +23,16 @@ clist <- function(arg_lst, need_quote=T) {
     collapse=', ')
 }
 
-generatePairsCode <- function(p) {
-  sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s)%s)',  #, %s
-          state$dataset_name,
-          paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', '), 
-          clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))]),
-          if (is.null(state$pairs)) '' else paste0(', ', 
-            clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F)))
-}
-
 generateCode <- function(p) {
+  state <- sys.frames()[[1]]
+  
   if ('ggmatrix' %in% class(p)) {
-    return(generatePairsCode(p))
+    cols <- paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', ')
+    aes <- clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))])
+    wrapped <- if (is.null(state$pairs)) '' else paste0(
+      ', ', clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
+    return(sprintf('ggpairs(%s, columns=c(%s), mapping=aes(%s)%s)',
+                   state$dataset_name, cols, aes, wrapped))
   }
   
   p$mapping <- rev(p$mapping)

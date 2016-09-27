@@ -137,7 +137,8 @@ plotInput <- reactive({
       p <- p + do.call(plotTheme(), list())
       
       theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
-      state$theme_name <<- theme_name
+      
+      state$theme_name <- theme_name
       color_type_flag <- !is.null(colorType()) && colorType() == 'discrete'
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
         scale_color_name <- sprintf('scale_colour_%s', theme_name)
@@ -152,12 +153,12 @@ plotInput <- reactive({
     }
     
     ## plot label styles
-    state$theme_attrs <<- list(family = labelFontFamily(),
-                               face = labelFontFace(),
-                               color = labelFontColor(),
-                               size = labelFontSize(),
-                               hjust = hjust(),
-                               vjust = vjust())
+    state$theme_attrs <- list(family = labelFontFamily(),
+                              face = labelFontFace(),
+                              color = labelFontColor(),
+                              size = labelFontSize(),
+                              hjust = hjust(),
+                              vjust = vjust())
     p <- p + theme(text=do.call(element_text, state$theme_attrs))
   }
   

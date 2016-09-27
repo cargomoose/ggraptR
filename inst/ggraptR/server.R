@@ -13,10 +13,10 @@ library(futile.logger)
 library(GGally)
 
 ## import global variables
-source('./global_variables.R')
+source('./global_variables.R', local=T)
 
 ## set debug logs
-source('./debug/debug.R')
+source('./debug/debug.R', local=T)
 
 ## import functions
 source('./functions/helper.R')
