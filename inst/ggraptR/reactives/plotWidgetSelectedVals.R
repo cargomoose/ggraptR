@@ -36,9 +36,9 @@ columns_sel <- reactive({
       return(columns())
   }
   
-  default_choice <- list(diamonds='price',
-                         mtcars='hp',
-                         rock='peri',
+  default_choice <- list(diamonds=c('cut', 'price'),
+                         mtcars=c('hp', 'mpg', 'cyl'),
+                         rock=c("peri", "shape", "area", "perm"),
                          iris=c('Sepal.Length', 'Species'))
   return(default_choice[[input$dataset]])
 })

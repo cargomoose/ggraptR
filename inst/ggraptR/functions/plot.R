@@ -141,6 +141,15 @@ plotPairs <- function(dataset, ls) {
          upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
          diag=ls$diag, lower=ls$low))
   
+  state <- sys.frames()[[1]]
+  for(i in 1:length(ggpairs_pars)) {
+    par <- ggpairs_pars[[i]]
+    par_name <- names(ggpairs_pars)[[i]]
+    if (par_name %in% c('upper', 'diag', 'lower')) {
+      state$pairs[[par_name]] <- par
+    }
+  }
+  
   # print.ggmatrix is overrided in helper.R script
   p <- do.call(ggpairs, ggpairs_pars)
   

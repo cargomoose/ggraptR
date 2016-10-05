@@ -16,10 +16,12 @@ ggraptR <- function(initialDf="diamonds",
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = F)
   }
   
+  # initial "global" variables
+  # current environment will be used like global variable list
+  # see inst/ggraptR/global_variables.R
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
   txtCfg <- ""
-  
   fileDefault <- list(width=10, height=10, DPI=100, widthMax=50,
                       heightMax=50, DPIMax=500)
 
