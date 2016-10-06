@@ -95,8 +95,11 @@ pairsPlotInputs <- reactive({
   flog.debug("plot::pairsPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
 
-  pil <- list(columns=columns(), color=color(), fill=fill(), alpha=alpha(),
-              upCont=ggpairsUpCont(), upCombo=ggpairsUpCombo(), upDiscr=ggpairsUpDiscr())
+  pil <- list(
+    columns=columns(), color=color(), fill=fill(), alpha=alpha(),
+    upCont=ggpairsUpCont(), upCombo=ggpairsUpCombo(), upDiscr=ggpairsUpDiscr(),
+    diagCont=ggpairsDiagCont(), diagDiscr=ggpairsDiagDiscr(),
+    lowCont=ggpairsLowCont(), lowCombo=ggpairsLowCombo(), lowDiscr=ggpairsLowDiscr())
   flog.debug("plot::pairsPlotInputs() - End", name='all')
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })

@@ -32,7 +32,7 @@ output$plotAggMethCtrl <- renderUI({
 output$xCtrl <- renderUI({
   if (!is.null(input$dataset) && displayXCond()) {
     selectInput('x', 'X', choices= 
-      colnamesOpts()[if (plotType() == 'histogram') !sapply(dataset(), is.factor) else T], 
+      colnamesOpts()[if (plotType() == 'histogram') !sapply(dataset(),is.factor) else T], 
                 selected=isolate(x_sel()))
   }
 })
@@ -185,7 +185,6 @@ output$alphaCtrl <- renderUI({
   }
 })
 
-
 ## size magnifier option
 output$sizeMagCtrl <- renderUI({
   if (!is.null(displaySizeMagCond()) && displaySizeMagCond()) {
@@ -201,21 +200,20 @@ output$coordFlipCtrl <- renderUI({
   }
 })
 
+
 output$ggpairsUpContCtrl <- renderUI({
   if (displayGgpairsCond()) {
     selectInput('ggpairsUpCont', 'Upper plots continuous variables', 
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 
-                          'cor', 'blank'),
-                selected='cor')
+                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                selected=eval(formals(ggpairs)$upper)$continuous)
   }
 })
 
 output$ggpairsUpComboCtrl <- renderUI({
   if (displayGgpairsCond()) {
     selectInput('ggpairsUpCombo', 'Upper plots combo', 
-                choices=c('box', 'dot', 'facethist', 'facetdensity', 
-                          'denstrip', 'blank'),
-                selected='box')
+                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
+                selected=eval(formals(ggpairs)$upper)$combo)
   }
 })
 
@@ -223,9 +221,50 @@ output$ggpairsUpDiscrCtrl <- renderUI({
   if (displayGgpairsCond()) {
     selectInput('ggpairsUpDiscr', 'Upper plots discrete variables', 
                 choices=c('facetbar', 'ratio', 'blank'),
-                selected='facetbar')
+                selected=eval(formals(ggpairs)$upper)$discrete)
   }
 })
+
+output$ggpairsDiagContCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsDiagCont', 'Diagonal plots continuous variables', 
+                choices=c('densityDiag', 'barDiag', 'blankDiag'),
+                selected=eval(formals(ggpairs)$diag)$continuous)
+  }
+})
+
+output$ggpairsDiagDiscrCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsDiagDiscr', 'Diagonal plots discrete variables', 
+                choices=c('barDiag', 'blankDiag'),
+                selected=eval(formals(ggpairs)$diag)$discrete)
+  }
+})
+
+output$ggpairsLowContCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsLowCont', 'Lower plots continuous variables', 
+                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+                selected=eval(formals(ggpairs)$lower)$continuous)
+  }
+})
+
+output$ggpairsLowComboCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsLowCombo', 'Lower plots combo', 
+                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
+                selected=eval(formals(ggpairs)$lower)$combo)
+  }
+})
+
+output$ggpairsLowDiscrCtrl <- renderUI({
+  if (displayGgpairsCond()) {
+    selectInput('ggpairsLowDiscr', 'Lower plots discrete variables', 
+                choices=c('facetbar', 'ratio', 'blank'),
+                selected=eval(formals(ggpairs)$lower)$discrete)
+  }
+})
+
 
 # additional aggregation by options
 output$plotAddAggByCtrl <- renderUI({

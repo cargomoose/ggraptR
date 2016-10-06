@@ -191,17 +191,39 @@ coordFlip <- reactive({
   if (is.null(input$coordFlip) || !displayCoordFlipCond()) FALSE else input$coordFlip
 })
 
+
 ggpairsUpCont <- reactive({
   input$ggpairsUpCont  # if (!is.null(input$ggpairsUpCont)) 
 })
 
 ggpairsUpCombo <- reactive({
-  if (!is.null(input$ggpairsUpCombo)) input$ggpairsUpCombo
+  input$ggpairsUpCombo  # if (!is.null(input$ggpairsUpCombo)) 
 })
 
 ggpairsUpDiscr <- reactive({
-  if (!is.null(input$ggpairsUpDiscr)) input$ggpairsUpDiscr
+  input$ggpairsUpDiscr  # if (!is.null(input$ggpairsUpDiscr))
 })
+
+ggpairsDiagCont <- reactive({
+  input$ggpairsDiagCont
+})
+
+ggpairsDiagDiscr <- reactive({
+  input$ggpairsDiagDiscr
+})
+
+ggpairsLowCont <- reactive({
+  input$ggpairsLowCont
+})
+
+ggpairsLowCombo <- reactive({
+  input$ggpairsLowCombo
+})
+
+ggpairsLowDiscr <- reactive({
+  input$ggpairsLowDiscr
+})
+
 
 ## bin width
 binWidth <- reactive({

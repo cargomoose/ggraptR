@@ -139,7 +139,8 @@ plotPairs <- function(dataset, ls) {
     list(dataset, columns=ls$columns,
          mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
          upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
-         diag=ls$diag, lower=ls$low))
+         diag=list(continuous=ls$diagCont, discrete=ls$diagDiscr), 
+         lower=list(continuous=ls$lowCont, combo=ls$lowCombo, discrete=ls$lowDiscr)))
   
   state <- sys.frames()[[1]]
   for(i in 1:length(ggpairs_pars)) {

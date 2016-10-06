@@ -29,6 +29,10 @@ verticalLayout(
   
   uiOutput('ggpairsUpContCtrl'),
   uiOutput('ggpairsUpComboCtrl'),
-  uiOutput('ggpairsUpDiscrCtrl')
-  
+  uiOutput('ggpairsUpDiscrCtrl'),
+  uiOutput('ggpairsDiagContCtrl'),
+  uiOutput('ggpairsDiagDiscrCtrl'),
+  uiOutput('ggpairsLowContCtrl'),
+  uiOutput('ggpairsLowComboCtrl'),
+  uiOutput('ggpairsLowDiscrCtrl')
 )

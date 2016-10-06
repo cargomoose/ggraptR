@@ -4,12 +4,13 @@ shinyUI(bootstrapPage(
   
   tags$head(tags$style(
     type="text/css",
-    "#rappy img {max-width: 95%;}", 
+    "#rappy img {max-width: 100%;}",
     "#react_row {max-width: 100%;}",
-    ".widblock {background-color: #F9F9F9; padding: 2px 10px; margin:5px}")),  
+    ".widblock {background-color: #F9F9F9; padding: 2px 10px; margin:5px}")),
   
   sidebarPanel(
-    splitLayout(cellWidths = c("25%", "75%"),
+    splitLayout(
+      cellWidths = c("25%", "75%"),
       imageOutput("rappy", height = "100%"),
       div(
           ## use shinyjs to disable/enable buttons w/ JS
