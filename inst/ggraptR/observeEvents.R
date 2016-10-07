@@ -41,16 +41,7 @@ observe({
 observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
-  # I hope there is some way to extract these ids from env
-  ids <- c('dataset', 'plotType', 'rawVsManAgg', 'plotAggMeth', 'x', 'y', 'color', 
-           'treatAsFacVarCol', 'fill', 'position', 'jitter', 'smooth', 'size', 
-           'shape', 'binWidth', 'densBlkLineCond', 'ptsOverlayCond', 'facetRow', 
-           'facetCol', 'facetWrap', 'facetScale', 'alpha', 'sizeMag', 'coordFlip', 
-           'plotAddAggBy', 'xlim', 'ylim', 'plotTitle', 'xLabel', 'yLabel', 
-           'labelFontFamily', 'labelFontFace', 'labelFontSize', 'labelFontColor', 
-           'hjust', 'vjust', 'plotTheme', 'showAesWgts', 'showFacetWgts', 
-           'showXYRangeWgts', 'showPlotAggWgt', 'showThemeWgts', 'showDSTypeAndPlotAggWgts')
-  for (id in ids) {
+  for (id in names(input)) {
     shinyjs::reset(id)
   }
   Sys.sleep(0.5)
