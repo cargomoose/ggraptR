@@ -1,6 +1,6 @@
 ## plot type options
 output$plotTypeCtrl <- renderUI({
-  selectInput(inputId = "plotType", label = "Plot Type", 
+  selectInput(inputId = "plotType", label = "Plot type", 
               choices = c('Scatter'='scatter', 'Pairs'='pairs', 
                           'Line'='line', 'Path'='path',
                           'Histogram'='histogram', 'Density'='density', 

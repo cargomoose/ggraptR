@@ -24,35 +24,28 @@ shinyUI(bootstrapPage(
             column(6, uiOutput('submitCtrl')), 
             column(6, uiOutput('reactiveCtrl')),
             id='react_row'))),
-    hr(),
+    br(),
     
-    ## dataset selection
     conditionalPanel(
       condition = 'input.conditionedPanels != "logTab"',
-      uiOutput('datasetCtrl')),
+      fluidRow(column(6, uiOutput('datasetCtrl')),
+               conditionalPanel('input.conditionedPanels == "plotTab"',
+                                column(6, uiOutput('plotTypeCtrl')))),
+      br()),
     
-    
-    ## "view plot" button if import tab
     conditionalPanel(
-      condition = 'input.conditionedPanels == "importTab"',
-      ## view plot button
-      actionButton("viewPlot", label = "View Plot")),
-    hr(),
+      condition = 'input.conditionedPanels == "plotTab"',
+      source('./views/plot/plotCtrlsUI.R', local=TRUE)$value),
     
-    ## file input/upload panel
-    conditionalPanel(
-      condition = 'input.conditionedPanels == "importTab"',
-      source('./views/import/dataImportCtrlsUI.R', local=TRUE)$value),
-    
-    ## aggregation options
     conditionalPanel(
       condition = 'input.conditionedPanels == "tableTab"',
       source('./views/table/manAggCtrlsUI.R', local=TRUE)$value),
     
-    ## plot options
     conditionalPanel(
-      condition = 'input.conditionedPanels == "plotTab"',
-      source('./views/plot/plotCtrlsUI.R', local=TRUE)$value)),
+      condition = 'input.conditionedPanels == "importTab"',
+      actionButton("viewPlot", label = "View Plot"),
+      hr(),
+      source('./views/import/dataImportCtrlsUI.R', local=TRUE)$value)),
   
   mainPanel(
     #import modal panels

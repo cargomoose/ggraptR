@@ -1,7 +1,7 @@
 ## dataset drop-down options 
 output$datasetCtrl <- renderUI({
   stopifnot(state$initialDf %in% rawDatasetNames())
-  selectInput("dataset", "Choose a dataset:", 
+  selectInput("dataset", "Choose a dataset", 
               choices=rawDatasetNames(),
               selected=state$initialDf)
 })
