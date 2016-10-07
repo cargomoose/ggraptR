@@ -109,7 +109,7 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
 
 ## function to convert 'None' to NULL
 convertNoneToNULL <- function(var) {
-  if (tolower(var)=='none') NULL else var
+  if (tolower(var)=='none' || !nchar(var)) NULL else var
 }
 
 

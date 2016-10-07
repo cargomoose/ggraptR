@@ -91,16 +91,12 @@ fillOrig <- reactive({
 
 ## fill 
 fill <- reactive({
-  if (!is.null(input$fill)) {
-    convertNoneToNULL(input$fill)
-  }
+  if (!is.null(input$fill)) convertNoneToNULL(input$fill)
 })
 
 ## fill as factor
 fillAsFactor <- reactive({
-  if (!is.null(fill())) {
-    varNameAsFactorOrNULL(fill())  
-  }
+  if (!is.null(fill())) varNameAsFactorOrNULL(fill())
 })
 
 ## position 
