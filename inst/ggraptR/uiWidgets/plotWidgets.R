@@ -202,67 +202,60 @@ output$coordFlipCtrl <- renderUI({
 
 
 output$ggpairsUpContCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsUpCont', 'Upper plots continuous variables', 
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-                selected=eval(formals(ggpairs)$upper)$continuous)
-  }
+  selectInput(
+    'ggpairsUpCont', NULL,
+    choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+    selected=eval(formals(ggpairs)$upper)$continuous)
 })
 
 output$ggpairsUpComboCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsUpCombo', 'Upper plots combo', 
-                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
-                selected=eval(formals(ggpairs)$upper)$combo)
-  }
+  selectInput(
+    'ggpairsUpCombo', NULL,
+    choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
+    selected=eval(formals(ggpairs)$upper)$combo)
 })
 
 output$ggpairsUpDiscrCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsUpDiscr', 'Upper plots discrete variables', 
-                choices=c('facetbar', 'ratio', 'blank'),
-                selected=eval(formals(ggpairs)$upper)$discrete)
-  }
-})
-
-output$ggpairsDiagContCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsDiagCont', 'Diagonal plots continuous variables', 
-                choices=c('densityDiag', 'barDiag', 'blankDiag'),
-                selected=eval(formals(ggpairs)$diag)$continuous)
-  }
-})
-
-output$ggpairsDiagDiscrCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsDiagDiscr', 'Diagonal plots discrete variables', 
-                choices=c('barDiag', 'blankDiag'),
-                selected=eval(formals(ggpairs)$diag)$discrete)
-  }
+  selectInput(
+    'ggpairsUpDiscr', NULL,
+    choices=c('facetba'='facetbar', 'ratio', 'blank'),
+    selected=eval(formals(ggpairs)$upper)$discrete)
 })
 
 output$ggpairsLowContCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsLowCont', 'Lower plots continuous variables', 
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-                selected=eval(formals(ggpairs)$lower)$continuous)
-  }
+  # req(displayGgpairsCond())
+  selectInput(
+    'ggpairsLowCont', NULL, 
+    choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+    selected=eval(formals(ggpairs)$lower)$continuous)
 })
 
 output$ggpairsLowComboCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsLowCombo', 'Lower plots combo', 
-                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
-                selected=eval(formals(ggpairs)$lower)$combo)
-  }
+  selectInput(
+    'ggpairsLowCombo', NULL, 
+    choices=c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
+    selected=eval(formals(ggpairs)$lower)$combo)
 })
 
 output$ggpairsLowDiscrCtrl <- renderUI({
-  if (displayGgpairsCond()) {
-    selectInput('ggpairsLowDiscr', 'Lower plots discrete variables', 
-                choices=c('facetbar', 'ratio', 'blank'),
-                selected=eval(formals(ggpairs)$lower)$discrete)
-  }
+  selectInput(
+    'ggpairsLowDiscr', NULL, 
+    choices=c('facetba'='facetbar', 'ratio', 'blank'),
+    selected=eval(formals(ggpairs)$lower)$discrete)
+})
+
+output$ggpairsDiagContCtrl <- renderUI({
+  selectInput(
+    'ggpairsDiagCont', NULL,
+    choices=c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
+    selected=eval(formals(ggpairs)$diag)$continuous)
+})
+
+output$ggpairsDiagDiscrCtrl <- renderUI({
+  selectInput(
+    'ggpairsDiagDiscr', NULL,
+    choices=c('bar'='barDiag', 'blank'='blankDiag'),
+    selected=eval(formals(ggpairs)$diag)$discrete)
 })
 
 
@@ -438,7 +431,7 @@ output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
 })
 
 output$generatePlotCodeCtl <- renderUI({
-  shinyBS::bsButton("generatePlotCode", label="Generate Plot Code", type="action", 
+  bsButton("generatePlotCode", label="Generate Plot Code", type="action", 
                     icon = icon("code"))
 })
 

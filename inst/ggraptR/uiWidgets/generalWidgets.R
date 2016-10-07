@@ -14,7 +14,7 @@ output$reactiveCtrl <- renderUI({
 
 ## upon-manual-submit button
 output$submitCtrl <- renderUI({
-  shinyBS::bsButton("submit", label="Submit", icon=icon("refresh"), type="action", 
+  bsButton("submit", label="Submit", icon=icon("refresh"), type="action", 
                     block=TRUE)
 })
 

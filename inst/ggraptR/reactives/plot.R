@@ -82,7 +82,6 @@ barPlot <- reactive({
 pairsPlot <- reactive({
   flog.debug("plot::pairsPlot() - Begin", name='all')
   dataset <- plotDF()
-  # browser()
   if (is.null(dataset) || is.null(pairsPlotInputs()) || !pairsWidgetsLoaded()) return()
   p <- plotPairs(dataset, pairsPlotInputs())
   

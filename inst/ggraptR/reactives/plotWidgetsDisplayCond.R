@@ -115,11 +115,6 @@ displayCoordFlipCond <- reactive({
     input$showAesWgts && input$plotType != 'pairs'
 })
 
-displayGgpairsCond <- reactive({
-  !is.null(input$plotType) && !is.null(input$showAesWgts) &&
-    input$showAesWgts && input$plotType == 'pairs'
-})
-
 ## display size magnifier condition reactive (belongs to advanced control widgets)
 displaySizeMagCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()
@@ -173,7 +168,8 @@ displayXlim <- reactive({
 
 ## display ylim condition reactive
 displayYlim <- reactive({
-  if (!is.null(dataset()) && !is.null(input$x) && !is.null(y()) && !is.null(input$plotType)
+  if (!is.null(dataset()) && !is.null(input$x) && !is.null(y()) && 
+      !is.null(input$plotType)
       && !input$plotType=='histogram' && !is.null(input$showXYRangeWgts)) {
     input$showXYRangeWgts
   }

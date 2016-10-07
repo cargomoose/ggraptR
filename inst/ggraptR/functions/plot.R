@@ -146,8 +146,8 @@ plotPairs <- function(dataset, ls) {
   for(i in 1:length(ggpairs_pars)) {
     par <- ggpairs_pars[[i]]
     par_name <- names(ggpairs_pars)[[i]]
-    if (par_name %in% c('upper', 'diag', 'lower')) {
-      state$pairs[[par_name]] <- par
+    if (par_name %in% c('upper', 'diag', 'lower') && length(unlist(par))) {
+      state$pairs[[par_name]] <- par[!sapply(par, is.null)]
     }
   }
   
