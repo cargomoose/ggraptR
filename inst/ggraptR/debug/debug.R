@@ -2,9 +2,9 @@
 
 # prepare txtCfg to read configuration file
 tryCatch({
-  state$txtCfg <- read.delim("./debug/debug.cfg.json", comment.char="#", quote="", header=F)
-  state$txtCfg <- as.character(state$txtCfg$V1) 
-  }, error = function(e) {})
+  state$txtCfg <- read.delim("debug/debug.cfg.json", 
+                             comment.char="#", quote="", header=F)$V1 %>% as.character
+  }, error = function(e) { state$txtCfg <- "" })
 
 # if txtCfg populated then logging is on, read extracted json record
 if (nchar(state$txtCfg) > 0) {

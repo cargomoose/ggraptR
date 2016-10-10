@@ -1,4 +1,3 @@
-
 ## display plot and data table
 observeEvent(input$reactive, {
   shinyBS::updateButton(session, "submit", disabled = input$reactive)

@@ -30,8 +30,7 @@ shinyUI(bootstrapPage(
       condition = 'input.conditionedPanels != "logTab"',
       fluidRow(column(6, uiOutput('datasetCtrl')),
                conditionalPanel('input.conditionedPanels == "plotTab"',
-                                column(6, uiOutput('plotTypeCtrl')))),
-      br()),
+                                column(6, uiOutput('plotTypeCtrl'))))),
     
     conditionalPanel(
       condition = 'input.conditionedPanels == "plotTab"',

@@ -116,8 +116,9 @@ plotInput <- reactive({
     !is.null(columns()) && columns() %in% colnamesOpts() else 
       !is.null(x()) && x() %in% colnamesOpts()
   if (!universalPlotWidgetsLoaded() || !is_horis_axis_actual) return()
-  
+
   p <- do.call(paste0(ptype, if (ptype == 'histogram') '' else 'Plot'), list())
+  if (is.null(p)) return()
   
   if (ptype != 'pairs') {
     if (!noFacetSelected()) {

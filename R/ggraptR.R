@@ -21,7 +21,6 @@ ggraptR <- function(initialDf="diamonds",
   # see inst/ggraptR/global_variables.R
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
-  txtCfg <- ""
   fileDefault <- list(width=10, height=10, DPI=100, widthMax=50,
                       heightMax=50, DPIMax=500)
 
