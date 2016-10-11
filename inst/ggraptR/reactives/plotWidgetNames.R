@@ -55,100 +55,69 @@ lineWidgets <- reactive({
   wgts
 })
 
-## line plot points overlay widgets
+## lineplot points
 linePtsOverlayWidgets <- reactive({
-  flog.debug("plotWidgetNames::linePtsOverlayWidgets() - Begin", name='all')
-  
+  flog.debug("plotWidgetNames::linePtsOverlayWidgets()", name='all')
   wgts <- c('ptsOverlayCond')
   if (input$showAesWgts){
     flog.debug("plotWidgetNames::linePtsOverlayWidgets() - input$showAesWgts", name='all')
     wgts <- c(wgts, 'x', 'shape', 'size', 'smooth', 'jitter', 'sizeMag')
   }
-  
-  flog.debug("plotWidgetNames::linePtsOverlayWidgets() - End", name='all')
   wgts
 })
 
-## path plot widgets
 pathWidgets <- reactive({
-  flog.debug("plotWidgetNames::pathWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'x', 'y',
-            if (input$showXYRangeWgts) c('xlim', 'ylim'),
-            if (input$showFacetWgts) facetWidgets)
-  
-  flog.debug("plotWidgetNames::pathWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::pathWidgets()", name='all')
+  c('plotType', 'x', 'y',
+    if (input$showXYRangeWgts) c('xlim', 'ylim'),
+    if (input$showFacetWgts) facetWidgets)
 })
 
-## path plot points overlay widgets loaded
 pathPtsOverlayWidgets <- reactive({
-  flog.debug("plotWidgetNames::pathPtsOverlayWidgets() - Start", name='all')
-  
-  wgts <- c('ptsOverlayCond',
-            if (input$showAesWgts) c('shape', 'size'))
-  
-  flog.debug("plotWidgetNames::pathPtsOverlayWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::pathPtsOverlayWidgets()", name='all')
+  c('ptsOverlayCond',
+    if (input$showAesWgts) c('shape', 'size'))
 })
 
-# ## histogram widgets
 histogramWidgets <- reactive({
-  flog.debug("plotWidgetNames::histogramWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'x', 
-            if (input$showAesWgts) c('fill', 'position', 'binWidth'),
-            if (input$showXYRangeWgts) 'xlim',
-            if (input$showFacetWgts) facetWidgets)
-  
-  flog.debug("plotWidgetNames::histogramWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::histogramWidgets()", name='all')
+  c('plotType', 'x', 
+    if (input$showAesWgts) c('fill', 'position', 'binWidth'),
+    if (input$showXYRangeWgts) 'xlim',
+    if (input$showFacetWgts) facetWidgets)
 })
 
-## density plot widgets
 densityWidgets <- reactive({
-  flog.debug("plotWidgetNames::densityWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'x',
-            if (input$showXYRangeWgts) 'xlim',
-            if (input$showFacetWgts) facetWidgets)
-  
-  flog.debug("plotWidgetNames::densityWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::densityWidgets()", name='all')
+  c('plotType', 'x', 
+    if (input$showXYRangeWgts) 'xlim',
+    if (input$showFacetWgts) facetWidgets)
 })
 
-## box plot widgets
 boxWidgets <- reactive({
-  flog.debug("plotWidgetNames::boxWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'x', 'y',
-            if (input$showAesWgts) 'fill',
-            if (input$showXYRangeWgts) c('xlim', 'ylim'),
-            if (input$showFacetWgts) facetWidgets)
-  
-  flog.debug("plotWidgetNames::boxWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::boxWidgets()", name='all')
+  c('plotType', 'x', 'y',
+    if (input$showAesWgts) 'fill',
+    if (input$showXYRangeWgts) c('xlim', 'ylim'),
+    if (input$showFacetWgts) facetWidgets)
 })
 
-## bar plot widgets
 barWidgets <- reactive({
-  flog.debug("plotWidgetNames::barWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'x', 'y',
-            if (input$showAesWgts) c('fill', 'position'),
-            if (input$showXYRangeWgts) c('xlim', 'ylim'),
-            if (input$showFacetWgts) facetWidgets)
-  
-  flog.debug("plotWidgetNames::barWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::barWidgets()", name='all')
+  c('plotType', 'x', 'y',
+    if (input$showAesWgts) c('fill', 'position'),
+    if (input$showXYRangeWgts) c('xlim', 'ylim'),
+    if (input$showFacetWgts) facetWidgets)
+})
+
+violinWidgets <- reactive({
+  flog.debug("plotWidgetNames::violinWidgets()", name='all')
+  c('plotType', 'x', 'y',
+    if (input$showAesWgts) c('fill'),
+    if (input$showFacetWgts) facetWidgets)
 })
 
 pairsWidgets <- reactive({
-  flog.debug("plotWidgetNames::pairshWidgets() - Start", name='all')
-  
-  wgts <- c('plotType', 'columns', 
-            if (input$showAesWgts) c('fill', 'color', 'alpha'))
-  
-  flog.debug("plotWidgetNames::pairshWidgets() - End", name='all')
-  wgts
+  flog.debug("plotWidgetNames::pairshWidgets()", name='all')
+  c('plotType', 'columns', if (input$showAesWgts) c('fill', 'color'))
 })

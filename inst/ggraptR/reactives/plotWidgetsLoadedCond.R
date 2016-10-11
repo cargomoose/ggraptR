@@ -58,6 +58,12 @@ pathPtsOverlayWidgetsLoaded <- reactive({
   }
 })
 
+violinWidgetsLoaded <- reactive({
+  if (!is.null(violinWidgets())) {
+    checkWidgetsLoaded(input, violinWidgets())
+  }
+})
+
 pairsWidgetsLoaded <- reactive({
   if (!is.null(pairsWidgets())) {
     checkWidgetsLoaded(input, pairsWidgets())

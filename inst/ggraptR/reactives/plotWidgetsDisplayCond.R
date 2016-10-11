@@ -1,58 +1,48 @@
 #### display conditional reactives
 
-## display x condition reactive
 displayXCond <- reactive({
   if (!is.null(input$plotType)) {
     !(input$plotType %in% c('pairs'))
   }
 })
 
-## display y condition reactive
 displayYCond <- reactive({
   if (!is.null(input$plotType)) {
     !(input$plotType %in% c('histogram', 'density', 'pairs'))
   }
 })
 
-## display pairs condition reactive
 displayColumnsCond <- reactive({
   if (!is.null(input$plotType)) {
     input$plotType %in% c('pairs')
   }
 })
 
-
-
-## display color condition reactive
 displayColCond <- reactive({
   if (!is.null(input$plotType) && !is.null(input$showAesWgts) && input$showAesWgts) {
     input$plotType %in% c('line', 'scatter', 'path', 'pairs')
   }
 })
 
-## display treat-as-a-factor-variable (for color) condition reactive
+# for color
 displayTreatAsFacVarColCond <- reactive({
   if (!is.null(input$plotType) && !is.null(input$showAesWgts) && input$showAesWgts) {
-    input$plotType %in% c('scatter')
+    input$plotType == 'scatter'
   }
 })
 
-## display fill condition reactive
 displayFillCond <- reactive({
   if (!is.null(input$plotType) && !is.null(input$showAesWgts) && input$showAesWgts) {
-    input$plotType %in% c('box', 'histogram', 'bar', 'density', 'pairs')
+    input$plotType %in% c('box', 'histogram', 'bar', 'density', 'violin', 'pairs')
   }
 })
 
-
-## display position condition reactive
 displayPosCond <- reactive({
   if (!is.null(input$plotType) && !is.null(!input$showAesWgts) && input$showAesWgts) {
     input$plotType %in% c('histogram', 'bar')
   }
 })
 
-## display shape condition reactive
 displayShapeCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()
   display <- FALSE

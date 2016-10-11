@@ -2,6 +2,17 @@ colnamesOpts <- reactive({
   names(dataset())
 })
 
+xOpts <- reactive({
+  if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
+  if (plotType() == 'violin') getFactorVarNames(dataset()) else 
+    colnamesOpts()[if (plotType() == 'histogram')
+      getNumericVarNames(dataset()) else T]
+})
+
+yOpts <- reactive({
+  if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
+  if (plotType() == 'violin') getNumericVarNames(dataset()) else colnamesOpts()
+})
 
 colOpts <- reactive({
   if (is.null(dataset()) || is.null(input$plotType)) return()

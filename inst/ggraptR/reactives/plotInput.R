@@ -82,6 +82,14 @@ pathPtsOverlayInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
+violinInputs <- reactive({
+  flog.debug("plot::violinInputs() - Begin", name='all')
+  if (is.null(plotDF())) return()
+  pil <- list(x=x(), y=y(), alpha=alpha(), fill=fill(), fillAsFactor=fillAsFactor())
+  flog.debug("plot::violinInputs() - End", name='all')
+  ensureCorrectPlotInputs(pil, colnames(plotDF()))
+})
+
 pairsPlotInputs <- reactive({
   flog.debug("plot::pairsPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()

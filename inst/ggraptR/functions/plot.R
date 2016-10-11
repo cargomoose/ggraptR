@@ -115,6 +115,16 @@ plotBar <- function(dataset, ls) {
   p
 }
 
+plotViolin <- function(dataset, ls) {
+  flog.debug("plot::plotViolin() - Begin", name='all')
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+    geom_violin(alpha=ls$alpha) + 
+    aes_string(fill=ls$fillAsFactor) +
+    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
+  flog.debug("plot::plotViolin() - End", name='all')
+  p
+}
+
 plotPairs <- function(dataset, ls) {
   flog.debug("plot::plotPairs() - Begin", name='all')  
   

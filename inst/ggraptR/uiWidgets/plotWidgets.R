@@ -1,11 +1,9 @@
-## plot type options
 output$plotTypeCtrl <- renderUI({
   selectInput(inputId = "plotType", label = "Plot type", 
-              choices = c('Scatter'='scatter', 'Pairs'='pairs', 
+              choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
                           'Line'='line', 'Path'='path',
                           'Histogram'='histogram', 'Density'='density', 
                           'Box'='box', 'Bar'='bar'))
-                          #'Violin'='violin', 
                           #'Image'='image', 
                           #'2-Density', 'density2d'
 })
@@ -63,7 +61,6 @@ output$treatAsFacVarColCtrl <- renderUI({
   }
 })
 
-## fill control options
 output$fillCtrl <- renderUI({
   if (!is.null(displayFillCond()) && displayFillCond()) {
     selectInput('fill', 'Fill', fillOpts(), isolate(fill_sel()))
@@ -102,14 +99,12 @@ output$smthCtrl <- renderUI({
   } 
 })
 
-## size options
 output$sizeCtrl <- renderUI({
   if (!is.null(displaySizeCond()) && displaySizeCond()) {
     selectInput('size', 'Size', sizeOpts(), isolate(size_sel()))
   }
 })
 
-## shape options
 output$shapeCtrl <- renderUI({
   if (!is.null(displayShapeCond()) && displayShapeCond()) {
     selectInput('shape', 'Shape', shapeOpts(), isolate(shape_sel()))
@@ -156,14 +151,12 @@ output$facetColCtrl <- renderUI({
   }
 })
 
-## facet wrap options
 output$facetWrapCtrl <- renderUI({
   if (!is.null(input$showFacetWgts) && input$showFacetWgts) {
     selectInput('facetWrap', 'Facet Wrap', facetOpts(), isolate(facetWrap_sel()))
   }
 })
 
-## facet scale options
 output$facetScaleCtrl <- renderUI({
   if (!is.null(input$showFacetWgts) && input$showFacetWgts) {
     selectInput('facetScale', 'Facet Scale',
@@ -181,7 +174,7 @@ output$alphaCtrl <- renderUI({
   }
 })
 
-## size magnifier option
+## size magnifier
 output$sizeMagCtrl <- renderUI({
   if (!is.null(displaySizeMagCond()) && displaySizeMagCond()) {
     sliderInput("sizeMag", label="Size Magnifier",
@@ -189,7 +182,6 @@ output$sizeMagCtrl <- renderUI({
   }
 })
 
-## coordinate flip options 
 output$coordFlipCtrl <- renderUI({
   if (displayCoordFlipCond()) {
     checkboxInput('coordFlip', 'Flip X and Y axis', value=isolate(coordFlip()))
@@ -219,7 +211,6 @@ output$ggpairsUpDiscrCtrl <- renderUI({
 })
 
 output$ggpairsLowContCtrl <- renderUI({
-  # req(displayGgpairsCond())
   selectInput(
     'ggpairsLowCont', NULL, 
     choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
@@ -264,7 +255,6 @@ output$plotAddAggByCtrl <- renderUI({
   }
 })
 
-## xlim control
 output$xlimCtrl <- renderUI({
   if (!is.null(displayXlim()) && displayXlim()) {
     if (input$x %in% finalDFNumericVars()) {
@@ -280,8 +270,7 @@ output$xlimCtrl <- renderUI({
   }
 })
 
-## ylim control
-## note: ylim() is NOT applicable to histograms
+# note: ylim() is NOT applicable to histograms
 output$ylimCtrl <- renderUI({
   if (!is.null(displayYlim()) && displayYlim()) {
     y <- y()
@@ -299,9 +288,6 @@ output$ylimCtrl <- renderUI({
   }
 })
 
-
-
-## plot title
 output$plotTitleCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) &&  !is.null(input$reactive) 
       && displayThemeWgts() && !input$reactive) {
@@ -309,7 +295,6 @@ output$plotTitleCtrl <- renderUI({
   }
 })
 
-## x label
 output$xLabelCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && !is.null(input$reactive)
       && displayThemeWgts() && !input$reactive) {
@@ -317,7 +302,6 @@ output$xLabelCtrl <- renderUI({
   }
 })
 
-## y label
 output$yLabelCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && !is.null(input$reactive)
       && displayThemeWgts() && !input$reactive) {
@@ -325,7 +309,6 @@ output$yLabelCtrl <- renderUI({
   }
 })
 
-## label font family 
 output$labelFontFamilyCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts()) {
     # first 3 fonts are available on Windows machine. Next ones generate warnings
@@ -336,7 +319,6 @@ output$labelFontFamilyCtrl <- renderUI({
   }
 })
 
-## label font face
 output$labelFontFaceCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts()) {
     labelFontFaceOpts <- c('plain', 'bold', 'italic', 'bold.italic')
@@ -345,35 +327,30 @@ output$labelFontFaceCtrl <- renderUI({
   }
 })
 
-## label font size
 output$labelFontSizeCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
     numericInput('labelFontSize', 'Label Font Size', value=isolate(labelFontSize()), 
                  min=7, max=30, step=1)
 })
 
-## label font color
 output$labelFontColorCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
     shinyjs::colourInput('labelFontColor', 'Label Font Color', 
                          value=isolate(labelFontColor()))
 })
 
-## hjust
 output$hjustCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
     numericInput('hjust', 'Horizontal Adjust', value=isolate(hjust()), 
                  min=0, max=1, step=0.1)
 })
 
-## vjust
 output$vjustCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts())
     numericInput('vjust', 'Vertical Adjust', value=isolate(vjust()), 
                  min=0, max=1, step=0.1)
 })
 
-## plot theme
 output$plotThemeCtrl <- renderUI({
   if (!is.null(displayThemeWgts()) && displayThemeWgts()) {
     themes <- c('Grey' = 'theme_grey', 
@@ -394,33 +371,27 @@ output$plotThemeCtrl <- renderUI({
 })
 
 
-#### show/hide checkbox widgets
-## show aesthetic controls
+# next block is about show/hide checkbox widgets
 output$showAesWgtsCtrl <- renderUI({
   checkboxInput('showAesWgts', 'Show aesthetics', value=TRUE)
 })
 
-## show facet controls
 output$showFacetWgtsCtrl <- renderUI({
   checkboxInput('showFacetWgts', 'Show facets', value=FALSE)
 })
 
-## show X & Y range controls
 output$showXYRangeWgtsCtrl <- renderUI({
   checkboxInput('showXYRangeWgts', 'Show ranges', value=FALSE)
 })
 
-## show aggregation controls
 output$showPlotAggWgtCtrl <- renderUI({
   checkboxInput('showPlotAggWgt', 'Show plot aggregations', value=FALSE)
 })
 
-## show theme controls
 output$showThemeWgtsCtrl <- renderUI({
   checkboxInput('showThemeWgts', 'Show themes', value=FALSE)
 })
 
-## show dataset type and plot aggregation method controls
 output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
   checkboxInput('showDSTypeAndPlotAggWgts', 
                 'Show dataset type and aggregation method', value=FALSE)
