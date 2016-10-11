@@ -4,9 +4,8 @@ colnamesOpts <- reactive({
 
 xOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
-  if (plotType() == 'violin') getFactorVarNames(dataset()) else 
-    colnamesOpts()[if (plotType() == 'histogram')
-      getNumericVarNames(dataset()) else T]
+  if (plotType() == 'violin') return(getFactorVarNames(dataset()))
+  if (plotType() == 'histogram') getNumericVarNames(dataset()) else colnamesOpts()
 })
 
 yOpts <- reactive({
