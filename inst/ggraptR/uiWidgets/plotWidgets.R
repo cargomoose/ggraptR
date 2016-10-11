@@ -115,8 +115,10 @@ output$shapeCtrl <- renderUI({
 output$binWidthCtrl <- renderUI({
   if (!is.null(displayBinWidthCond()) && !is.null(histMaxBinWidth()) 
       && displayBinWidthCond()) {
+    maxVal <- histMaxBinWidth()
+    minVal <- stepVal <- if (maxVal > 10) 1 else 0.1
     sliderInput('binWidth', label = "Bin Width",
-                min=1, max=histMaxBinWidth(), value=isolate(binWidth()), step=1) 
+                min=minVal, max=maxVal, value=isolate(binWidth()), step=stepVal) 
   }
 })
 
