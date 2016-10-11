@@ -1,5 +1,3 @@
-#### widget options
-## dataset colnames options reactive
 colnamesOpts <- reactive({
   dataset <- dataset()
   if (!is.null(dataset)) {
@@ -7,7 +5,6 @@ colnamesOpts <- reactive({
   }
 })
 
-## color options reactive
 colOpts <- reactive({
   dataset <- dataset()
   if (is.null(dataset)) return()
@@ -23,7 +20,6 @@ colOpts <- reactive({
   res
 })
 
-## fill options reactive
 fillOpts <- reactive({
   dataset <- dataset()
   if (is.null(dataset)) return()
@@ -32,7 +28,6 @@ fillOpts <- reactive({
   fillOpts      
 })
 
-## facet options reactive
 facetOpts <- reactive({
   dataset <- dataset()
   if (is.null(dataset)) return()
@@ -41,12 +36,10 @@ facetOpts <- reactive({
   facetOpts
 })
 
-## size options reactive
 sizeOpts <- reactive({
   c('None', numericVars())
 })
 
-## shape options reactive
 shapeOpts <- reactive({
   dataset <- dataset()
   if (is.null(dataset)) return()
@@ -55,7 +48,6 @@ shapeOpts <- reactive({
   c('None', varsUniqValsCntLOE6)
 })
 
-## histogram max bin width reactive
 histMaxBinWidth <- reactive({
   dataset <- dataset()
   if (!is.null(dataset) && !is.null(input$x) && input$x %in% colnames(dataset)) {

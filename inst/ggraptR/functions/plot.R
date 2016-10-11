@@ -1,13 +1,12 @@
-## function for scatter plot
 plotScatter <- function(dataset, ls) {
   flog.debug("plot::plotScatter() - Begin", name='all')  
   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
-    if (is.null(ls$size)) 
-    geom_point(aes_string(shape=ls$shapeAsFactor), 
-               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
-    geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
-               alpha=ls$alpha, position=ls$jitter)
+    if (is.null(ls$size))
+      geom_point(aes_string(shape=ls$shapeAsFactor), 
+                 alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
+      geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
+                 alpha=ls$alpha, position=ls$jitter)
   p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
@@ -22,7 +21,6 @@ plotScatter <- function(dataset, ls) {
   p
 }
 
-## function for points overlay
 plotPointsOverlay <- function(plot, ls) {
   flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
   
@@ -39,7 +37,6 @@ plotPointsOverlay <- function(plot, ls) {
   p
 }
 
-## function for line plot
 plotLine <- function(dataset, ls) {
   flog.debug("plot::plotLine() - Begin", name='all')
   
@@ -56,7 +53,6 @@ plotLine <- function(dataset, ls) {
   p
 }
 
-## function for path plot
 plotPath <- function(dataset, ls) {
   flog.debug("plot::plotPath() - Begin", name='all')   
   
@@ -73,20 +69,16 @@ plotPath <- function(dataset, ls) {
   p
 }
 
-## function for histogram
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
-  
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_histogram(alpha=ls$alpha, position='identity', binwidth=ls$binWidth) + 
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  
   flog.debug("plot::plotHistogram() - End", name='all')    
   p
 }
 
-## function for density plot 
 plotDensity <- function(dataset, ls) {
   flog.debug("plot::plotDensity() - Begin", name='all')      
 
@@ -95,42 +87,34 @@ plotDensity <- function(dataset, ls) {
                  mapping=do.call(aes_string, 
                                  c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
                                    if (!ls$densBlkLineCond) list(color=ls$fillAsFactor))))
-  p <- p + if (!is.null(ls$fill)) 
-    do.call(guides, c(list(group=guide_legend(title=ls$fill), 
-                           fill=guide_legend(title=ls$fill)), 
-                      if (!ls$densBlkLineCond) list(color=guide_legend(title=ls$fill))))
+  p <- p + if (!is.null(ls$fill)) do.call(
+    guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
+              if (!ls$densBlkLineCond) list(color=guide_legend(title=ls$fill))))
   
-  flog.debug("plot::plotDensity() - End", name='all')   
+  flog.debug("plot::plotDensity() - End", name='all')
   p
 }
 
-## function for box plot
 plotBox <- function(dataset, ls) {
   flog.debug("plot::plotBox() - Begin", name='all')     
-  
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  
   flog.debug("plot::plotBox() - End", name='all')   
   p
 }
 
-## function for bar plot
 plotBar <- function(dataset, ls) {
   flog.debug("plot::plotBar() - Begin", name='all')   
-
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  
   flog.debug("plot::plotBar() - End", name='all')
   p
 }
 
-## function for scatter plot
 plotPairs <- function(dataset, ls) {
   flog.debug("plot::plotPairs() - Begin", name='all')  
   

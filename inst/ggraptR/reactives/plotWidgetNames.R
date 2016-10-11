@@ -36,10 +36,9 @@ scatterWidgets <- reactive({
   wgts
 })
 
-## line plot widgets
 lineWidgets <- reactive({
   flog.debug("plotWidgetNames::lineWidgets() - Start", name='all')
-  
+
   wgts <- c('plotType', 'x', 'y')
   if (input$showAesWgts){
     flog.debug("plotWidgetNames::lineWidgets() - input$showAesWgts", name='all')

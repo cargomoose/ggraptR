@@ -14,8 +14,7 @@ output$reactiveCtrl <- renderUI({
 
 ## upon-manual-submit button
 output$submitCtrl <- renderUI({
-  bsButton("submit", label="Submit", icon=icon("refresh"), type="action", 
-                    block=TRUE)
+  bsButton("submit", label="Submit", icon=icon("refresh"), type="action", block=TRUE)
 })
 
 output$plotLog <- renderText({

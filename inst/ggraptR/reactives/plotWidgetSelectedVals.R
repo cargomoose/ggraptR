@@ -16,7 +16,6 @@ x_sel <- reactive({
 ## y selected
 y_sel <- reactive({
   if (is.null(input$dataset)) return()
-  
   if (!is.null(yOrig()) && !is.null(colnamesOpts()) && yOrig() %in% colnamesOpts()) {
       return(yOrig())
   }
@@ -31,7 +30,6 @@ y_sel <- reactive({
 ## pairsPlot columns selected
 columns_sel <- reactive({
   if (is.null(input$dataset)) return()
-  
   if (!is.null(columns()) && !is.null(colnamesOpts()) && columns() %in% colnamesOpts()) {
       return(columns())
   }

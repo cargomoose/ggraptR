@@ -17,7 +17,7 @@ getYearColumnName <- function(df) {
 }
 
 
-## this function determines the name of the month column (in YYYY-MM format)
+## determines the name of the month column (in YYYY-MM format)
 getMonthColumnName <- function(df) {
   firstRow <- df[1, ]
   yearMonthPtrn <- '^(18|19|20)[0-9]{2}[- /.](0[1-9]|1[012])$'
@@ -32,7 +32,7 @@ getMonthColumnName <- function(df) {
 }
 
 
-## this function determines the name of the day column (in YYYY-MM-DD format)
+## determines the name of the day column (in YYYY-MM-DD format)
 getDateColumnName <- function(df) {
   firstRow <- as.character(df[1, ])
   datePtrn <- '^(18|19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$'
@@ -47,26 +47,24 @@ getDateColumnName <- function(df) {
 }
 
 
-## this function grabs the names of factor variables
+## grabs the names of factor variables
 getFactorVarNames <- function(df) {
   colnames(df)[sapply(df, is.factor)]
 }
 
-
-## this function grabs the names of numeric variables
+## grabs the names of numeric variables
 getNumericVarNames <- function(df) {
   colnames(df)[sapply(df, is.numeric)]
 }
 
-
-## this function grabs the names variables of whose number of unique values does not exceed 
+## grabs the names variables of whose number of unique values does not exceed 
 ## a specified threshold (LOE: less than or equal to)
 getVarNamesUniqValsCntLOEN <- function(df, n=100) {
   colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
 }
 
 
-## this function gets all variable names of data frame objects that are loaded into memory
+## gets all variable names of data frame objects that are loaded into memory
 getLoadedDataFrameNames <- function(env=.GlobalEnv) {
   objNames <- ls(env)
   dfNames <- c()
@@ -80,7 +78,7 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
 }
 
 
-## this function modifies and ensures proper variable name
+## modifies and ensures proper variable name
 ## for semi-automatic aggregation dataset column names
 ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   if (tolower(var) %in% c('none', '.')) return(var)
@@ -104,22 +102,14 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   var
 }
 
-
-
-
-## function to convert 'None' to NULL
 convertNoneToNULL <- function(var) {
-  if (tolower(var)=='none' || !nchar(var)) NULL else var
+  if (is.null(var) || tolower(var)=='none' || !nchar(var)) NULL else var
 }
 
-
-## 
 varNameAsFactorOrNULL <- function(var) {
   if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
 }
 
-
-## function to check if specified widgets are loaded on shiny UI
 checkWidgetsLoaded <- function(input, widgets) {
   for (widget in widgets) {
     if (is.null(input[[widget]])) {
@@ -128,7 +118,6 @@ checkWidgetsLoaded <- function(input, widgets) {
   }
   TRUE
 }
-
 
 ## function for cleaning (removing duplicates or "None" values, etc.)
 cleanPlotAggBy <- function(x, y, aggBy) {
@@ -146,7 +135,7 @@ cleanPlotAggBy <- function(x, y, aggBy) {
 }
 
 
-## this function takes two numeric ranges and returns TRUE if the two ranges overlap;
+## takes two numeric ranges and returns TRUE if the two ranges overlap;
 ## it is used to ensure that numeric xlim range has been updated for new dataset and x variables
 ## when plot type is set to histogram (to prevent an error message)
 checkTwoRangesOverlap <- function(range1, range2) {
@@ -158,7 +147,7 @@ checkTwoRangesOverlap <- function(range1, range2) {
 }
 
 
-## this function ensures correct plot inputs for an updated dataset
+## ensures correct plot inputs for an updated dataset
 ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
@@ -178,7 +167,7 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
 }
 
 
-## this function removes elements that are not part of a dataset's column variables
+## removes elements that are not part of a dataset's column variables
 rmElemsNotInDatasetCols <- function(elems, dataset) {
   elems[elems %in% colnames(dataset)]
 }
@@ -192,7 +181,7 @@ print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion 
     spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
 }
 
-## this function takes a dataset, variable name, and variable's limit (e.g. x and xlim)
+## takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;
 ## for e.g. if x is a continuous variable, then xlim should be a numeric range;
 ## for e.g. if y is a factor or character variable, then ylim should be a vector of discrete values;

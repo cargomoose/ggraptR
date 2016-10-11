@@ -1,4 +1,3 @@
-## scatter plot inputs
 scatterPlotInputs <- reactive({
   flog.debug("plot::scatterPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) {
@@ -13,7 +12,6 @@ scatterPlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## line plot inputs
 linePlotInputs <- reactive({
   flog.debug("plot::linePlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -22,7 +20,6 @@ linePlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## line points overlay inputs
 linePtsOverlayInputs <- reactive({
   flog.debug("plot::linePtsOverlayInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -32,8 +29,6 @@ linePtsOverlayInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-
-## bar plot inputs
 barPlotInputs <- reactive({
   flog.debug("plot::barPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -43,7 +38,6 @@ barPlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## histogram inputs
 histogramInputs <- reactive({
   flog.debug("plot::histogramInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -53,7 +47,6 @@ histogramInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## density plot inputs
 densityPlotInputs <- reactive({
   flog.debug("plot::densityPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -63,7 +56,6 @@ densityPlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## box plot inputs
 boxPlotInputs <- reactive({
   flog.debug("plot::boxPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -72,7 +64,6 @@ boxPlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## path plot inputs
 pathPlotInputs <- reactive({
   flog.debug("plot::pathPlotInputs() - Begin", name='all')
   if (is.null(plotDF())) return()
@@ -104,7 +95,6 @@ pairsPlotInputs <- reactive({
   ensureCorrectPlotInputs(pil, colnames(plotDF()))
 })
 
-## plot reactive
 plotInput <- reactive({
   flog.debug("plot::plotInput() - Begin", name='all')
   flog.debug("systime - begin", name='all')
