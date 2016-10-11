@@ -1,16 +1,8 @@
 ## x selected
 x_sel <- reactive({
   if (is.null(input$dataset)) return()
-  
-  if (!is.null(x()) && !is.null(colnamesOpts()) && x() %in% colnamesOpts()) {
-      return(x())
-  }
-  
-  default_choice <- list(diamonds='carat',
-                         mtcars='mpg',
-                         rock='area',
-                         iris='Pental.Length')
-  return(default_choice[[input$dataset]])
+  if (!is.null(x()) && !is.null(colnamesOpts()) && x() %in% colnamesOpts()) return(x())
+  list(diamonds='carat', mtcars='mpg', rock='area', iris='Petal.Width')[[input$dataset]]
 })
 
 ## y selected
@@ -19,12 +11,7 @@ y_sel <- reactive({
   if (!is.null(yOrig()) && !is.null(colnamesOpts()) && yOrig() %in% colnamesOpts()) {
       return(yOrig())
   }
-      
-  default_choice <- list(diamonds='price',
-                         mtcars='hp',
-                         rock='peri',
-                         iris='Sepal.Width')
-  return(default_choice[[input$dataset]])
+  list(diamonds='price', mtcars='hp', rock='peri', iris='Sepal.Width')[[input$dataset]]
 })
 
 ## pairsPlot columns selected
@@ -33,12 +20,10 @@ columns_sel <- reactive({
   if (!is.null(columns()) && !is.null(colnamesOpts()) && columns() %in% colnamesOpts()) {
       return(columns())
   }
-  
-  default_choice <- list(diamonds=c('cut', 'price'),
-                         mtcars=c('hp', 'mpg', 'cyl'),
-                         rock=c("peri", "shape", "area", "perm"),
-                         iris=c('Sepal.Length', 'Species'))
-  return(default_choice[[input$dataset]])
+  list(diamonds=c('cut', 'price'),
+       mtcars=c('hp', 'mpg', 'cyl'),
+       rock=c("peri", "shape", "area", "perm"),
+       iris=c('Sepal.Length', 'Species'))[[input$dataset]]
 })
 
 ## color selected

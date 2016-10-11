@@ -1,10 +1,8 @@
-#### widgets required by plot type
-## facet widgets
+# widgets required by plot type
 facetWidgets <- c('facetRow', 'facetCol', 'facetWrap', 'facetScale')
 
-## scatter plot widgets
 scatterWidgets <- reactive({
-  flog.debug("plotWidgetNames::scatterWidgets() - Begin", name='all')
+  flog.debug("plotWidgetNames::scatterWidgets()", name='all')
   
   if (is.null(input$showAesWgts)){
     flog.debug("plotWidgetNames::scatterWidgets() - is.null(input$showAesWgts) - End", 

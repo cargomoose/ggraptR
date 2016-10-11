@@ -65,7 +65,6 @@ displayShapeCond <- reactive({
   display
 })
 
-## display size condition reactive
 displaySizeCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()
   display <- FALSE
@@ -78,7 +77,6 @@ displaySizeCond <- reactive({
   display
 })
 
-## display smooth condition reactive
 displaySmthCond <- reactive({
   if (is.null(input$plotType) || is.null(xType()) || is.null(yType()) 
       || is.null(input$showAesWgts)) return()
@@ -97,7 +95,6 @@ displaySmthCond <- reactive({
   display  
 })
 
-## display jitter condition reactive 
 displayJitCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()
   display <- FALSE
@@ -115,7 +112,7 @@ displayCoordFlipCond <- reactive({
     input$showAesWgts && input$plotType != 'pairs'
 })
 
-## display size magnifier condition reactive (belongs to advanced control widgets)
+# size magnifier. Belongs to advanced control widgets
 displaySizeMagCond <- reactive({
   if (is.null(input$plotType) || is.null(input$showAesWgts)) return()
   display <- FALSE
@@ -128,7 +125,6 @@ displaySizeMagCond <- reactive({
   display
 })
 
-## display bin width condition reactive
 displayBinWidthCond <- reactive({
   if (!is.null(input$plotType) && !is.null(input$x) && !is.null(input$showAesWgts)
       && input$x %in% finalDFNumericVars() && input$showAesWgts) {
@@ -136,29 +132,27 @@ displayBinWidthCond <- reactive({
   }
 })
 
-## display density black line condition reactive
+# density black line
 displayDensBlkLineCond <- reactive({
   if (!is.null(input$plotType) && !is.null(input$showAesWgts)) {
     input$plotType=='density' & input$showAesWgts
   }
 })
 
-
-## display points overlay checkbox condition reactive
+# points overlay checkbox
 displayPtsOverlayCond <- reactive({
   if (!is.null(input$plotType)) {
     input$plotType %in% c('line', 'path')
   }
 })
 
-## display additional aggregation select field condition reactive
+# display additional aggregation select field
 displayPlotAddAggBy <- reactive({
   if (!is.null(input$showDSTypeAndPlotAggWgts) && !is.null(semiAutoAggOn())) {
     input$showDSTypeAndPlotAggWgts & semiAutoAggOn()
   }
 })
 
-## display xlim condition reactive
 displayXlim <- reactive({
   if (!is.null(dataset()) && !is.null(input$x) && !is.null(y())
       && !is.null(input$showXYRangeWgts)) {
@@ -166,7 +160,6 @@ displayXlim <- reactive({
   }
 })
 
-## display ylim condition reactive
 displayYlim <- reactive({
   if (!is.null(dataset()) && !is.null(input$x) && !is.null(y()) && 
       !is.null(input$plotType)
@@ -175,15 +168,13 @@ displayYlim <- reactive({
   }
 })
 
-## display raw-vs-manual-agg condition reactive
+# raw-vs-manual-agg
 displayRawVsManAgg <- reactive({
   if (!is.null(input$showDSTypeAndPlotAggWgts)) {
     input$showDSTypeAndPlotAggWgts
   }
 })
 
-
-## display plot aggregation method reactive
 displayPlotAggMeth <- reactive({
   if (!is.null(input$showDSTypeAndPlotAggWgts)) {
     input$showDSTypeAndPlotAggWgts

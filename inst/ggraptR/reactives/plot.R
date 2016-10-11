@@ -1,91 +1,62 @@
-## scatter plot
 scatterPlot <- reactive({
-  flog.debug("plot::scatterPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || is.null(scatterWidgetsLoaded()) || !scatterWidgetsLoaded() 
+  flog.debug("plot::scatterPlot()", name='all')
+  if (is.null(plotDF()) || is.null(scatterWidgetsLoaded()) || !scatterWidgetsLoaded() 
       || !(y() %in% finalDFVars())) return()
-  flog.debug("plot::scatterPlot() - End", name='all')
-  plotScatter(dataset, scatterPlotInputs())
+  plotScatter(plotDF(), scatterPlotInputs())
 })
 
-## line plot
 linePlot <- reactive({
-  flog.debug("plot::linePlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || !lineWidgetsLoaded() || !(y() %in% finalDFVars())) return()
-  p <- plotLine(dataset, linePlotInputs())
-  
-  ## line plot with points overlay
-  if (!linePtsOverlayWidgetsLoaded()) return(p)
-  if (input$ptsOverlayCond) {
-    p <- plotPointsOverlay(p, linePtsOverlayInputs())
-  }
-  
-  flog.debug("plot::linePlot() - End", name='all')
-  p
+  flog.debug("plot::linePlot()", name='all')
+  if (is.null(plotDF()) || !lineWidgetsLoaded() || !(y() %in% finalDFVars())) return()
+  p <- plotLine(plotDF(), linePlotInputs())
+  if (linePtsOverlayWidgetsLoaded() && input$ptsOverlayCond) 
+    plotPointsOverlay(p, linePtsOverlayInputs()) else p
 })
 
-## path plot 
 pathPlot <- reactive({
-  flog.debug("plot::pathPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || !pathWidgetsLoaded() || !(y() %in% finalDFVars())) return()
-  p <- plotPath(dataset, pathPlotInputs())
+  flog.debug("plot::pathPlot()", name='all')
+  if (is.null(plotDF()) || !pathWidgetsLoaded() || !(y() %in% finalDFVars())) return()
+  p <- plotPath(plotDF(), pathPlotInputs())
   
-  ## path plot with points overlay
-  if (!pathPtsOverlayWidgetsLoaded()) return(p)
-  if (!is.null(input$ptsOverlayCond) && input$ptsOverlayCond) {
-    p <- plotPointsOverlay(p, pathPtsOverlayInputs())
-  }
-  
-  flog.debug("plot::pathPlot() - End", name='all')
-  p
+  if (pathPtsOverlayWidgetsLoaded() &&!is.null(input$ptsOverlayCond) 
+      && input$ptsOverlayCond) 
+    plotPointsOverlay(p, pathPtsOverlayInputs()) else p
 })
 
-## histogram
 histogram <- reactive({
-  flog.debug("plot::histogram() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || !histogramWidgetsLoaded()) return()
-  flog.debug("plot::histogram() - End", name='all')
-  plotHistogram(dataset, histogramInputs())
+  flog.debug("plot::histogram()", name='all')
+  if (is.null(plotDF()) || !histogramWidgetsLoaded()) return()
+  plotHistogram(plotDF(), histogramInputs())
 })
 
-## density plot
 densityPlot <- reactive({
-  flog.debug("plot::densityPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || !densityWidgetsLoaded()) return()
-  flog.debug("plot::densityPlot() - End", name='all')
-  plotDensity(dataset, densityPlotInputs())
+  flog.debug("plot::densityPlot()", name='all')
+  if (is.null(plotDF()) || !densityWidgetsLoaded()) return()
+  plotDensity(plotDF(), densityPlotInputs())
 })
 
-## box plot
 boxPlot <- reactive({
-  flog.debug("plot::boxPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || is.null(boxPlotInputs()) || !boxWidgetsLoaded() 
+  flog.debug("plot::boxPlot()", name='all')
+  if (is.null(plotDF()) || is.null(boxPlotInputs()) || !boxWidgetsLoaded() 
       || !(y() %in% finalDFVars())) return()
-  flog.debug("plot::boxPlot() - End", name='all')
-  plotBox(dataset, boxPlotInputs())
+  plotBox(plotDF(), boxPlotInputs())
 })
 
-## bar plot
 barPlot <- reactive({
-  flog.debug("plot::barPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || !barWidgetsLoaded() || !(y() %in% finalDFVars())) return()
-  flog.debug("plot::barPlot() - End", name='all')
-  plotBar(dataset, barPlotInputs())
+  flog.debug("plot::barPlot()", name='all')
+  if (is.null(plotDF()) || !barWidgetsLoaded() || !(y() %in% finalDFVars())) return()
+  plotBar(plotDF(), barPlotInputs())
+})
+
+violinPlot <- reactive({
+  flog.debug("plot::violinPlot()", name='all')
+  if (is.null(plotDF()) || !violinWidgetsLoaded() || !(y() %in% finalDFVars())) return()
+  plotViolin(plotDF(), violinInputs())
 })
 
 pairsPlot <- reactive({
-  flog.debug("plot::pairsPlot() - Begin", name='all')
-  dataset <- plotDF()
-  if (is.null(dataset) || is.null(pairsPlotInputs()) || !pairsWidgetsLoaded()) return()
-  p <- plotPairs(dataset, pairsPlotInputs())
-  
-  flog.debug("plot::pairsPlot() - End", name='all')
-  p
+  flog.debug("plot::pairsPlot()", name='all')
+  if (is.null(plotDF()) || is.null(pairsPlotInputs()) || !pairsWidgetsLoaded()) return()
+  plotPairs(plotDF(), pairsPlotInputs())
 })
 

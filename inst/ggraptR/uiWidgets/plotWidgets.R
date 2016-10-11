@@ -28,23 +28,19 @@ output$plotAggMethCtrl <- renderUI({
   }
 })
 
-## x-axis options
 output$xCtrl <- renderUI({
   if (!is.null(input$dataset) && displayXCond()) {
-    selectInput('x', 'X', choices= 
-      colnamesOpts()[if (plotType() == 'histogram') !sapply(dataset(),is.factor) else T], 
-                selected=isolate(x_sel()))
+    selectInput('x', 'X', choices=xOpts(), selected=isolate(x_sel()))
   }
 })
 
-## y-axis options
 output$yCtrl <- renderUI({
   if (!is.null(input$dataset) && displayYCond()) {
-    selectInput('y', 'Y', choices=colnamesOpts(), selected=isolate(y_sel()))
+    selectInput('y', 'Y', choices=yOpts(), selected=isolate(y_sel()))
   }
 })
 
-## columns for pairsPlot options
+# columns for pairsPlot
 output$columnsCtrl <- renderUI({
   if (!is.null(input$dataset) && displayColumnsCond()) {
     selectInput('columns', 'Columns', choices=colnamesOpts(), 

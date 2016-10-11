@@ -1,39 +1,28 @@
 colnamesOpts <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-    names(dataset)
-  }
+  names(dataset())
 })
 
-colOpts <- reactive({
-  dataset <- dataset()
-  if (is.null(dataset)) return()
-  if (is.null(input$plotType)) return()
 
-  res <- if (input$plotType %in% c('scatter', 'pairs')) {
+colOpts <- reactive({
+  if (is.null(dataset()) || is.null(input$plotType)) return()
+  if (input$plotType %in% c('scatter', 'pairs')) {
     c('None', names(dataset()))
   } else if (input$plotType %in% c('line', 'path')) {
-    varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset, 6)
+    varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset(), 6)
     c('None', factorVars(), varsUniqValsCntLOE6)
   }
-  
-  res
 })
 
 fillOpts <- reactive({
-  dataset <- dataset()
-  if (is.null(dataset)) return()
-  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset, 6)
-  fillOpts <- c('None', factorVars(), varsUniqValsCntLOE6)
-  fillOpts      
+  if (is.null(dataset())) return()
+  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset(), 6)
+  c('None', factorVars(), varsUniqValsCntLOE6)
 })
 
 facetOpts <- reactive({
-  dataset <- dataset()
-  if (is.null(dataset)) return()
-  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset, 6)
-  facetOpts <- c('None', factorVars(), varsUniqValsCntLOE6)
-  facetOpts
+  if (is.null(dataset())) return()
+  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset(), 6)
+  c('None', factorVars(), varsUniqValsCntLOE6)
 })
 
 sizeOpts <- reactive({
@@ -41,25 +30,20 @@ sizeOpts <- reactive({
 })
 
 shapeOpts <- reactive({
-  dataset <- dataset()
-  if (is.null(dataset)) return()
-  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset, 6)
-  #c('None', setdiff(varsUniqValsCntLOE6, numericVars()))
+  if (is.null(dataset())) return()
+  varsUniqValsCntLOE6 <- getVarNamesUniqValsCntLOEN(dataset(), 6)
   c('None', varsUniqValsCntLOE6)
 })
 
 histMaxBinWidth <- reactive({
   dataset <- dataset()
   if (!is.null(dataset) && !is.null(input$x) && input$x %in% colnames(dataset)) {
-	maxBinWidth <- round(diff(range(dataset[[input$x]], na.rm=TRUE)))
-	maxBinWidth
+  	round(diff(range(dataset[[input$x]], na.rm=TRUE)))
   }
 })
 
 ## additional aggregation options reactive
 plotAddAggByOpts <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-	  setdiff(origVars(), plotSemiAutoAggByBase())
-  }
+  if (is.null(dataset())) return()
+	setdiff(origVars(), plotSemiAutoAggByBase())
 })
