@@ -1,6 +1,6 @@
 scatterPlot <- reactive({
   flog.debug("plot::scatterPlot()", name='all')
-  if (is.null(plotDF()) || is.null(scatterWidgetsLoaded()) || !scatterWidgetsLoaded() 
+  if (is.null(plotDF()) || is.null(scatterWidgetsLoaded()) || !scatterWidgetsLoaded()
       || !(y() %in% finalDFVars())) return()
   plotScatter(plotDF(), scatterPlotInputs())
 })

@@ -29,7 +29,7 @@ verticalLayout(
   
   fluidRow(
     column(6, uiOutput('colCtrl')),
-    column(6, uiOutput('treatAsFacVarColCtrl'))),
+    column(6, br(), uiOutput('treatAsFacVarColCtrl'))),
   
   fluidRow(
     column(6, uiOutput('fillCtrl')),
