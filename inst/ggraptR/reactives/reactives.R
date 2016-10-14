@@ -27,13 +27,17 @@ origNumericVars <- reactive({
 
 
 #### variables for dataset() -- raw or manually aggregated dataset
-
 ## processed dataset factor variables
 factorVars <- reactive({
   dataset <- dataset()
   if (!is.null(dataset)) {
     getFactorVarNames(dataset)
   }
+})
+
+categoricalVars <- reactive({
+  if (is.null(dataset())) return()
+  unique(c(getFactorVarNames(dataset()), getVarNamesUniqValsCntLOEN(dataset(), 6)))
 })
 
 ## processed dataset numeric variables
@@ -48,7 +52,7 @@ numericVars <- reactive({
 varsUniqValsCntLOEN <- reactive({
   dataset <- dataset()
   if (!is.null(dataset)) {
-    n <- input$nUniqValsCntThres
+    n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
     if (!is.null(n)) {
       getVarNamesUniqValsCntLOEN(dataset, n)
     }
@@ -56,9 +60,7 @@ varsUniqValsCntLOEN <- reactive({
 })
 
 
-
 #### variables for finalDF()
-
 ## number of rows
 nrows <- reactive({
   dataset <- finalDF()
