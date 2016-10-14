@@ -4,13 +4,15 @@ colnamesOpts <- reactive({
 
 xOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
-  if (plotType() %in% c('violin', 'box')) return(getFactorVarNames(dataset()))
-  if (plotType() == 'histogram') getNumericVarNames(dataset()) else colnamesOpts()
+  if (plotType() %in% c('violin', 'box', 'bar')) return(getFactorVarNames(dataset()))
+  if (plotType() %in% c('histogram', 'density')) 
+    getNumericVarNames(dataset()) else colnamesOpts()
 })
 
 yOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
-  if (plotType() %in% c('violin','box')) getNumericVarNames(dataset()) else colnamesOpts()
+  if (plotType() %in% c('violin', 'box', 'bar')) 
+    getNumericVarNames(dataset()) else colnamesOpts()
 })
 
 colOpts <- reactive({
