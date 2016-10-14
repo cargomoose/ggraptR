@@ -1,4 +1,4 @@
-## display plot and data table
+# display plot or table
 observeEvent(input$reactive, {
   shinyBS::updateButton(session, "submit", disabled = input$reactive)
   
@@ -30,13 +30,14 @@ observeEvent(input$reactive, {
   }
 })
 
-## view plot from import tab
+# view plot from import tab
 observe({
-  if(input$viewPlot > 0){
+  if (input$viewPlot > 0){
     session$sendCustomMessage("myCallbackHandler", "1")
   }
 })
 
+# reset inputs
 observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
@@ -47,21 +48,21 @@ observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = TRUE)
 })
 
-## disable/enable toggle between facet grid and facet wrap
+# disable/enable toggle between facet grid and facet wrap
 observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
   if (input$showFacetWgts) {
     if (noFacetSelected()) {
-      shinyjs::enable('facetCol')
-      shinyjs::enable('facetRow')
-      shinyjs::enable('facetWrap')
+      enable('facetCol')
+      enable('facetRow')
+      enable('facetWrap')
     } else if (facetGridSelected()) {
-      shinyjs::enable('facetCol')
-      shinyjs::enable('facetRow')
-      shinyjs::disable('facetWrap')
+      enable('facetCol')
+      enable('facetRow')
+      disable('facetWrap')
     } else if (facetWrapSelected()) {
-      shinyjs::disable('facetCol')
-      shinyjs::disable('facetRow')
-      shinyjs::enable('facetWrap')
+      disable('facetCol')
+      disable('facetRow')
+      enable('facetWrap')
     } 
   }
 })
