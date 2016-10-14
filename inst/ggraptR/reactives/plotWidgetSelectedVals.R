@@ -1,19 +1,3 @@
-## x selected
-x_sel <- reactive({
-  if (is.null(input$dataset)) return()
-  if (!is.null(x()) && !is.null(colnamesOpts()) && x() %in% colnamesOpts()) return(x())
-  list(diamonds='carat', mtcars='mpg', rock='area', iris='Petal.Width')[[input$dataset]]
-})
-
-## y selected
-y_sel <- reactive({
-  if (is.null(input$dataset)) return()
-  if (!is.null(yOrig()) && !is.null(colnamesOpts()) && yOrig() %in% colnamesOpts()) {
-      return(yOrig())
-  }
-  list(diamonds='price', mtcars='hp', rock='peri', iris='Sepal.Width')[[input$dataset]]
-})
-
 ## pairsPlot columns selected
 columns_sel <- reactive({
   if (is.null(input$dataset)) return()

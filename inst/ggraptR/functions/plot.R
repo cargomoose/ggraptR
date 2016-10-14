@@ -117,7 +117,7 @@ plotBar <- function(dataset, ls) {
 
 plotViolin <- function(dataset, ls) {
   flog.debug("plot::plotViolin() - Begin", name='all')
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+  p <- ggplot(dataset, aes_string(x=ls$xAsFactor, y=ls$y)) + 
     geom_violin(alpha=ls$alpha) + 
     aes_string(fill=ls$fillAsFactor) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))

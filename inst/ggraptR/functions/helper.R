@@ -152,13 +152,14 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
     if (!is.null(plotInputsList[[name]])) {
-      if (any(name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap')) &&
+      if (name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap') &&
           !(plotInputsList[[name]] %in% colnames)) {
-          plotInputsList[name] <- list(NULL)
-      } else if (any(name %in% c('color', 'size', 'shape')) &&
+        warning('Incorrect plot input has been nulled: ', name)
+        plotInputsList[name] <- list(NULL)
+      } else if (name %in% c('color', 'size', 'shape') &&
                  !(plotInputsList[[name]] %in% colnames)) {
-          asFactorName <- paste0(name, 'AsFactor')
-          plotInputsList[name] <- plotInputsList[asFactorName] <- list(NULL)
+        asFactorName <- paste0(name, 'AsFactor')
+        plotInputsList[name] <- plotInputsList[asFactorName] <- list(NULL)
       }
     }
   }

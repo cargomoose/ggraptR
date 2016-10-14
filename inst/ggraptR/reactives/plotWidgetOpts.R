@@ -13,7 +13,7 @@ yOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
   setdiff(if (plotType() %in% c('violin', 'box', 'bar'))
     numericVars() else colnamesOpts(), 
-    isolate(xOpts())[1])
+    if (isolate(displayXCond())) isolate(xOpts())[1])
 })
 
 colOpts <- reactive({

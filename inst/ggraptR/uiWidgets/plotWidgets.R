@@ -28,13 +28,13 @@ output$plotAggMethCtrl <- renderUI({
 
 output$xCtrl <- renderUI({
   if (!is.null(input$dataset) && displayXCond()) {
-    selectInput('x', 'X', choices=xOpts(), selected=isolate(x_sel()))
+    selectInput('x', 'X', choices=xOpts())
   }
 })
 
 output$yCtrl <- renderUI({
   if (!is.null(input$dataset) && displayYCond()) {
-    selectInput('y', 'Y', choices=yOpts(), selected=isolate(y_sel()))
+    selectInput('y', 'Y', choices=yOpts())
   }
 })
 

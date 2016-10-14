@@ -7,6 +7,10 @@ x <- reactive({
   input$x
 })
 
+xAsFactor <- reactive({
+  varNameAsFactorOrNULL(input$x)
+})
+
 yOrig <- reactive({
   input$y
 })
