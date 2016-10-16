@@ -77,7 +77,7 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
   }
 
   ## find numeric columns and round
-  numericVars <- getNumericVarNames(agg)
+  numericVars <- getIsNumericVarNames(agg)
 
   for (numericVar in numericVars) {
     agg[[numericVar]] <- round(agg[[numericVar]], nRndDeci)

@@ -4,16 +4,12 @@ colnamesOpts <- reactive({
 
 xOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
-  if (plotType() %in% c('violin', 'box', 'bar')) return(categoricalVars())
-  if (plotType() %in% c('histogram', 'density')) 
-    numericVars() else colnamesOpts()
+  if (plotType() %in% c('violin', 'box', 'bar')) categoricalVars() else numericVars()
 })
 
 yOpts <- reactive({
   if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
-  setdiff(if (plotType() %in% c('violin', 'box', 'bar'))
-    numericVars() else colnamesOpts(), 
-    if (isolate(displayXCond())) isolate(xOpts())[1])
+  setdiff(numericVars(), if (displayXCond()) x())
 })
 
 colOpts <- reactive({

@@ -12,7 +12,7 @@ origVars <- reactive({
 origFactorVars <- reactive({
   dataset <- rawDataset()
   if (!is.null(dataset)) {
-    getFactorVarNames(dataset)
+    getIsFactorVarNames(dataset)
   }
 })
 
@@ -20,35 +20,24 @@ origFactorVars <- reactive({
 origNumericVars <- reactive({
   dataset <- rawDataset()
   if (!is.null(dataset)) {
-    getNumericVarNames(dataset)
+    getIsNumericVarNames(dataset)
   }
 })
-
 
 
 #### variables for dataset() -- raw or manually aggregated dataset
-## processed dataset factor variables
-factorVars <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-    getFactorVarNames(dataset)
-  }
-})
-
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
-  unique(c(getFactorVarNames(dataset()), getVarNamesUniqValsCntLOEN(dataset(), 6)))
+  unique(c(getIsFactorVarNames(dataset()), if (nrow(dataset()) > 30) 
+    getVarNamesUniqValsCntLOEN(dataset(), 6)))
 })
 
-## processed dataset numeric variables
 numericVars <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-    getNumericVarNames(dataset)
-  }
+  if (is.null(dataset())) return()
+  setdiff(colnames(dataset()), categoricalVars())
 })
 
-## processed dataset variables with less than or equal to N unique values
+## variables with less than or equal to N unique values
 varsUniqValsCntLOEN <- reactive({
   dataset <- dataset()
   if (!is.null(dataset)) {
@@ -79,14 +68,14 @@ finalDFVars <- reactive({
 finalDFFactorVars <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset)) {
-    getFactorVarNames(dataset)
+    getIsFactorVarNames(dataset)
   }
 })
 
 finalDFNumericVars <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset)) {
-    getNumericVarNames(dataset)
+    getIsNumericVarNames(dataset)
   }
 })
 

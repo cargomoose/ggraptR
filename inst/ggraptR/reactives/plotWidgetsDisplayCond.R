@@ -8,7 +8,7 @@ displayXCond <- reactive({
 
 displayYCond <- reactive({
   if (!is.null(input$plotType)) {
-    !(input$plotType %in% c('histogram', 'density', 'pairs'))
+    !(input$plotType %in% c('pairs', 'histogram', 'density'))
   }
 })
 

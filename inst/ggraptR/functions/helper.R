@@ -48,12 +48,12 @@ getDateColumnName <- function(df) {
 
 
 ## grabs the names of factor variables
-getFactorVarNames <- function(df) {
+getIsFactorVarNames <- function(df) {
   colnames(df)[sapply(df, is.factor)]
 }
 
 ## grabs the names of numeric variables
-getNumericVarNames <- function(df) {
+getIsNumericVarNames <- function(df) {
   colnames(df)[sapply(df, is.numeric)]
 }
 
