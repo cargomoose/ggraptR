@@ -8,24 +8,6 @@ output$plotTypeCtrl <- renderUI({
                           #'2-Density', 'density2d'
 })
 
-## dataset type options (raw vs. manually aggregated)
-output$rawVsManAggCtrl <- renderUI({
-  if (!is.null(displayRawVsManAgg()) && displayRawVsManAgg()) {
-    selectInput("rawVsManAgg", "Dataset Type",
-                c("Raw Dataset" = 'raw', "Manually Aggregated" = 'manAgg'),
-                isolate(rawVsManAgg()))
-  }
-})
-
-## aggregation method options (for plot view only)
-output$plotAggMethCtrl <- renderUI({
-  if (!is.null(displayPlotAggMeth()) && displayPlotAggMeth()) {
-    selectInput('plotAggMeth', 'Aggregation Method', 
-                c('None', 'sum', 'mean', 'count', 'min', 'max', 'median'),
-                isolate(plotAggMeth()))
-  }
-})
-
 output$xCtrl <- renderUI({
   if (!is.null(input$dataset) && displayXCond()) {
     selectInput('x', 'X', choices=xOpts())
@@ -392,6 +374,25 @@ output$showThemeWgtsCtrl <- renderUI({
 output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
   checkboxInput('showDSTypeAndPlotAggWgts', 
                 'Show dataset type and aggregation method', value=FALSE)
+})
+
+
+## dataset type options (raw vs. manually aggregated)
+output$rawVsManAggCtrl <- renderUI({
+  if (!is.null(displayRawVsManAgg()) && displayRawVsManAgg()) {
+    selectInput("rawVsManAgg", "Dataset Type",
+                c("Raw Dataset" = 'raw', "Manually Aggregated" = 'manAgg'),
+                isolate(rawVsManAgg()))
+  }
+})
+
+## aggregation method options (for plot view only)
+output$plotAggMethCtrl <- renderUI({
+  if (!is.null(displayPlotAggMeth()) && displayPlotAggMeth()) {
+    selectInput('plotAggMeth', 'Aggregation Method', 
+                c('None', 'sum', 'mean', 'count', 'min', 'max', 'median'),
+                isolate(plotAggMeth()))
+  }
 })
 
 output$generatePlotCodeCtl <- renderUI({
