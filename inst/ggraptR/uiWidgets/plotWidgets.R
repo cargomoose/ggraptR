@@ -42,7 +42,7 @@ output$yCtrl <- renderUI({
 output$columnsCtrl <- renderUI({
   if (!is.null(input$dataset) && displayColumnsCond()) {
     selectInput('columns', 'Columns', choices=colnamesOpts(), 
-                selected=isolate(columns_sel()), multiple=T)
+                selected=colnamesOpts()[1:min(ncol(dataset()), 3)], multiple=T)
   }
 })
 
@@ -265,9 +265,7 @@ output$xlimCtrl <- renderUI({
                   min=xRange()[1], max=xRange()[2], value=xRange(), sep='')
     } else if (input$x %in% finalDFFactorVars()) {
       selectInput('xlim', label='X Value', 
-                  choices=xFactorVarUniqVals(), 
-                  #selected=xFactorVarUniqVals(),
-                  multiple=T)
+                  choices=xFactorVarUniqVals(), multiple=T)
     }
   }
 })
@@ -276,16 +274,13 @@ output$xlimCtrl <- renderUI({
 output$ylimCtrl <- renderUI({
   if (!is.null(displayYlim()) && displayYlim()) {
     y <- y()
-    
     if (y %in% finalDFNumericVars()) {
       if (is.null(yRange())) return()
       sliderInput("ylim", label="Y Range",
                   min=yRange()[1], max=yRange()[2], value=yRange(), sep='')
     } else if (y %in% finalDFFactorVars()) {
       selectInput('ylim', label='Y Value',
-                  choices=yFactorVarUniqVals(), 
-                  #selected=yFactorVarUniqVals(),
-                  multiple=T)
+                  choices=yFactorVarUniqVals(), multiple=T)
     }
   }
 })

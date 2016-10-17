@@ -3,12 +3,13 @@ colnamesOpts <- reactive({
 })
 
 xOpts <- reactive({
-  if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
+  if (is.null(dataset()) || is.null(plotType())) return()
   if (plotType() %in% c('violin', 'box', 'bar')) categoricalVars() else numericVars()
 })
 
 yOpts <- reactive({
-  if (is.null(dataset()) || is.null(plotType()) || is.null(colnamesOpts())) return()
+  if (is.null(dataset()) || is.null(plotType()) || 
+      (displayXCond() && is.null(x()))) return()
   setdiff(numericVars(), if (displayXCond()) x())
 })
 
