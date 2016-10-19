@@ -114,7 +114,9 @@ plotInput <- reactive({
   isHorisontalAxisBelongsDataset <- if (ptype == 'pairs') 
     !is.null(columns()) && columns() %in% colnamesOpts() else 
       !is.null(x()) && x() %in% colnamesOpts()
-  if (!universalPlotWidgetsLoaded() || !isHorisontalAxisBelongsDataset) return()
+  universalPlotWidgets <- c('plotType', 'x')
+  if (!checkWidgetsLoaded(input, universalPlotWidgets) || 
+      !isHorisontalAxisBelongsDataset) return()
 
   p <- do.call(paste0(ptype, if (ptype == 'histogram') '' else 'Plot'), list())
   if (is.null(p)) return()

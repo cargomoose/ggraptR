@@ -121,3 +121,12 @@ pairsWidgets <- reactive({
   flog.debug("plotWidgetNames::pairshWidgets()", name='all')
   c('plotType', 'columns', if (input$showAesWgts) c('fill', 'color'))
 })
+
+themeWidgets <- reactive({
+  flog.debug("plotWidgetNames::themeWidgets()", name='all')
+  c('plotTitle', 'xLabel', 'yLabel', 'hjust', 'vjust',
+    'labelFontFamily', 'labelFontFace', 
+    'labelFontColor', 'labelFontSize')
+})
+
+
