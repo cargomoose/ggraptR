@@ -181,6 +181,10 @@ print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion 
     spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
 }
 
+notNulls <- function(...) {
+  all(!sapply(list(...), is.null))
+}
+
 ## takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;
 ## for e.g. if x is a continuous variable, then xlim should be a numeric range;
