@@ -31,7 +31,7 @@ output$columnsCtrl <- renderUI({
 ## color control options
 output$colCtrl <- renderUI({
   if (!is.null(displayColCond()) && displayColCond()) {
-    selectInput('color', 'Color', colOpts(), selected="clarity") #isolate(color_sel())
+    selectInput('color', 'Color', colOpts(), isolate(color_sel()))
   }
 })
 

@@ -216,4 +216,3 @@ generateCodeReactive <- reactive({
 })
 
 log <- reactiveValues()
-

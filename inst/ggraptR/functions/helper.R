@@ -1,4 +1,3 @@
-
 ## note: the functions below will find year (YYYY), month (YYYY-MM), 
 ## and date (YYYY-MM-DD) between 1800-01-01 and 2099-12-31
 

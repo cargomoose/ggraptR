@@ -111,10 +111,10 @@ plotInput <- reactive({
   flog.debug(start.time, name='all')
   
   ptype <- plotType()
-  is_horis_axis_actual <- if (ptype == 'pairs') 
+  isHorisontalAxisBelongsDataset <- if (ptype == 'pairs') 
     !is.null(columns()) && columns() %in% colnamesOpts() else 
       !is.null(x()) && x() %in% colnamesOpts()
-  if (!universalPlotWidgetsLoaded() || !is_horis_axis_actual) return()
+  if (!universalPlotWidgetsLoaded() || !isHorisontalAxisBelongsDataset) return()
 
   p <- do.call(paste0(ptype, if (ptype == 'histogram') '' else 'Plot'), list())
   if (is.null(p)) return()

@@ -3,27 +3,18 @@ observeEvent(input$reactive, {
   shinyBS::updateButton(session, "submit", disabled = input$reactive)
   
   if (input$reactive) {
-
-    ## display plot reactively
-    output$plot <- renderPlot({
+    output$plot <- renderPlot({  # display plot reactively
       plotInput()
     }, height=700)
-    
-    ## display data table reactively
-    output$displayTable <- DT::renderDataTable({
+    output$displayTable <- DT::renderDataTable({  # display data table reactively
       DT::datatable(manAggDataset(), filter='bottom')
     })
-    
   } else {
-
-    ## display plot upon submit
-    output$plot <- renderPlot({
+    output$plot <- renderPlot({  # display plot upon submit
       input$submit
       isolate(plotInput())
     }, height=700)
-    
-    ## display data table upon submit
-    output$displayTable <- DT::renderDataTable({
+    output$displayTable <- DT::renderDataTable({  # display data table upon submit
       input$submit
       isolate(DT::datatable(manAggDataset(), filter='bottom'))
     })

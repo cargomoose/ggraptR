@@ -22,7 +22,8 @@ customDataset <- reactive({
     return()
   }
   if (is.null(input$header) | is.null(input$sep) | is.null(input$quote)){
-    flog.debug("dataset::customDataset() - is.null(input$header) | is.null(input$sep) | is.null(input$quote) - End", name='all')
+    flog.debug("dataset::customDataset() - is.null(input$header) | is.null(input$sep) | 
+               is.null(input$quote) - End", name='all')
     return()
   }
   
@@ -56,7 +57,6 @@ rawDatasetNames <- reactive({
 
 ## reactive variable for raw dataset
 rawDataset <- reactive({
-  
   flog.debug("dataset::rawDataset() - Begin", name='all')
   
   ## from dataset selection drop-down
@@ -67,23 +67,20 @@ rawDataset <- reactive({
   
   state$dataset_name <- input$dataset
   
-  ## if no custom dataset was uploaded, then set one of the preloaded datasets as raw dataset
+  ## if no custom dataset was uploaded, then set one of the preloaded datasets as raw
   if (is.null(input$file)) {
     flog.debug("dataset::rawDataset() - is.null(input$file) - End", name='all')
     get(input$dataset)
-  }
-  
-  ## if custom dataset was uploaded
-  else {
-    ## if custom dataset was selected, then set it as raw dataset
+  } else { # if custom dataset was uploaded
+    # if custom dataset was selected, then set it as raw dataset
     if (input$dataset == customDatasetName()) {
-      flog.debug("dataset::rawDataset() - input$dataset == customDatasetName() - End", name='all')
+      flog.debug("dataset::rawDataset() - input$dataset == customDatasetName() - End", 
+                 name='all')
       customDataset()      
-    } 
-    
-    ## if custom dataset was not selected, then set one of the preloaded datasets as raw dataset
-    else {
-      flog.debug("dataset::rawDataset() - !(input$dataset == customDatasetName()) - End", name='all')
+    } else {
+      ## if custom dataset was not selected, then set one of the preloaded datasets as raw
+      flog.debug("dataset::rawDataset() - !(input$dataset == customDatasetName()) - End", 
+                 name='all')
       get(input$dataset)
     }
   }
@@ -91,19 +88,17 @@ rawDataset <- reactive({
 
 ## manually aggregated dataset
 manAggDataset <- reactive({
-  
   flog.debug("dataset::manAggDataset() - Begin", name='all')
   
   ## if all fields for manual aggregation are filled in
   if (!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)) {
     ## return manually aggregated dataset
-    flog.debug("dataset::manAggDataset() - !is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)", name='all')
+    flog.debug("dataset::manAggDataset() - !is.null(input$aggBy) && 
+               !is.null(input$aggTarget) && !is.null(input$aggMeth)", name='all')
     df <- aggregate(rawDataset(), input$aggBy, input$aggTarget, input$aggMeth)
-  }
-  
-  ## else, return raw dataset  
-  else {
-    flog.debug("dataset::manAggDataset() - !(!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth))", name='all')
+  } else {  # return raw dataset  
+    flog.debug("dataset::manAggDataset() - !(!is.null(input$aggBy) && 
+               !is.null(input$aggTarget) && !is.null(input$aggMeth))", name='all')
     df <- rawDataset()
   }
 
@@ -113,7 +108,6 @@ manAggDataset <- reactive({
 
 ## raw or aggregated dataset
 dataset <- reactive({
-  
   flog.debug("dataset::dataset() - Begin", name='all')
 
   #if (is.null(input$rawVsManAgg)) return()
@@ -126,10 +120,7 @@ dataset <- reactive({
   if (input$rawVsManAgg == 'raw') {
     flog.debug("dataset::dataset() - input$rawVsManAgg == 'raw' - End", name='all')
     dataset <- rawDataset()
-  } 
-
-  ## aggregated dataset
-  else if (input$rawVsManAgg=='manAgg') {
+  } else if (input$rawVsManAgg=='manAgg') {  # aggregated dataset
     flog.debug("dataset::dataset() - input$rawVsManAgg=='manAgg' - End", name='all')
     dataset <- manAggDataset()
   }
@@ -144,7 +135,8 @@ dataset <- reactive({
 ## (that are NOT in the "additional aggregate-by" fields)
 plotSemiAutoAggByBase <- reactive({
   flog.debug("dataset::plotSemiAutoAggByBase() - Begin", name='all')
-  aggBy <- c(input$x, input$color, input$size, input$shape, input$fill, input$facetRow, input$facetCol, input$facetWrap)
+  aggBy <- c(input$x, input$color, input$size, input$shape, input$fill, input$facetRow, 
+             input$facetCol, input$facetWrap)
   aggBy <- cleanPlotAggBy(input$x, input$y, aggBy)
   flog.debug("dataset::plotSemiAutoAggByBase() - End", name='all')
   aggBy
@@ -153,7 +145,6 @@ plotSemiAutoAggByBase <- reactive({
 ## reactive for semi-automatic aggregate by
 ## base + additional aggregate-by fields
 plotSemiAutoAggBy <- reactive({
-  
   flog.debug("dataset::plotSemiAutoAggBy() - Begin", name='all')
   
   if (is.null(dataset())){
@@ -171,7 +162,6 @@ plotSemiAutoAggBy <- reactive({
 
 ## reactive for semi-automatic aggregated dataset
 semiAutoAggDF <- reactive({
-  
   flog.debug("dataset::semiAutoAggDF() - Begin", name='all')
   
   if (is.null(semiAutoAggOn())){
@@ -186,7 +176,8 @@ semiAutoAggDF <- reactive({
   if (semiAutoAggOn()) {
     flog.debug("dataset::semiAutoAggDF() - semiAutoAggOn()", name='all')
     if (is.null(plotSemiAutoAggBy())){
-      flog.debug("dataset::semiAutoAggDF() - is.null(plotSemiAutoAggBy()) - End", name='all')
+      flog.debug("dataset::semiAutoAggDF() - is.null(plotSemiAutoAggBy()) - End", 
+                 name='all')
       return()
     }
     
@@ -196,8 +187,10 @@ semiAutoAggDF <- reactive({
     
     vars <- c(aggBy, aggTarget)
     if (all(vars %in% colnames(dataset()))) {
-      semiAutoAggDF <- aggregate(dataset(), aggBy=aggBy, aggTarget=input$y, aggMeth=input$plotAggMeth)
-      flog.debug("dataset::semiAutoAggDF() - all(vars %in% colnames(dataset()) - End", name='all')
+      semiAutoAggDF <- aggregate(dataset(), aggBy=aggBy, aggTarget=input$y, 
+                                 aggMeth=input$plotAggMeth)
+      flog.debug("dataset::semiAutoAggDF() - all(vars %in% colnames(dataset()) - End", 
+                 name='all')
       semiAutoAggDF 
     }
   } 
@@ -205,7 +198,6 @@ semiAutoAggDF <- reactive({
 
 ## reactive variable for final dataset
 finalDF <- reactive({
-  
   flog.debug("dataset::finalDF() - Begin", name='all')
   
   if (is.null(dataset())){
@@ -221,9 +213,7 @@ finalDF <- reactive({
   if (semiAutoAggOn()){
     flog.debug("dataset::finalDF() - semiAutoAggOn() - End", name='all')
     semiAutoAggDF()
-  }
-  ## natural dataset (raw or manually aggregated dataset)
-  else{
+  } else{  # natural dataset (raw or manually aggregated dataset)
     flog.debug("dataset::finalDF() - !(semiAutoAggOn()) - End", name='all')
     dataset()
   }
@@ -233,7 +223,6 @@ finalDF <- reactive({
 ## reactive dataset used for plotting 
 ## (filtered version of finalDF(), using xlim and ylim)
 plotDF <- reactive({
-  
   flog.debug("dataset::plotDF() - Begin", name='all')
   
   dataset <- finalDF()
@@ -292,6 +281,6 @@ plotDF <- reactive({
   
   flog.debug("dataset::plotDF() - End", name='all')
   
-  return(dataset)
+  dataset
 })
 
