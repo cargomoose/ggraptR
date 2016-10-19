@@ -110,6 +110,7 @@ varNameAsFactorOrNULL <- function(var) {
 }
 
 checkWidgetsLoaded <- function(input, widgets) {
+  if (is.null(widgets)) return(FALSE)
   for (widget in widgets) {
     if (is.null(input[[widget]])) {
       return(FALSE)

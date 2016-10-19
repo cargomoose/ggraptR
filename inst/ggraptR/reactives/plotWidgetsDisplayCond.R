@@ -83,7 +83,7 @@ displaySmthCond <- reactive({
       display <- input$showAesWgts
     }
   }
-  display  
+  display
 })
 
 displayCoordFlipCond <- reactive({
@@ -105,8 +105,9 @@ displaySizeMagCond <- reactive({
 })
 
 displayBinWidthCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts, input$x, histMaxBinWidth()) &&
-    input$x %in% finalDFNumericVars() && input$showAesWgts && input$plotType=='histogram'
+  notNulls(input$plotType, input$showAesWgts, input$x) && 
+    input$x %in% finalDFNumericVars() && input$showAesWgts && 
+    input$plotType=='histogram' && !is.null(histMaxBinWidth())
 })
 
 # density black line
