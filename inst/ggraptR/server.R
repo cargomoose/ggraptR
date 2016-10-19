@@ -34,7 +34,6 @@ shinyServer(function(input, output, session) {
   source('./reactives/plotWidgetNames.R', local=TRUE)
   source('./reactives/plotWidgetOpts.R', local=TRUE)
   source('./reactives/plotWidgetsDisplayCond.R', local=TRUE)
-  source('./reactives/plotWidgetsLoadedCond.R', local=TRUE)
   source('./reactives/plotWidgetSelectedVals.R', local=TRUE)
   source('./reactives/plot.R', local=TRUE)
   source('./reactives/plotInput.R', local=TRUE)
