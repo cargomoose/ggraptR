@@ -69,7 +69,7 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
   dfNames <- c()
   for (objName in objNames) {
     obj <- get(objName)
-    if(any(class(obj)=='data.frame')) {  # class() can return many values and generate warning
+    if (any(class(obj)=='data.frame')) {
       dfNames <- c(dfNames, objName)
     } 
   }
@@ -86,7 +86,7 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   if (!(var %in% colnames)) {
     ## if semi-automatic aggregation is turned on
     if (semiAutoAggOn) {
-      return (if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
+      return(if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
     }
   } 
 
@@ -136,7 +136,8 @@ cleanPlotAggBy <- function(x, y, aggBy) {
 
 
 ## takes two numeric ranges and returns TRUE if the two ranges overlap;
-## it is used to ensure that numeric xlim range has been updated for new dataset and x variables
+## it is used to ensure that numeric xlim range has been updated for new dataset and 
+# x variables
 ## when plot type is set to histogram (to prevent an error message)
 checkTwoRangesOverlap <- function(range1, range2) {
   lowerRange1 <- range1[1]
@@ -182,14 +183,22 @@ print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion 
     spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
 }
 
-notNulls <- function(...) {
-  all(!sapply(list(...), is.null))
+notNulls <- function(...) {  # effective lazy implementation
+  for (el in list(...)) {
+    if (is.null(el)) return(F)
+  }
+  TRUE
+}
+
+anyNull <- function(...) {
+  !notNulls(...)
 }
 
 ## takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;
 ## for e.g. if x is a continuous variable, then xlim should be a numeric range;
-## for e.g. if y is a factor or character variable, then ylim should be a vector of discrete values;
+## for e.g. if y is a factor or character variable, then ylim should be a vector 
+# of discrete values;
 ## MODIFY THIS FUNCTION FOR CASES WHEN VARIABLE IS LOGICAL!!!
 # checkVarAndLimCompatible <- function(dataset, var, lim) {
 #   varType <- class(dataset[[var]])

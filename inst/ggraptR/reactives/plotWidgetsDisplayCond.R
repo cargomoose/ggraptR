@@ -1,41 +1,43 @@
-#### display conditional reactives
+# checks for display conditional reactives
+displayColumnsCond <- reactive({
+  notNulls(input$plotType) && input$plotType %in% c('pairs')
+})
 
 displayXCond <- reactive({
-  notNulls(input$dataset, input$plotType) && !(input$plotType %in% c('pairs'))
+  notNulls(input$plotType) && !(input$plotType %in% c('pairs'))
 })
 
 displayYCond <- reactive({
-  notNulls(input$dataset, input$plotType) && 
-    !(input$plotType %in% c('pairs', 'histogram', 'density'))
-})
-
-displayColumnsCond <- reactive({
-  notNulls(input$dataset, input$plotType) && input$plotType %in% c('pairs')
+  notNulls(input$plotType) && !(input$plotType %in% c('pairs', 'histogram', 'density'))
 })
 
 displayColCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && input$showAesWgts &&
+  notNulls(input$showAesWgts) && input$showAesWgts &&
     input$plotType %in% c('line', 'scatter', 'path', 'pairs')
+})
+
+displayGgpairsWgtsCond <- reactive({
+  notNulls(input$plotType) && input$plotType == 'pairs'
 })
 
 # for color
 displayTreatAsFacVarColCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && input$showAesWgts &&
+  notNulls(input$showAesWgts) && input$showAesWgts &&
     input$plotType == 'scatter'
 })
 
 displayFillCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && input$showAesWgts &&
+  notNulls(input$showAesWgts) && input$showAesWgts &&
     input$plotType %in% c('box', 'histogram', 'bar', 'density', 'violin', 'pairs')
 })
 
 displayPosCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && input$showAesWgts &&
+  notNulls(input$showAesWgts) && input$showAesWgts &&
     input$plotType %in% c('histogram', 'bar')
 })
 
 displayJitCond <- reactive({
-  if (!notNulls(input$plotType, input$showAesWgts)) return(F)
+  if (is.null(input$showAesWgts)) return(F)
   display <- FALSE
   if (input$plotType=='scatter') {
     display <- input$showAesWgts
@@ -47,7 +49,7 @@ displayJitCond <- reactive({
 })
 
 displayShapeCond <- reactive({
-  if (!notNulls(input$plotType, input$showAesWgts)) return(F)
+  if (is.null(input$showAesWgts)) return(F)
   display <- FALSE
   if (input$plotType=='scatter') {
     display <- input$showAesWgts
@@ -59,7 +61,7 @@ displayShapeCond <- reactive({
 })
 
 displaySizeCond <- reactive({
-  if (!notNulls(input$plotType, input$showAesWgts)) return(F)
+  if (is.null(input$showAesWgts)) return(F)
   display <- FALSE
   if (input$plotType=='scatter') {
     display <- input$showAesWgts
@@ -71,7 +73,7 @@ displaySizeCond <- reactive({
 })
 
 displaySmthCond <- reactive({
-  if (!notNulls(input$plotType, input$showAesWgts, xType(), yType())) return(F)
+  if (anyNull(input$showAesWgts, xType(), yType())) return(F)
   display <- FALSE
   if (input$plotType=='scatter') {
     if (xType()=='continuous' && yType()=='continuous')
@@ -87,13 +89,13 @@ displaySmthCond <- reactive({
 })
 
 displayCoordFlipCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) &&
+  notNulls(input$showAesWgts) &&
     input$showAesWgts && input$plotType != 'pairs'
 })
 
 # size magnifier. Belongs to advanced control widgets
 displaySizeMagCond <- reactive({
-  if (!notNulls(input$plotType, input$showAesWgts)) return(F)
+  if (is.null(input$showAesWgts)) return(F)
   display <- FALSE
   if (input$plotType=='scatter') {
     display <- input$showAesWgts
@@ -105,20 +107,20 @@ displaySizeMagCond <- reactive({
 })
 
 displayBinWidthCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts, input$x) && 
+  notNulls(input$showAesWgts, input$x) && 
     input$x %in% finalDFNumericVars() && input$showAesWgts && 
     input$plotType=='histogram' && !is.null(histMaxBinWidth())
 })
 
 # density black line
 displayDensBlkLineCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && 
+  notNulls(input$showAesWgts) && 
     input$plotType=='density' && input$showAesWgts
 })
 
 # points overlay checkbox
 displayPtsOverlayCond <- reactive({
-  notNulls(input$plotType, input$showAesWgts) && input$plotType %in% c('line', 'path')
+  notNulls(input$showAesWgts) && input$plotType %in% c('line', 'path')
 })
 
 # display additional aggregation select field

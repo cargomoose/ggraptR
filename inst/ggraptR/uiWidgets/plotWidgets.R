@@ -166,59 +166,75 @@ output$coordFlipCtrl <- renderUI({
 
 
 output$ggpairsUpContCtrl <- renderUI({
-  selectInput(
-    'ggpairsUpCont', NULL,
-    choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-    selected=eval(formals(ggpairs)$upper)$continuous)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsUpCont', NULL,
+      choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+      selected=eval(formals(ggpairs)$upper)$continuous)
+  }
 })
 
 output$ggpairsUpComboCtrl <- renderUI({
-  selectInput(
-    'ggpairsUpCombo', NULL,
-    choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
-    selected=eval(formals(ggpairs)$upper)$combo)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsUpCombo', NULL,
+      choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
+      selected=eval(formals(ggpairs)$upper)$combo)
+  }
 })
 
 output$ggpairsUpDiscrCtrl <- renderUI({
-  selectInput(
-    'ggpairsUpDiscr', NULL,
-    choices=c('facetba'='facetbar', 'ratio', 'blank'),
-    selected=eval(formals(ggpairs)$upper)$discrete)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsUpDiscr', NULL,
+      choices=c('facetba'='facetbar', 'ratio', 'blank'),
+      selected=eval(formals(ggpairs)$upper)$discrete)
+  }
 })
 
 output$ggpairsLowContCtrl <- renderUI({
-  selectInput(
-    'ggpairsLowCont', NULL, 
-    choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-    selected=eval(formals(ggpairs)$lower)$continuous)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsLowCont', NULL, 
+      choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+      selected=eval(formals(ggpairs)$lower)$continuous)
+  }
 })
 
 output$ggpairsLowComboCtrl <- renderUI({
-  selectInput(
-    'ggpairsLowCombo', NULL, 
-    choices=c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
-    selected=eval(formals(ggpairs)$lower)$combo)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsLowCombo', NULL, 
+      choices=c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
+      selected=eval(formals(ggpairs)$lower)$combo)
+  }
 })
 
 output$ggpairsLowDiscrCtrl <- renderUI({
-  selectInput(
-    'ggpairsLowDiscr', NULL, 
-    choices=c('facetba'='facetbar', 'ratio', 'blank'),
-    selected=eval(formals(ggpairs)$lower)$discrete)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsLowDiscr', NULL, 
+      choices=c('facetba'='facetbar', 'ratio', 'blank'),
+      selected=eval(formals(ggpairs)$lower)$discrete)
+  }
 })
 
 output$ggpairsDiagContCtrl <- renderUI({
-  selectInput(
-    'ggpairsDiagCont', NULL,
-    choices=c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
-    selected=eval(formals(ggpairs)$diag)$continuous)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsDiagCont', NULL,
+      choices=c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
+      selected=eval(formals(ggpairs)$diag)$continuous)
+  }
 })
 
 output$ggpairsDiagDiscrCtrl <- renderUI({
-  selectInput(
-    'ggpairsDiagDiscr', NULL,
-    choices=c('bar'='barDiag', 'blank'='blankDiag'),
-    selected=eval(formals(ggpairs)$diag)$discrete)
+  if (displayGgpairsWgtsCond()) {
+    selectInput(
+      'ggpairsDiagDiscr', NULL,
+      choices=c('bar'='barDiag', 'blank'='blankDiag'),
+      selected=eval(formals(ggpairs)$diag)$discrete)
+  }
 })
 
 
@@ -345,28 +361,41 @@ output$plotThemeCtrl <- renderUI({
 
 # next block is about show/hide checkbox widgets
 output$showAesWgtsCtrl <- renderUI({
-  checkboxInput('showAesWgts', 'Show aesthetics', value=TRUE)
+  if (!is.null(input$plotType)) {
+    checkboxInput('showAesWgts', 'Show aesthetics', value=TRUE)
+  }
 })
 
 output$showFacetWgtsCtrl <- renderUI({
-  checkboxInput('showFacetWgts', 'Show facets', value=FALSE)
+  if (!is.null(input$plotType)) {
+    checkboxInput('showFacetWgts', 'Show facets', value=FALSE)
+  }
 })
 
 output$showXYRangeWgtsCtrl <- renderUI({
-  checkboxInput('showXYRangeWgts', 'Show ranges', value=FALSE)
-})
-
-output$showPlotAggWgtCtrl <- renderUI({
-  checkboxInput('showPlotAggWgt', 'Show plot aggregations', value=FALSE)
+  if (!is.null(input$plotType)) {
+    checkboxInput('showXYRangeWgts', 'Show ranges', value=FALSE)
+  }
 })
 
 output$showThemeWgtsCtrl <- renderUI({
-  checkboxInput('showThemeWgts', 'Show themes', value=FALSE)
+  if (!is.null(input$plotType)) {
+    checkboxInput('showThemeWgts', 'Show themes', value=FALSE)
+  }
 })
 
+output$showPlotAggWgtCtrl <- renderUI({
+  if (!is.null(input$plotType)) {
+    checkboxInput('showPlotAggWgt', 'Show plot aggregations', value=FALSE)
+  }
+})
+
+
 output$showDSTypeAndPlotAggWgtsCtrl <- renderUI({
-  checkboxInput('showDSTypeAndPlotAggWgts', 
-                'Show dataset type and aggregation method', value=FALSE)
+  if (!is.null(input$plotType)) {
+    checkboxInput('showDSTypeAndPlotAggWgts', 
+                  'Show dataset type and aggregation method', value=FALSE)
+  }
 })
 
 

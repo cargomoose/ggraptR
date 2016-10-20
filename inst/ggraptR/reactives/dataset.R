@@ -164,11 +164,11 @@ plotSemiAutoAggBy <- reactive({
 semiAutoAggDF <- reactive({
   flog.debug("dataset::semiAutoAggDF() - Begin", name='all')
   
-  if (is.null(semiAutoAggOn())){
+  if (is.null(semiAutoAggOn())) {
     flog.debug("dataset::semiAutoAggDF() - is.null(semiAutoAggOn()) - End", name='all')
     return()
   }
-  if (is.null(dataset())){
+  if (is.null(dataset())) {
     flog.debug("dataset::semiAutoAggDF() - is.null(dataset()) - End", name='all')
     return()
   }

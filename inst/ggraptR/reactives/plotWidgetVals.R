@@ -21,11 +21,9 @@ columns <- reactive({
 })
 
 y <- reactive({
-  if (!is.null(input$y) && !is.null(plotAggMeth()) && !is.null(finalDF())
-      && !is.null(semiAutoAggOn())) {
-    ensureProperVarName(colnames=colnames(finalDF()), var=input$y, 
-                        aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn())
-  }
+  if (anyNull(input$y, plotAggMeth(), finalDF(), semiAutoAggOn())) return()
+  ensureProperVarName(colnames=colnames(finalDF()), var=input$y, 
+    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn())
 })
 
 colorOrig <- reactive({
@@ -33,12 +31,10 @@ colorOrig <- reactive({
 })
 
 color <- reactive({
-  if (!is.null(plotDF()) && !is.null(input$color) && !is.null(plotAggMeth())
-      && !is.null(semiAutoAggOn())) {
-    col <- ensureProperVarName(colnames=colnames(plotDF()), var=input$color, 
-                               aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn())  
-    convertNoneToNULL(col)
-  }
+  if (anyNull(plotDF(), input$color, plotAggMeth(), semiAutoAggOn())) return()
+  convertNoneToNULL(ensureProperVarName(
+    colnames=colnames(plotDF()), var=input$color, 
+    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn()))
 })
 
 colorAsFactor <- reactive({
@@ -54,12 +50,10 @@ sizeOrig <- reactive({
 })
 
 size <- reactive({
-  if (!is.null(plotDF()) && !is.null(input$size) && !is.null(plotAggMeth())
-      && !is.null(semiAutoAggOn())) {
-    sz <- ensureProperVarName(colnames=colnames(plotDF()), var=input$size, 
-                              aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn())
-    convertNoneToNULL(sz)
-  }
+  if (anyNull(plotDF(), input$size, plotAggMeth(), semiAutoAggOn())) return()
+  convertNoneToNULL(ensureProperVarName(
+    colnames=colnames(plotDF()), var=input$size, 
+    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn()))
 })
 
 fillOrig <- reactive({
@@ -212,15 +206,13 @@ facetGrids <- reactive({
 })
 
 xlim <- reactive({
-  if (!is.null(displayXlim()) && displayXlim() && !is.null(input$xlim)) {
-    input$xlim
-  }
+  if (anyNull(displayXlim(), input$xlim) || !displayXlim()) return()
+  input$xlim
 })
 
 ylim <- reactive({
-  if (!is.null(displayYlim()) && displayYlim() && !is.null(input$ylim)) {
-    input$ylim
-  }
+  if (anyNull(displayYlim(), input$ylim) || !displayYlim()) return()
+  input$ylim
 })
 
 

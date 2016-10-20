@@ -146,7 +146,7 @@ plotLabelWidgetsLoaded <- reactive({
 
 ## conditional: facet widgets are loaded
 facetWidgetsLoaded <- reactive({
-  checkWidgetsLoaded(input, widgets = c('facetCol', 'facetRow', 'facetWrap', 'facetScale'))
+  checkWidgetsLoaded(input, widgets = c('facetCol', 'facetRow', 'facetWrap','facetScale'))
 })
 
 ## conditional: no facet was selected
@@ -198,7 +198,7 @@ colorType <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset) && !is.null(color())) {
     if (color() %in% finalDFNumericVars()) 'continuous' else 'discrete'
-  }
+  } else 'none'
 })
 
 ## conditional reactive: semi-automatic aggregation is on
