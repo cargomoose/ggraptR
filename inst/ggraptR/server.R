@@ -20,7 +20,7 @@ source('./debug/debug.R', local=T)
 
 ## import functions
 source('./functions/helper.R')
-source('./functions/plot.R')
+source('./functions/ggplots.R')
 source('./functions/aggregate.R')
 source('./functions/ggraptplot.R')
 
@@ -36,7 +36,6 @@ shinyServer(function(input, output, session) {
   source('./reactives/plotWidgetsDisplayCond.R', local=TRUE)
   source('./reactives/plotWidgetSelectedVals.R', local=TRUE)
   source('./reactives/plot.R', local=TRUE)
-  source('./reactives/plotInput.R', local=TRUE)
   
   ## UI controls
   source('./uiWidgets/generalWidgets.R', local=TRUE)

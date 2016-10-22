@@ -153,7 +153,8 @@ plotSemiAutoAggBy <- reactive({
   }
   aggBy <- c(plotSemiAutoAggByBase(), input$plotAddAggBy)
   aggBy <- cleanPlotAggBy(input$x, input$y, aggBy)
-  aggBy <- rmElemsNotInDatasetCols(aggBy, dataset())
+  aggBy <- aggBy[aggBy %in% colnames(dataset())]
+  
   
   flog.debug("dataset::plotSemiAutoAggBy() - End", name='all')
   

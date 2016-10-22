@@ -21,22 +21,6 @@ plotScatter <- function(dataset, ls) {
   p
 }
 
-plotPointsOverlay <- function(plot, ls) {
-  flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
-  
-  p <- plot + if (is.null(ls$size)) 
-    geom_point(aes_string(shape=ls$shapeAsFactor), 
-               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
-    geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
-               alpha=ls$alpha, position=ls$jitter)
-  p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
-  p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-  p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
-
-  flog.debug("plot::plotPointsOverlay() - End", name='all')       
-  p
-}
-
 plotLine <- function(dataset, ls) {
   flog.debug("plot::plotLine() - Begin", name='all')
   
@@ -66,6 +50,22 @@ plotPath <- function(dataset, ls) {
   }
   
   flog.debug("plot::plotPath() - End", name='all')    
+  p
+}
+
+plotPointsOverlay <- function(plot, ls) {
+  flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
+  
+  p <- plot + if (is.null(ls$size)) 
+    geom_point(aes_string(shape=ls$shapeAsFactor), 
+               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
+                 geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
+                            alpha=ls$alpha, position=ls$jitter)
+  p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
+  p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
+  p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
+  
+  flog.debug("plot::plotPointsOverlay() - End", name='all')       
   p
 }
 
@@ -132,9 +132,11 @@ plotPairs <- function(dataset, ls) {
     function(x) !is.null(x), 
     list(dataset, columns=ls$columns,
          mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
-         upper=list(continuous=ls$upCont, combo=ls$upCombo, discrete=ls$upDiscr), 
-         diag=list(continuous=ls$diagCont, discrete=ls$diagDiscr), 
-         lower=list(continuous=ls$lowCont, combo=ls$lowCombo, discrete=ls$lowDiscr)))
+         upper=list(continuous=ls$ggpairsUpCont, combo=ls$ggpairsUpCombo, 
+                    discrete=ls$ggpairsUpDiscr), 
+         diag=list(continuous=ls$ggpairsDiagCont, discrete=ls$ggpairsDiagDiscr), 
+         lower=list(continuous=ls$ggpairsLowCont, combo=ls$ggpairsLowCombo, 
+                    discrete=ls$ggpairsLowDiscr)))
   
   state <- sys.frames()[[1]]
   for(i in 1:length(ggpairs_pars)) {
@@ -145,7 +147,7 @@ plotPairs <- function(dataset, ls) {
     }
   }
   
-  # print.ggmatrix is overrided in helper.R script
+  # print.ggmatrix() is overrided in helper.R script
   p <- do.call(ggpairs, ggpairs_pars)
   
   flog.debug("plot::plotPairs() - End", name='all')  

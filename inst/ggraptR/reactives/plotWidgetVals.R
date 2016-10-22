@@ -1,4 +1,3 @@
-#### current widget values
 plotType <- reactive({
   input$plotType
 })
@@ -8,22 +7,21 @@ x <- reactive({
 })
 
 xAsFactor <- reactive({
-  varNameAsFactorOrNULL(input$x)
+  varNameAsFactorOrNULL(x())
 })
 
 yOrig <- reactive({
   input$y
 })
 
-## columns for pairsPlot
-columns <- reactive({
-  input$columns
+y <- reactive({
+  ensureProperVarName(colnames(isolate(finalDF())), yOrig(), 
+                      isolate(plotAggMeth()), isolate(semiAutoAggOn()))
 })
 
-y <- reactive({
-  if (anyNull(input$y, plotAggMeth(), finalDF(), semiAutoAggOn())) return()
-  ensureProperVarName(colnames=colnames(finalDF()), var=input$y, 
-    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn())
+# pairsPlot
+columns <- reactive({
+  input$columns
 })
 
 colorOrig <- reactive({
@@ -31,10 +29,9 @@ colorOrig <- reactive({
 })
 
 color <- reactive({
-  if (anyNull(plotDF(), input$color, plotAggMeth(), semiAutoAggOn())) return()
   convertNoneToNULL(ensureProperVarName(
-    colnames=colnames(plotDF()), var=input$color, 
-    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn()))
+    isolate(colnames(plotDF())), colorOrig(), 
+            isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
 colorAsFactor <- reactive({
@@ -50,10 +47,9 @@ sizeOrig <- reactive({
 })
 
 size <- reactive({
-  if (anyNull(plotDF(), input$size, plotAggMeth(), semiAutoAggOn())) return()
   convertNoneToNULL(ensureProperVarName(
-    colnames=colnames(plotDF()), var=input$size, 
-    aggMeth=plotAggMeth(), semiAutoAggOn=semiAutoAggOn()))
+    isolate(colnames(plotDF())), sizeOrig(), 
+    isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
 fillOrig <- reactive({
@@ -61,7 +57,7 @@ fillOrig <- reactive({
 })
 
 fill <- reactive({
- convertNoneToNULL(input$fill)
+ convertNoneToNULL(fillOrig())
 })
 
 fillAsFactor <- reactive({
@@ -72,11 +68,8 @@ position <- reactive({
   convertNoneToNULL(input$position)
 })
 
-jitterOrig <- reactive({
-  input$jitter
-})
-
 jitter <- reactive({
+  # if (is.null(input$jitter)) TRUE else input$jitter
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
 })
 
@@ -97,7 +90,7 @@ sizeMag <- reactive({
 })
 
 densBlkLineCond <- reactive({
-  if (is.null(input$densBlkLineCond)) FALSE else input$densBlkLineCond
+  if (!isolate(displayDensBlkLineCond())) NULL else input$densBlkLineCond
 })
 
 shapeOrig <- reactive({
@@ -105,7 +98,7 @@ shapeOrig <- reactive({
 })
 
 shape <- reactive({
-  convertNoneToNULL(input$shape)
+  convertNoneToNULL(shapeOrig())
 })
 
 shapeAsFactor <- reactive({
@@ -121,7 +114,7 @@ smooth <- reactive({
 })
 
 coordFlip <- reactive({
-  if (is.null(input$coordFlip) || !displayCoordFlipCond()) FALSE else input$coordFlip
+  if (is.null(input$coordFlip)) FALSE else input$coordFlip  #####
 })
 
 
@@ -163,7 +156,7 @@ binWidth <- reactive({
 })
 
 ptsOverlayCond <- reactive({
-  if (is.null(input$ptsOverlayCond)) FALSE else input$ptsOverlayCond
+  if (isolate(!displayPtsOverlayCond())) NULL else input$ptsOverlayCond
 })
 
 facetRowOrig <- reactive({
@@ -171,9 +164,10 @@ facetRowOrig <- reactive({
 })
 
 facetRow <- reactive({
-  if (is.null(plotDF()) || is.null(input$facetRow)) return('.')
+  plotDF <- isolate(plotDF())  #####
+  if (anyNull(plotDF, input$facetRow)) return('.')
   fr <- ifelse(input$facetRow=='None', '.', input$facetRow)
-  if (fr != '.' && fr %in% colnames(plotDF())) fr else '.'
+  if (fr != '.' && fr %in% colnames(plotDF)) fr else '.'
 })
 
 facetColOrig <- reactive({
@@ -181,9 +175,10 @@ facetColOrig <- reactive({
 })
 
 facetCol <- reactive({
-  if (is.null(plotDF()) || is.null(input$facetCol)) return('.')
+  plotDF <- isolate(plotDF())  #####
+  if (anyNull(plotDF, input$facetCol)) return('.')
   fc <- ifelse(input$facetCol=='None', '.', input$facetCol)
-  if (fc != '.' && fc %in% colnames(plotDF())) fc else '.'
+  if (fc != '.' && fc %in% colnames(plotDF)) fc else '.'
 }) 
 
 facetWrapOrig <- reactive({
@@ -191,28 +186,28 @@ facetWrapOrig <- reactive({
 })
 
 facetWrap <- reactive({
-  if (is.null(plotDF()) || is.null(input$facetWrap)) return('.')
+  plotDF <- isolate(plotDF())  #####
+  if (anyNull(plotDF, input$facetWrap)) return('.')
   fw <- ifelse(input$facetWrap=='None', '.', input$facetWrap)
-  if (fw != '.' && fw %in% colnames(plotDF())) fw else '.'
+  if (fw != '.' && fw %in% colnames(plotDF)) fw else '.'
 })
 
 facetScale <- reactive({
   if (is.null(input$facetScale)) 'none' else input$facetScale
 })
 
-facetGrids <- reactive({
-  if (is.null(facetRow()) || is.null(facetCol())) '. ~ .' else 
-    paste(facetRow(), '~', facetCol())
+facetGrids <- reactive({  ####
+  row <- isolate(facetRow())
+  col <- isolate(facetCol())
+  if (anyNull(row, col)) '. ~ .' else paste(row, '~', col)
 })
 
 xlim <- reactive({
-  if (anyNull(displayXlim(), input$xlim) || !displayXlim()) return()
-  input$xlim
+  if (isolate(!displayXlim())) NULL else input$xlim
 })
 
 ylim <- reactive({
-  if (anyNull(displayYlim(), input$ylim) || !displayYlim()) return()
-  input$ylim
+  if (isolate(!displayYlim())) NULL else input$ylim
 })
 
 

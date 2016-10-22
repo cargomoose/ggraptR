@@ -42,10 +42,10 @@ output$dlPlot <- downloadHandler(
     if (plotType() == 'pairs') {
       dev <- ggplot2:::plot_dev(NULL, file, inputDPI)
       dev(file=file, width=inputWidth, height=inputHeight)
-      print(plotInput())
+      print(buildPlot())
       dev.off()
     } else
-      ggsave(file, plot=plotInput(), width=inputWidth, height=inputHeight, 
+      ggsave(file, plot=buildPlot(), width=inputWidth, height=inputHeight, 
            units="in", dpi=inputDPI)
   }
 )

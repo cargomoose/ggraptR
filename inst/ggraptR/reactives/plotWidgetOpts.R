@@ -3,21 +3,23 @@ colnamesOpts <- reactive({
 })
 
 xOpts <- reactive({
-  if (is.null(dataset()) || is.null(plotType())) return()
+  if (anyNull(dataset(), plotType())) return()
   if (plotType() %in% c('violin', 'box', 'bar')) categoricalVars() else numericVars()
 })
 
 yOpts <- reactive({
-  if (is.null(dataset()) || is.null(plotType()) || 
-      (displayXCond() && is.null(x()))) return()
-  setdiff(numericVars(), if (displayXCond()) x())
+  x <- x()  # the only reactive trigger. y options must be different from selected x value
+  # so it does not make sense to render y before x is ready
+  isolate({
+    if (is.null(plotType()) || (displayXCond() && is.null(x))) return()
+    setdiff(numericVars(), if (displayXCond()) x) })
 })
 
 colOpts <- reactive({
-  if (is.null(dataset()) || is.null(input$plotType)) return()
-  if (input$plotType %in% c('scatter', 'pairs')) {
+  if (is.null(dataset()) || is.null(plotType())) return()
+  if (plotType() %in% c('scatter', 'pairs')) {
     c('None', names(dataset()))
-  } else if (input$plotType %in% c('line', 'path')) {
+  } else if (plotType() %in% c('line', 'path')) {
     c('None', categoricalVars())
   }
 })

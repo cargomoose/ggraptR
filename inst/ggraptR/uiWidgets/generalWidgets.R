@@ -1,7 +1,9 @@
 ## dataset drop-down options 
 output$datasetCtrl <- renderUI({
-  stopifnot(state$initialDf %in% rawDatasetNames())
-  selectInput("dataset", "Dataset", choices=rawDatasetNames(), selected=state$initialDf)
+  isolate({
+    stopifnot(state$initialDf %in% rawDatasetNames())
+    selectInput("dataset", "Dataset", choices=rawDatasetNames(), selected=state$initialDf)
+  })
 })
 
 ## reactive  option

@@ -1,5 +1,25 @@
-#### variables for rawDataset() -- probably not very useful
+plotInputsRegister <- reactive({
+  inputs <- list(
+    scatter=c('x', 'y', 'color', 'colorAsFactor', 'treatAsFacVarCol', 'shape',
+                  'shapeAsFactor', 'size', 'smooth', 'jitter', 'alpha', 'sizeMag'),
+    line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
+    linePtsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
+                     'alpha', 'sizeMag'),
+    bar=c('y', 'x', 'fill', 'fillAsFactor', 'alpha', 'position'),
+    histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
+    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlkLineCond'),
+    box=c('y', 'x', 'fill', 'fillAsFactor', 'alpha'),
+    violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
+    pairs=c('columns', 'color', 'fill', 'alpha',
+                'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
+                'ggpairsDiagCont', 'ggpairsDiagDiscr',
+                'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
+  inputs$path <- inputs$line
+  inputs$pathPtsOverlay <- inputs$linePtsOverlay
+  inputs
+})
 
+#### variables for rawDataset() -- probably not very useful
 ## original variables
 origVars <- reactive({
   dataset <- rawDataset()
@@ -140,13 +160,13 @@ yFactorVarUniqVals <- reactive({
 ####
 ## conditional: plot label widgets loaded
 plotLabelWidgetsLoaded <- reactive({
-  checkWidgetsLoaded(input, widgets = c('plotTitle', 'xLabel', 'yLabel'))
+  checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel'))
 })
 
 
 ## conditional: facet widgets are loaded
 facetWidgetsLoaded <- reactive({
-  checkWidgetsLoaded(input, widgets = c('facetCol', 'facetRow', 'facetWrap','facetScale'))
+  checkWidgetsLoaded(input, c('facetCol', 'facetRow', 'facetWrap','facetScale'))
 })
 
 ## conditional: no facet was selected
@@ -208,7 +228,7 @@ semiAutoAggOn <- reactive({
 
 generateCodeReactive <- reactive({
   flog.debug("plot::generateCode() - Begin", name='all')
-  res <- generateCode(plotInput())
+  res <- generateCode(buildPlot())
   flog.debug("plot::generateCode() - res", name='all')
   flog.debug(res, name='all')
   flog.debug("plot::generateCode() - End", name='all')

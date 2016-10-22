@@ -1,14 +1,15 @@
 # checks for display conditional reactives
 displayColumnsCond <- reactive({
-  notNulls(input$plotType) && input$plotType %in% c('pairs')
+  !is.null(input$plotType) && input$plotType == 'pairs'
 })
 
 displayXCond <- reactive({
-  notNulls(input$plotType) && !(input$plotType %in% c('pairs'))
+  !is.null(input$plotType) && !(input$plotType %in% c('pairs'))
 })
 
 displayYCond <- reactive({
-  notNulls(input$plotType) && !(input$plotType %in% c('pairs', 'histogram', 'density'))
+  notNulls(isolate(input$plotType), x()) && 
+    !(input$plotType %in% c('pairs', 'histogram', 'density'))
 })
 
 displayColCond <- reactive({
@@ -17,7 +18,7 @@ displayColCond <- reactive({
 })
 
 displayGgpairsWgtsCond <- reactive({
-  notNulls(input$plotType) && input$plotType == 'pairs'
+  !is.null(input$plotType) && input$plotType == 'pairs'
 })
 
 # for color

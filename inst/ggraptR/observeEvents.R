@@ -4,7 +4,7 @@ observeEvent(input$reactive, {
   
   if (input$reactive) {
     output$plot <- renderPlot({  # display plot reactively
-      plotInput()
+      buildPlot()
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table reactively
       DT::datatable(manAggDataset(), filter='bottom')
@@ -12,7 +12,7 @@ observeEvent(input$reactive, {
   } else {
     output$plot <- renderPlot({  # display plot upon submit
       input$submit
-      isolate(plotInput())
+      isolate(buildPlot())
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table upon submit
       input$submit

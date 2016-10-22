@@ -15,7 +15,6 @@ getYearColumnName <- function(df) {
   yearCol
 }
 
-
 ## determines the name of the month column (in YYYY-MM format)
 getMonthColumnName <- function(df) {
   firstRow <- df[1, ]
@@ -30,7 +29,6 @@ getMonthColumnName <- function(df) {
   yearMonthCol
 }
 
-
 ## determines the name of the day column (in YYYY-MM-DD format)
 getDateColumnName <- function(df) {
   firstRow <- as.character(df[1, ])
@@ -43,6 +41,18 @@ getDateColumnName <- function(df) {
     }
   }
   dateCol
+}
+
+## takes two numeric ranges and returns TRUE if the two ranges overlap;
+## it is used to ensure that numeric xlim range has been updated for new dataset and 
+# x variables
+## when plot type is set to histogram (to prevent an error message)
+checkTwoRangesOverlap <- function(range1, range2) {
+  lowerRange1 <- range1[1]
+  upperRange1 <- range1[2]
+  lowerRange2 <- range2[1]
+  upperRange2 <- range2[2]
+  upperRange1 >= lowerRange2 & lowerRange1 <= upperRange2
 }
 
 
@@ -62,6 +72,13 @@ getVarNamesUniqValsCntLOEN <- function(df, n=100) {
   colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
 }
 
+convertNoneToNULL <- function(var) {
+  if (is.null(var) || tolower(var)=='none' || !nchar(var)) NULL else var
+}
+
+varNameAsFactorOrNULL <- function(var) {
+  if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
+}
 
 ## gets all variable names of data frame objects that are loaded into memory
 getLoadedDataFrameNames <- function(env=.GlobalEnv) {
@@ -74,49 +91,6 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
     } 
   }
   dfNames
-}
-
-
-## modifies and ensures proper variable name
-## for semi-automatic aggregation dataset column names
-ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
-  if (tolower(var) %in% c('none', '.')) return(var)
-  
-  ## only if original variable name is not found in dataset's column names
-  if (!(var %in% colnames)) {
-    ## if semi-automatic aggregation is turned on
-    if (semiAutoAggOn) {
-      return(if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
-    }
-  } 
-
-  ## if original variable name is found in dataset's column names
-  else {
-    varAgg <- paste0(var, '_', aggMeth)
-    if (varAgg %in% colnames) {
-      return(varAgg)
-    }
-  }
-  
-  var
-}
-
-convertNoneToNULL <- function(var) {
-  if (is.null(var) || tolower(var)=='none' || !nchar(var)) NULL else var
-}
-
-varNameAsFactorOrNULL <- function(var) {
-  if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
-}
-
-checkWidgetsLoaded <- function(input, widgets) {
-  if (is.null(widgets)) return(FALSE)
-  for (widget in widgets) {
-    if (is.null(input[[widget]])) {
-      return(FALSE)
-    }
-  }
-  TRUE
 }
 
 ## function for cleaning (removing duplicates or "None" values, etc.)
@@ -133,20 +107,6 @@ cleanPlotAggBy <- function(x, y, aggBy) {
   
   aggBy
 }
-
-
-## takes two numeric ranges and returns TRUE if the two ranges overlap;
-## it is used to ensure that numeric xlim range has been updated for new dataset and 
-# x variables
-## when plot type is set to histogram (to prevent an error message)
-checkTwoRangesOverlap <- function(range1, range2) {
-  lowerRange1 <- range1[1]
-  upperRange1 <- range1[2]
-  lowerRange2 <- range2[1]
-  upperRange2 <- range2[2]
-  upperRange1 >= lowerRange2 & lowerRange1 <= upperRange2
-}
-
 
 ## ensures correct plot inputs for an updated dataset
 ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
@@ -168,10 +128,39 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   plotInputsList
 }
 
+## modifies and ensures proper variable name
+## for semi-automatic aggregation dataset column names
+ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
+  if (anyNull(colnames, var, aggMeth, semiAutoAggOn)) return()
+  if (tolower(var) %in% c('none', '.')) return(var)
+  
+  ## only if original variable name is not found in dataset's column names
+  if (!(var %in% colnames)) {
+    ## if semi-automatic aggregation is turned on
+    if (semiAutoAggOn) {
+      return(if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
+    }
+  } 
+  
+  ## if original variable name is found in dataset's column names
+  else {
+    varAgg <- paste0(var, '_', aggMeth)
+    if (varAgg %in% colnames) {
+      return(varAgg)
+    }
+  }
+  
+  var
+}
 
-## removes elements that are not part of a dataset's column variables
-rmElemsNotInDatasetCols <- function(elems, dataset) {
-  elems[elems %in% colnames(dataset)]
+checkWidgetsLoaded <- function(input, widgets) {
+  if (is.null(widgets)) return(FALSE)
+  for (widget in widgets) {
+    if (is.null(input[[widget]])) {
+      return(FALSE)
+    }
+  }
+  TRUE
 }
 
 
@@ -183,6 +172,7 @@ print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion 
     spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
 }
 
+
 notNulls <- function(...) {  # effective lazy implementation
   for (el in list(...)) {
     if (is.null(el)) return(F)
@@ -193,6 +183,13 @@ notNulls <- function(...) {  # effective lazy implementation
 anyNull <- function(...) {
   !notNulls(...)
 }
+
+na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
+
+do.call.pasted <- function(..., args=list()) {
+  do.call(paste(na_omit(list(...)), collapse=''), args, envir=parent.env(parent.frame()))
+}
+
 
 ## takes a dataset, variable name, and variable's limit (e.g. x and xlim)
 ## and returns TRUE if that they are compatible;

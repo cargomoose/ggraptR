@@ -1,67 +1,115 @@
-scatterPlot <- reactive({
-  flog.debug("plot::scatterPlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, scatterWidgets()) || 
-      !(y() %in% finalDFVars())) return()
-  plotScatter(plotDF(), scatterPlotInputs())
-})
-
-linePlot <- reactive({
-  flog.debug("plot::linePlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, lineWidgets()) || 
-      !(y() %in% finalDFVars())) return()
-  p <- plotLine(plotDF(), linePlotInputs())
-  if (checkWidgetsLoaded(input, linePtsOverlayWidgets()) && input$ptsOverlayCond) 
-    plotPointsOverlay(p, linePtsOverlayInputs()) else p
-})
-
-pathPlot <- reactive({
-  flog.debug("plot::pathPlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, pathWidgets()) || 
-      !(y() %in% finalDFVars())) return()
-  p <- plotPath(plotDF(), pathPlotInputs())
+getPlotInputs <- reactive({
+  inputNames <- plotInputsRegister()[[isolate(plotType())]]
+  # we need to isolate x(). It will effect using y()
+  subscribedInputNames <- setdiff(inputNames, 'x')
   
-  if (checkWidgetsLoaded(input, pathPtsOverlayWidgets()) &&!is.null(input$ptsOverlayCond) 
-      && input$ptsOverlayCond) 
-    plotPointsOverlay(p, pathPtsOverlayInputs()) else p
+  # subscriptions
+  columns() 
+  inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
+  
+  names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
+  if ('x' %in% inputNames) inputs$x <- isolate(x())
+  ensureCorrectPlotInputs(inputs, colnames(isolate(plotDF())))
 })
 
-histogram <- reactive({
-  flog.debug("plot::histogram()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, histogramWidgets())) return()
-  plotHistogram(plotDF(), histogramInputs())
-})
+getBasePlot <- function(plotDF, pType, inputs) {
+  pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
+  p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))
+  
+  if (pType %in% c('line', 'path')) {
+    overlayWidgets <- do.call.pasted(pType, 'PtsOverlayWidgets')
+    areLoaded <- checkWidgetsLoaded(input, overlayWidgets)
+    if (areLoaded && input$ptsOverlayCond) {
+      overlayInputs <- do.call.pasted(pType, 'PtsOverlayInputs')
+      p <- plotPointsOverlay(p, overlayInputs)
+    }
+  }
+  p
+}
 
-densityPlot <- reactive({
-  flog.debug("plot::densityPlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, densityWidgets())) return()
-  plotDensity(plotDF(), densityPlotInputs())
+buildPlot <- reactive({
+  flog.debug("plot::buildPlot() - Begin", name='all')
+  flog.debug("systime - begin", name='all')
+  start.time <- Sys.time()
+  flog.debug(start.time, name='all')
+  
+  inputs <- getPlotInputs()  # subscription must be before first return(NULL)
+  isolate({
+    plotDF <- plotDF()
+    pType <- plotType()
+    plotWidgets <- do.call.pasted(pType, 'Widgets')
+    arePlotWidgetsLoaded <- !is.null(plotWidgets) &&
+      checkWidgetsLoaded(input, c('plotType', plotWidgets))
+  })
+  
+  if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
+  p <- getBasePlot(plotDF, pType, inputs)
+  if (is.null(p)) return()
+  
+  if (pType != 'pairs') {
+    if (!noFacetSelected()) {
+      if (facetGridSelected()) {
+        p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
+      } else if (facetWrapSelected()) {  ## facet wrap
+        p <- p + facet_wrap(facets=facetWrap(), scales=facetScale())
+      }
+    }
+    
+    p <- p + if (coordFlip()) coord_flip()
+    
+    ## plot labels 
+    p <- p + if (!is.null(plotTitle()) && plotTitle() != '') ggtitle(plotTitle())
+    p <- p + if (!is.null(xLabel()) && xLabel() != '') xlab(xLabel())
+    p <- p + if (!is.null(yLabel()) && yLabel() != '') ylab(yLabel())
+    
+    ## plot themes
+    if (!is.null(plotTheme())) {
+      p <- p + do.call(plotTheme(), list())
+      
+      theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
+      
+      state$theme_name <- theme_name
+      isColorTypeDiscr <- isolate(colorType()) == 'discrete'  ########
+      if (!theme_name %in% c('grey', 'bw', 'economist')) {
+        scale_color_name <- sprintf('scale_colour_%s', theme_name)
+        if (theme_name == 'calc') {
+          scale_color_name <- sub('u', '', scale_color_name)
+        }
+        p <- p + if (isColorTypeDiscr && theme_name != 'tufte') 
+          do.call(scale_color_name, list())
+      } else if (theme_name == 'economist') {
+        p <- p + scale_colour_economist() + if (isColorTypeDiscr) scale_color_calc()
+      }
+    }
+    
+    ## plot label styles
+    state$theme_attrs <- list(family = labelFontFamily(),
+                              face = labelFontFace(),
+                              color = labelFontColor(),
+                              size = labelFontSize(),
+                              hjust = hjust(),
+                              vjust = vjust())
+    p <- p + theme(text=do.call(element_text, state$theme_attrs))
+  }
+  
+  flog.debug("plot::buildPlot() - End", name='all')
+  flog.debug("proctime - end", name='all')
+  end.time <- Sys.time()
+  flog.debug(end.time, name='all')
+  time.taken <- end.time - start.time
+  flog.debug("time.taken", name='all')
+  flog.debug(time.taken , name='all')
+  
+  # add plot history entry
+  if (!is.null(p)) {
+    logEntry <- generateCode(p)
+    curLog <- isolate(log$plot)
+    isFirstEntry <- is.null(curLog)
+    
+    if (isFirstEntry || curLog[[1]] != logEntry) {
+      log$plot <- if (isFirstEntry) logEntry else c(logEntry, curLog)
+    }
+  }
+  
+  p
 })
-
-boxPlot <- reactive({
-  flog.debug("plot::boxPlot()", name='all')
-  if (is.null(plotDF()) || is.null(boxPlotInputs()) || 
-      !checkWidgetsLoaded(input, boxPlotWidgets()) || !(y() %in% finalDFVars())) return()
-  plotBox(plotDF(), boxPlotInputs())
-})
-
-barPlot <- reactive({
-  flog.debug("plot::barPlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, barPlotWidgets()) || 
-      !(y() %in% finalDFVars())) return()
-  plotBar(plotDF(), barPlotInputs())
-})
-
-violinPlot <- reactive({
-  flog.debug("plot::violinPlot()", name='all')
-  if (is.null(plotDF()) || !checkWidgetsLoaded(input, violinWidgets()) || 
-      !(y() %in% finalDFVars())) return()
-  plotViolin(plotDF(), violinInputs())
-})
-
-pairsPlot <- reactive({
-  flog.debug("plot::pairsPlot()", name='all')
-  if (is.null(plotDF()) || is.null(pairsPlotInputs()) || 
-      !checkWidgetsLoaded(input, pairsWidgets())) return()
-  plotPairs(plotDF(), pairsPlotInputs())
-})
-

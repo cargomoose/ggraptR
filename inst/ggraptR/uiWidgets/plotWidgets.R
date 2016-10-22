@@ -24,7 +24,7 @@ output$yCtrl <- renderUI({
 output$columnsCtrl <- renderUI({
   if (displayColumnsCond()) {
     selectInput('columns', 'Columns', choices=colnamesOpts(), 
-                selected=colnamesOpts()[1:min(ncol(dataset()), 3)], multiple=T)
+                selected=colnamesOpts()[1:min(ncol(isolate(dataset())), 3)], multiple=T)
   }
 })
 
@@ -58,10 +58,7 @@ output$posCtrl <- renderUI({
 
 ## jitter options
 output$jitCtrl <- renderUI({
-  flog.debug("plotWidgets::output$jitCtrl() - Begin", name='all')
   if (displayJitCond()) {
-    flog.debug("plotWidgets::output$jitCtrl() - displayJitCond() - End", name='all')
-    flog.debug(jitter(), name='all')
     checkboxInput('jitter', 'Apply jitter effect', value=TRUE) #isolate(jitter())
   }
 })
