@@ -5,10 +5,10 @@ plotInputsRegister <- reactive({
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
     linePtsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
                      'alpha', 'sizeMag'),
-    bar=c('y', 'x', 'fill', 'fillAsFactor', 'alpha', 'position'),
+    bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
     density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlkLineCond'),
-    box=c('y', 'x', 'fill', 'fillAsFactor', 'alpha'),
+    box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
     violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
     pairs=c('columns', 'color', 'fill', 'alpha',
                 'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
@@ -47,25 +47,31 @@ origNumericVars <- reactive({
 
 #### variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
-  if (is.null(dataset())) return()
-  unique(c(getIsFactorVarNames(dataset()), if (nrow(dataset()) > 30) 
-    getVarNamesUniqValsCntLOEN(dataset(), 6)))
+  isolate({
+    if (is.null(dataset())) return()
+    unique(c(getIsFactorVarNames(dataset()), if (nrow(dataset()) > 30) 
+      getVarNamesUniqValsCntLOEN(dataset(), 6)))
+  })
 })
 
 numericVars <- reactive({
-  if (is.null(dataset())) return()
-  setdiff(colnames(dataset()), categoricalVars())
+  isolate({
+    if (is.null(dataset())) return()
+    setdiff(colnames(dataset()), categoricalVars())
+  })
 })
 
 ## variables with less than or equal to N unique values
 varsUniqValsCntLOEN <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-    n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
-    if (!is.null(n)) {
-      getVarNamesUniqValsCntLOEN(dataset, n)
+  isolate({
+    dataset <- dataset()
+    if (!is.null(dataset)) {
+      n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
+      if (!is.null(n)) {
+        getVarNamesUniqValsCntLOEN(dataset, n)
+      }
     }
-  }
+  })
 })
 
 

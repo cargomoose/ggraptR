@@ -3,8 +3,9 @@ colnamesOpts <- reactive({
 })
 
 xOpts <- reactive({
-  if (anyNull(dataset(), plotType())) return()
-  if (plotType() %in% c('violin', 'box', 'bar')) categoricalVars() else numericVars()
+  pType <- plotType()
+  if (anyNull(isolate(dataset()), pType)) return()
+  if (pType %in% c('violin', 'box', 'bar')) categoricalVars() else numericVars()
 })
 
 yOpts <- reactive({

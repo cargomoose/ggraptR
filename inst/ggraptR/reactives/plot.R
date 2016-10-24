@@ -1,10 +1,7 @@
 getPlotInputs <- reactive({
-  inputNames <- plotInputsRegister()[[isolate(plotType())]]
+  inputNames <- plotInputsRegister()[[plotType()]]
   # we need to isolate x(). It will effect using y()
   subscribedInputNames <- setdiff(inputNames, 'x')
-  
-  # subscriptions
-  columns() 
   inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
   
   names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
