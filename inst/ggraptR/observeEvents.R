@@ -4,7 +4,9 @@ observeEvent(input$reactive, {
   
   if (input$reactive) {
     output$plot <- renderPlot({  # display plot reactively
-      buildPlot()
+      p <- buildPlot()
+      # browser()
+      p
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table reactively
       DT::datatable(manAggDataset(), filter='bottom')
