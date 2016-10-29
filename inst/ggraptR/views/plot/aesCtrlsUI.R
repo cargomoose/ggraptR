@@ -35,7 +35,7 @@ verticalLayout(
     column(6, uiOutput('fillCtrl')),
     column(6, uiOutput('posCtrl'))),
   
-  uiOutput('ptsOverlayCondCtrl'),
+  uiOutput('pointsOverlayCtrl'),
   
   fluidRow(
     column(6, uiOutput('sizeCtrl')),

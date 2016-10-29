@@ -248,6 +248,10 @@ vjust <- reactive({
   if (is.null(input$vjust)) 0.5 else input$vjust
 })
 
+showXYRangeWgts <- reactive({
+  !is.null(input$showXYRangeWgts) && input$showXYRangeWgts
+})
+
 plotTheme <- reactive({
   if (is.null(input$plotTheme)) 'theme_grey' else input$plotTheme
 })
@@ -264,4 +268,18 @@ rawVsManAgg <- reactive({
 plotAddAggBy <- reactive({
   input$plotAddAggBy
 })
+
+showAesWgts <- reactive({
+  !is.null(input$showAesWgts) && input$showAesWgts
+})
+
+showFacetWgts <- reactive({
+  !is.null(input$showFacetWgts) && input$showFacetWgts
+})
+
+pointsOverlay <- reactive({
+  # displayPointsOverlayCond() && 
+  input$pointsOverlay
+})
+
 

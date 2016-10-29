@@ -32,9 +32,7 @@ shinyServer(function(input, output, session) {
   source('./reactives/dataset.R', local=TRUE)
   source('./reactives/plotWidgetVals.R', local=TRUE)
   source('./reactives/plotWidgetNames.R', local=TRUE)
-  source('./reactives/plotWidgetOpts.R', local=TRUE)
   source('./reactives/plotWidgetsDisplayCond.R', local=TRUE)
-  source('./reactives/plotWidgetSelectedVals.R', local=TRUE)
   source('./reactives/plot.R', local=TRUE)
   
   ## UI controls

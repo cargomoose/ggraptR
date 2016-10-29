@@ -1,11 +1,15 @@
 getPlotInputs <- reactive({
-  inputNames <- plotInputsRegister()[[plotType()]]
+  pType <- isolate(plotType())
+  inputNames <- plotInputsRegister()[[pType]]
   # we need to isolate x(). It will effect using y()
-  subscribedInputNames <- setdiff(inputNames, 'x')
-  inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
+  subscribedInputNames <- setdiff(inputNames, c('x', 'xAsFactor'))
   
+  inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
   names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
+  
+  if (pType != 'pairs') ggpairsLowDiscr() else c(alpha())  # make dependency
   if ('x' %in% inputNames) inputs$x <- isolate(x())
+  if ('xAsFactor' %in% inputNames) inputs$xAsFactor <- isolate(xAsFactor())
   ensureCorrectPlotInputs(inputs, colnames(isolate(plotDF())))
 })
 
@@ -16,7 +20,7 @@ getBasePlot <- function(plotDF, pType, inputs) {
   if (pType %in% c('line', 'path')) {
     overlayWidgets <- do.call.pasted(pType, 'PtsOverlayWidgets')
     areLoaded <- checkWidgetsLoaded(input, overlayWidgets)
-    if (areLoaded && input$ptsOverlayCond) {
+    if (areLoaded && pointsOverlay()) {
       overlayInputs <- do.call.pasted(pType, 'PtsOverlayInputs')
       p <- plotPointsOverlay(p, overlayInputs)
     }
@@ -30,15 +34,18 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
+  pType <- isolate(plotType())
+  if (is.null(pType) && is.null(y())) return()  # y() subscription for the first run
+  # if (pType == 'violin') browser()
   inputs <- getPlotInputs()  # subscription must be before first return(NULL)
   isolate({
     plotDF <- plotDF()
-    pType <- plotType()
     plotWidgets <- do.call.pasted(pType, 'Widgets')
     arePlotWidgetsLoaded <- !is.null(plotWidgets) &&
       checkWidgetsLoaded(input, c('plotType', plotWidgets))
   })
   
+  # if (pType == 'violin') browser()
   if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
   p <- getBasePlot(plotDF, pType, inputs)
   if (is.null(p)) return()
@@ -48,7 +55,7 @@ buildPlot <- reactive({
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
       } else if (facetWrapSelected()) {  ## facet wrap
-        p <- p + facet_wrap(facets=facetWrap(), scales=facetScale())
+        p <- p + facet_wrap(facets=facetWrapFix(), scales=facetScale())
       }
     }
     

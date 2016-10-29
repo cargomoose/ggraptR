@@ -19,6 +19,7 @@ plotInputsRegister <- reactive({
   inputs
 })
 
+
 #### variables for rawDataset() -- probably not very useful
 ## original variables
 origVars <- reactive({
@@ -47,31 +48,25 @@ origNumericVars <- reactive({
 
 #### variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
-  isolate({
-    if (is.null(dataset())) return()
-    unique(c(getIsFactorVarNames(dataset()), if (nrow(dataset()) > 30) 
-      getVarNamesUniqValsCntLOEN(dataset(), 6)))
-  })
+  if (is.null(dataset())) return()
+  unique(c(getIsFactorVarNames(dataset()), 
+           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(dataset(), 6)))
 })
 
 numericVars <- reactive({
-  isolate({
-    if (is.null(dataset())) return()
-    setdiff(colnames(dataset()), categoricalVars())
-  })
+  if (is.null(dataset())) return()
+  setdiff(colnames(dataset()), categoricalVars())
 })
 
 ## variables with less than or equal to N unique values
 varsUniqValsCntLOEN <- reactive({
-  isolate({
-    dataset <- dataset()
-    if (!is.null(dataset)) {
-      n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
-      if (!is.null(n)) {
-        getVarNamesUniqValsCntLOEN(dataset, n)
-      }
+  dataset <- dataset()
+  if (!is.null(dataset)) {
+    n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
+    if (!is.null(n)) {
+      getVarNamesUniqValsCntLOEN(dataset, n)
     }
-  })
+  }
 })
 
 
@@ -229,16 +224,11 @@ colorType <- reactive({
 
 ## conditional reactive: semi-automatic aggregation is on
 semiAutoAggOn <- reactive({
-  if (is.null(plotAggMeth())) FALSE else tolower(plotAggMeth()) != 'none'
+  !is.null(plotAggMeth()) && tolower(plotAggMeth()) != 'none'
 })
 
 generateCodeReactive <- reactive({
-  flog.debug("plot::generateCode() - Begin", name='all')
-  res <- generateCode(buildPlot())
-  flog.debug("plot::generateCode() - res", name='all')
-  flog.debug(res, name='all')
-  flog.debug("plot::generateCode() - End", name='all')
-  res
+  generateCode(buildPlot())
 })
 
 log <- reactiveValues()
