@@ -29,8 +29,10 @@ output$yCtrl <- renderUI({
 # columns for pairsPlot
 output$columnsCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    isolate(selectInput('columns', 'Columns', choices=names(dataset()), 
-                        selected=names(dataset())[1:min(ncol(dataset()), 3)], multiple=T))
+    isolate(selectInput(
+      'columns', 'Columns', choices=names(dataset()), 
+      selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
+        columns(), multiple=T))
   }
 })
 

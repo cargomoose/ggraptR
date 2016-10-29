@@ -24,6 +24,18 @@ columns <- reactive({
   input$columns
 })
 
+# important reactive to trigger buildPlot()
+alpha <- reactive({
+  # solves problem: pairs ->(back to)-> scatter. y() is the same, dont trigger getInput()
+  # dep plotType() next problem: scatter -> violin premature getInput()
+  # dep dispY() problem: x()->Sep.Width premature getInput()
+  # if (isol(plotType()) == 'pairs') dispY() problem: back to scatter dont trigger Inp()
+  
+  if (isolate(plotType()) == 'pairs') 
+    displayYCond() else displayGgpairsWgtsCond()  # trigger
+  if (is.null(alphaOrig())) 1 else alphaOrig()
+})
+
 colorOrig <- reactive({
   input$color
 })
@@ -75,10 +87,6 @@ jitter <- reactive({
 
 alphaOrig <- reactive({
   input$alpha
-})
-
-alpha <- reactive({
-  if (is.null(input$alpha)) 1 else input$alpha
 })
 
 sizeMagOrig <- reactive({

@@ -1,13 +1,15 @@
 getPlotInputs <- reactive({
   pType <- isolate(plotType())
   inputNames <- plotInputsRegister()[[pType]]
-  # we need to isolate x(). It will effect using y()
+  # we need to isolate x(). It will effect through y()
   subscribedInputNames <- setdiff(inputNames, c('x', 'xAsFactor'))
   
   inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
   names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
+  # note that alpha() is the only reactive that is common for all plotTypes. It has 
+  # additional slightly sophisticated reactive behaviour.
   
-  if (pType != 'pairs') ggpairsLowDiscr() else c(alpha())  # make dependency
+  # if (pType != 'pairs') ggpairsLowDiscr() # make dependency
   if ('x' %in% inputNames) inputs$x <- isolate(x())
   if ('xAsFactor' %in% inputNames) inputs$xAsFactor <- isolate(xAsFactor())
   ensureCorrectPlotInputs(inputs, colnames(isolate(plotDF())))
@@ -36,7 +38,7 @@ buildPlot <- reactive({
   
   pType <- isolate(plotType())
   if (is.null(pType) && is.null(y())) return()  # y() subscription for the first run
-  # if (pType == 'violin') browser()
+  # if (pType == 'scatter') browser()
   inputs <- getPlotInputs()  # subscription must be before first return(NULL)
   isolate({
     plotDF <- plotDF()
@@ -45,7 +47,6 @@ buildPlot <- reactive({
       checkWidgetsLoaded(input, c('plotType', plotWidgets))
   })
   
-  # if (pType == 'violin') browser()
   if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
   p <- getBasePlot(plotDF, pType, inputs)
   if (is.null(p)) return()
