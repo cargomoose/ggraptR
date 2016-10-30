@@ -174,9 +174,7 @@ print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion 
 
 
 notNulls <- function(...) {  # effective lazy implementation
-  for (el in list(...)) {
-    if (is.null(el)) return(F)
-  }
+  for (el in list(...)) if (is.null(el)) return(F)
   TRUE
 }
 
@@ -188,6 +186,11 @@ na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
 
 do.call.pasted <- function(..., args=list()) {
   do.call(paste(na_omit(list(...)), collapse=''), args, envir=parent.env(parent.frame()))
+}
+
+getFirstNonNull <- function(...) {
+  for (el in list(...)) if (!is.null(el)) return(el)
+  stop()
 }
 
 

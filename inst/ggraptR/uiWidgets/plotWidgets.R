@@ -182,65 +182,73 @@ output$coordFlipCtrl <- renderUI({
 
 output$ggpairsUpContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsUpCont', NULL,
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-                selected=eval(formals(ggpairs)$upper)$continuous)
+    isolate(selectInput(
+      'ggpairsUpCont', NULL, 
+      c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+      getFirstNonNull(ggpairsUpCont(), eval(formals(ggpairs)$upper)$continuous)))
   }
 })
 
 output$ggpairsUpComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsUpCombo', NULL,
-                choices=c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
-                selected=eval(formals(ggpairs)$upper)$combo)
+    isolate(selectInput(
+      'ggpairsUpCombo', NULL,
+      c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
+      getFirstNonNull(ggpairsUpCombo(), eval(formals(ggpairs)$upper)$combo)))
   }
 })
 
 output$ggpairsUpDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsUpDiscr', NULL,
-                choices=c('facetba'='facetbar', 'ratio', 'blank'),
-                selected=eval(formals(ggpairs)$upper)$discrete)
+    isolate(selectInput(
+      'ggpairsUpDiscr', NULL,
+      c('facetba'='facetbar', 'ratio', 'blank'),
+      getFirstNonNull(ggpairsUpDiscr(), eval(formals(ggpairs)$upper)$discrete)))
   }
 })
 
 output$ggpairsLowContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsLowCont', NULL, 
-                choices=c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
-                selected=eval(formals(ggpairs)$lower)$continuous)
+    isolate(selectInput(
+      'ggpairsLowCont', NULL, 
+      c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
+      getFirstNonNull(ggpairsLowCont(), eval(formals(ggpairs)$lower)$continuous)))
   }
 })
 
 output$ggpairsLowComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsLowCombo', NULL, 
-      choices=c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
-      selected=eval(formals(ggpairs)$lower)$combo)
+    isolate(selectInput(
+      'ggpairsLowCombo', NULL, 
+      c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
+      getFirstNonNull(ggpairsLowCombo(), eval(formals(ggpairs)$lower)$combo)))
   }
 })
 
 output$ggpairsLowDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsLowDiscr', NULL, 
-                choices=c('facetba'='facetbar', 'ratio', 'blank'),
-                selected=eval(formals(ggpairs)$lower)$discrete)
+    isolate(selectInput(
+      'ggpairsLowDiscr', NULL, 
+      c('facetba'='facetbar', 'ratio', 'blank'),
+      getFirstNonNull(ggpairsLowDiscr(), eval(formals(ggpairs)$lower)$discrete)))
   }
 })
 
 output$ggpairsDiagContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsDiagCont', NULL,
-                choices=c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
-                selected=eval(formals(ggpairs)$diag)$continuous)
+    isolate(selectInput(
+      'ggpairsDiagCont', NULL,
+      c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
+      getFirstNonNull(ggpairsDiagCont(), eval(formals(ggpairs)$diag)$continuous)))
   }
 })
 
 output$ggpairsDiagDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    selectInput('ggpairsDiagDiscr', NULL,
-                choices=c('bar'='barDiag', 'blank'='blankDiag'),
-                selected=eval(formals(ggpairs)$diag)$discrete)
+    isolate(selectInput(
+      'ggpairsDiagDiscr', NULL,
+      c('bar'='barDiag', 'blank'='blankDiag'),
+      getFirstNonNull(ggpairsDiagDiscr(), eval(formals(ggpairs)$diag)$discrete)))
   }
 })
 
