@@ -36,18 +36,23 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  pType <- isolate(plotType())
-  if (is.null(pType) && is.null(y())) return()  # y() subscription for the first run
-  # if (pType == 'scatter') browser()
-  inputs <- getPlotInputs()  # subscription must be before first return(NULL)
+  if (!readyWidgets$status) return()
   isolate({
     plotDF <- plotDF()
-    plotWidgets <- do.call.pasted(pType, 'Widgets')
-    arePlotWidgetsLoaded <- !is.null(plotWidgets) &&
-      checkWidgetsLoaded(input, c('plotType', plotWidgets))
+    pType <- plotType()
   })
   
-  if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
+  # if (is.null(pType) && is.null(y())) return()  # y() subscription for the first run
+  # subscription must be before first return(NULL)
+  inputs <- getPlotInputs()
+  browser()
+  # isolate({
+  #   plotDF <- plotDF()
+    # plotWidgets <- do.call.pasted(pType, 'Widgets')
+    # arePlotWidgetsLoaded <- !is.null(plotWidgets) &&
+      # checkWidgetsLoaded(input, c('plotType', plotWidgets))
+  # })
+  # if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
   p <- getBasePlot(plotDF, pType, inputs)
   if (is.null(p)) return()
   

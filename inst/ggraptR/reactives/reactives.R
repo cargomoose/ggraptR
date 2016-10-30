@@ -1,7 +1,7 @@
 plotInputsRegister <- reactive({
   inputs <- list(
-    scatter=c('x', 'y', 'color', 'colorAsFactor', 'treatAsFacVarCol', 'shape',
-                  'shapeAsFactor', 'size', 'smooth', 'jitter', 'alpha', 'sizeMag'),
+    scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape',
+              'size', 'smooth', 'jitter', 'alpha', 'sizeMag', 'coordFlip'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
     linePtsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
                      'alpha', 'sizeMag'),
@@ -231,4 +231,7 @@ generateCodeReactive <- reactive({
   generateCode(buildPlot())
 })
 
-log <- reactiveValues()
+log <- reactiveValues(plot=NULL)
+
+readyWidgets <- reactiveValues()
+  

@@ -1,4 +1,6 @@
 plotType <- reactive({
+  readyWidgets$names <- c()
+  readyWidgets$status <- F
   input$plotType
 })
 
@@ -24,6 +26,10 @@ columns <- reactive({
   input$columns
 })
 
+alphaOrig <- reactive({
+  input$alpha
+})
+
 # important reactive to trigger buildPlot()
 alpha <- reactive({
   # solves problem: pairs ->(back to)-> scatter. y() is the same, dont trigger getInput()
@@ -31,8 +37,8 @@ alpha <- reactive({
   # dep dispY() problem: x()->Sep.Width premature getInput()
   # if (isol(plotType()) == 'pairs') dispY() problem: back to scatter dont trigger Inp()
   
-  if (isolate(plotType()) == 'pairs') 
-    displayYCond() else displayGgpairsWgtsCond()  # trigger
+  # if (isolate(plotType()) == 'pairs') 
+    # displayYCond() else displayGgpairsWgtsCond()  # trigger
   if (is.null(alphaOrig())) 1 else alphaOrig()
 })
 
@@ -83,10 +89,6 @@ position <- reactive({
 jitter <- reactive({
   # if (is.null(input$jitter)) TRUE else input$jitter
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
-})
-
-alphaOrig <- reactive({
-  input$alpha
 })
 
 sizeMagOrig <- reactive({

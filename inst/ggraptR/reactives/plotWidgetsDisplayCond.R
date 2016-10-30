@@ -1,5 +1,4 @@
-# serves as trigger too
-aesReady <- reactive({
+aesReady <- reactive({  # serves as trigger too
   !is.null(displayYCond()) && showAesWgts()
 })
 
@@ -18,10 +17,6 @@ displayXCond <- reactive({
 displayYCond <- reactive({
   # isolate plotType because switching scatter to violin results premature
   # drawing of y-axis based on old x() value - Sepal.Length
-  # plotType() -> xOpts() -> xCtrl() -> x() -> yOpts() -> .
-  
-  # !is.null(yOpts()) &&  ####
-  # if (is.null(plotType()) || (displayXCond() && is.null(x))) return()  ####
   
   # x() is the only reactive trigger. y options must be different from selected x value
   # so it does not make sense to render y before x is ready
@@ -34,18 +29,15 @@ displayGgpairsWgtsCond <- reactive({
 })
 
 displayColCond <- reactive({
-  # sel: !is.null(colorOrig()) && !is.null(colOpts()) && colorOrig() %in% colOpts()
   pairsReady() && aesReady() && 
     isolate(plotType() %in% c('line', 'scatter', 'path', 'pairs'))
 })
 
-# for color
 displayTreatAsFacVarColCond <- reactive({
   aesReady() && isolate(plotType() == 'scatter')
 })
 
 displayFillCond <- reactive({
-  # sel: !is.null(fillOrig()) && !is.null(fillOpts()) && fillOrig() %in% fillOpts()
   pairsReady() && aesReady() && isolate(
     plotType() %in% c('histogram', 'bar', 'box', 'density', 'violin', 'pairs'))
 })
@@ -60,13 +52,11 @@ displayJitCond <- reactive({
 })
 
 displayShapeCond <- reactive({
-  # sel: !is.null(shapeOrig()) && !is.null(shapeOpts()) && shapeOrig() %in% shapeOpts()
   aesReady() && isolate(
     plotType() == 'scatter' || (plotType() %in% c('line', 'path') && pointsOverlay()))
 })
 
 displaySizeCond <- reactive({
-  # sel: !is.null(sizeOrig()) && !is.null(sizeOpts()) && sizeOrig() %in% sizeOpts()
   displayShapeCond()
 })
 
@@ -78,7 +68,6 @@ displayCoordFlipCond <- reactive({
   aesReady() && isolate(plotType() != 'pairs')
 })
 
-# size magnifier. Belongs to advanced control widgets
 displaySizeMagCond <- reactive({
   displayShapeCond()
 })
@@ -92,23 +81,16 @@ displayDensBlkLineCond <- reactive({
   aesReady() && isolate(plotType() == 'density')
 })
 
-# points overlay checkbox
 displayPointsOverlayCond <- reactive({
   aesReady() && isolate(plotType() %in% c('line', 'path'))
 })
 
  
 displayFacetCond <- reactive({
-  #sel:!is.null(facetRowOrig()) && !is.null(facetOpts()) && facetRowOrig()%in%facetOpts()
-  # !is.null(facetColOrig()) && !is.null(facetOpts()) && facetColOrig() %in% facetOpts()
-  # !is.null(facetWrapOrig()) && !is.null(facetOpts()) && facetWrapOrig() %in% facetOpts()
   extraBlocksReady() && isolate(plotType() != 'pairs') && showFacetWgts()
 })
 
-# display additional aggregation select field
 displayPlotAddAggBy <- reactive({
-  # sel:!is.null(plotAddAggBy()) && !is.null(plotAddAggByOpts()) &&
-  # && all(plotAddAggBy() %in% plotAddAggByOpts())
   extraBlocksReady() && 
     notNulls(input$showDSTypeAndPlotAggWgts, input$semiAutoAggOn) &&
     input$showDSTypeAndPlotAggWgts & semiAutoAggOn()

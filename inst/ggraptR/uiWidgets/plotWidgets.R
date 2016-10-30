@@ -1,9 +1,46 @@
 # if we abandon keep the default first value of selectInput list
 # then we will lost any input state after collapsing aestetic elements block
 
+# last time this block of code spoiled dispX()->dispY() dependency
+# dynamically create new functions based on base shiny::xxInput()
+# for (inp in c('checkbox', 'select', 'slider', 'colour', 'numeric')) {
+#   newFunCode <- function(...) {
+#     args <- list(...)
+#     if (!readyWidgets$status) {
+#       readyWidgets$names <- c(readyWidgets$names, args[[1]])
+#       if (setequal(readyWidgets$names,  plotInputsRegister()[[isolate(plotType())]])) {
+#         readyWidgets$status <- T  # trigger buildPlot
+#       }
+#     }
+#     do.call(paste0(inp, 'Input'), args)  # this line will be evaluated further
+#   }
+#   stopifnot(body(newFunCode)[[4]][[2]] == quote(paste0(inp, "Input")))
+#   body(newFunCode)[[4]][[2]] <- eval(body(newFunCode)[[4]][[2]])
+#   
+#   assign(paste0(inp, 'Input'), newFunCode, envir=.GlobalEnv)
+# }
+
+updateWgtLoadedState <- function(inpName) {
+  isolate({
+    if (!readyWidgets$status) {
+      readyWidgets$names <- c(readyWidgets$names, inpName)
+      requiredNames <- plotInputsRegister()[[isolate(plotType())]]
+      
+      redund <- setdiff(readyWidgets$names, requiredNames)
+      if (length(redund)) stop('Redundant controls loading: ', redund)
+      if (inpName == 'y') browser()
+
+      if (setequal(readyWidgets$names, requiredNames)) {
+        readyWidgets$status <- T  # trigger buildPlot
+      }
+    }
+  })
+}
+
+
 output$plotTypeCtrl <- renderUI({
   if (!is.null(dataset())) {
-    selectInput(inputId = "plotType", label = "Plot type", 
+    selectInput("plotType", "Plot type", 
                 choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
                             'Line'='line', 'Path'='path',
                             'Histogram'='histogram', 'Density'='density', 
@@ -15,20 +52,23 @@ output$plotTypeCtrl <- renderUI({
 
 output$xCtrl <- renderUI({
   if (displayXCond()) {
-    isolate(selectInput('x', 'X', choices=if (plotType() %in% c('violin', 'box', 'bar'))
+    updateWgtLoadedState('x')
+    isolate(selectInput('x', 'X', if (plotType() %in% c('violin', 'box', 'bar'))
       categoricalVars() else numericVars(), selected = x()))
   }
 })
 
 output$yCtrl <- renderUI({
   if (displayYCond()) {
-    isolate(selectInput('y', 'Y', setdiff(numericVars(), if (displayXCond()) x()), y()))
+    updateWgtLoadedState('y')
+    isolate(selectInput('y','Y', setdiff(numericVars(), if (displayXCond()) x()), y()))
   }
 })
 
 # columns for pairsPlot
 output$columnsCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('columns')
     isolate(selectInput(
       'columns', 'Columns', choices=names(dataset()), 
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
@@ -39,6 +79,7 @@ output$columnsCtrl <- renderUI({
 ## color control options
 output$colCtrl <- renderUI({
   if (displayColCond()) {
+    updateWgtLoadedState('color')
     isolate({
       opts <- c('None', if (plotType() %in% c('scatter', 'pairs')) 
         names(dataset()) else categoricalVars())
@@ -50,6 +91,7 @@ output$colCtrl <- renderUI({
 ## treat-as-a-factor-variable option for color
 output$treatAsFacVarColCtrl <- renderUI({
   if (displayTreatAsFacVarColCond()) {
+    updateWgtLoadedState('treatAsFacVarCol')
     isolate(checkboxInput('treatAsFacVarCol', 'Treat as a factor variable', 
                           value=treatAsFacVarCol()))
   }
@@ -57,6 +99,7 @@ output$treatAsFacVarColCtrl <- renderUI({
 
 output$fillCtrl <- renderUI({
   if (displayFillCond()) {
+    updateWgtLoadedState('fill')
     isolate(selectInput('fill', 'Fill', c('None', categoricalVars()), fillOrig()))
   }
 })
@@ -64,6 +107,7 @@ output$fillCtrl <- renderUI({
 ## position (stack vs. dodge) control options
 output$posCtrl <- renderUI({
   if (displayPosCond()) {
+    updateWgtLoadedState('position')
     isolate(selectInput('position', 'Position', c('None', 'dodge', 'stack'), position()))
   }
 })
@@ -71,6 +115,7 @@ output$posCtrl <- renderUI({
 ## jitter options
 output$jitCtrl <- renderUI({
   if (displayJitCond()) {
+    updateWgtLoadedState('jitter')
     isolate(checkboxInput('jitter', 'Apply jitter effect', value=TRUE)) #jitter()
   }
 })
@@ -78,6 +123,7 @@ output$jitCtrl <- renderUI({
 ## geom smoothing options
 output$smthCtrl <- renderUI({
   if (displaySmthCond()) {
+    updateWgtLoadedState('smooth')
     isolate(selectInput('smooth', 'Smoothing Effect',
                         c('None'='None', 'Linear'='lm', 'Non-linear'='auto'), 
                         smoothOrig()))
@@ -86,12 +132,14 @@ output$smthCtrl <- renderUI({
 
 output$sizeCtrl <- renderUI({
   if (displaySizeCond()) {
+    updateWgtLoadedState('size')
     isolate(selectInput('size', 'Size', c('None', numericVars()), sizeOrig()))
   }
 })
 
 output$shapeCtrl <- renderUI({
   if (displayShapeCond()) {
+    updateWgtLoadedState('shape')
     # options = c('None', varsUniqValsCntLOEN())
     isolate(selectInput('shape', 'Shape', c('None', categoricalVars()), shapeOrig()))
   }
@@ -100,6 +148,7 @@ output$shapeCtrl <- renderUI({
 ## histogram binwidth options
 output$binWidthCtrl <- renderUI({
   if (displayBinWidthCond()) {
+    updateWgtLoadedState('binWidth')
     isolate({
       # if (!is.null(dataset()) && x() %in% colnames(dataset)) {  # !is.null(x()) && 
       maxVal <- round(diff(range(dataset()[[x()]], na.rm=TRUE)))
@@ -113,6 +162,7 @@ output$binWidthCtrl <- renderUI({
 ## density line color options
 output$densBlkLineCondCtrl <- renderUI({
   if (displayDensBlkLineCond()) {
+    updateWgtLoadedState('densBlkLineCond')
     isolate(checkboxInput('densBlkLineCond', 'Draw black outline', 
                           value=densBlkLineCond()))
   }
@@ -160,6 +210,7 @@ output$facetScaleCtrl <- renderUI({
 ## alpha (opacity) options
 output$alphaCtrl <- renderUI({
   if (showAesWgts()) {
+    updateWgtLoadedState('alpha')
     sliderInput("alpha", label = "Opacity",
                 min=0, max=1, value=0.5, step=0.1) #isolate(alpha())
   }
@@ -168,13 +219,16 @@ output$alphaCtrl <- renderUI({
 ## size magnifier
 output$sizeMagCtrl <- renderUI({
   if (displaySizeMagCond()) {
+    updateWgtLoadedState('sizeMag')
     sliderInput("sizeMag", label="Size Magnifier",
                 min=1, max=25, value=3, step=1) #isolate(sizeMag())
   }
 })
 
 output$coordFlipCtrl <- renderUI({
+  # browser()
   if (displayCoordFlipCond()) {
+    updateWgtLoadedState('coordFlip')
     isolate(checkboxInput('coordFlip', 'Flip X and Y axis', value=F))  # val=coordFlip()
   }
 })
@@ -182,6 +236,7 @@ output$coordFlipCtrl <- renderUI({
 
 output$ggpairsUpContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsUpCont')
     isolate(selectInput(
       'ggpairsUpCont', NULL, 
       c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
@@ -191,6 +246,7 @@ output$ggpairsUpContCtrl <- renderUI({
 
 output$ggpairsUpComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsUpCombo')
     isolate(selectInput(
       'ggpairsUpCombo', NULL,
       c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
@@ -200,6 +256,7 @@ output$ggpairsUpComboCtrl <- renderUI({
 
 output$ggpairsUpDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsUpDiscr')
     isolate(selectInput(
       'ggpairsUpDiscr', NULL,
       c('facetba'='facetbar', 'ratio', 'blank'),
@@ -209,6 +266,7 @@ output$ggpairsUpDiscrCtrl <- renderUI({
 
 output$ggpairsLowContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsLowCont')
     isolate(selectInput(
       'ggpairsLowCont', NULL, 
       c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
@@ -218,6 +276,7 @@ output$ggpairsLowContCtrl <- renderUI({
 
 output$ggpairsLowComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsLowCombo')
     isolate(selectInput(
       'ggpairsLowCombo', NULL, 
       c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
@@ -227,6 +286,7 @@ output$ggpairsLowComboCtrl <- renderUI({
 
 output$ggpairsLowDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsLowDiscr')
     isolate(selectInput(
       'ggpairsLowDiscr', NULL, 
       c('facetba'='facetbar', 'ratio', 'blank'),
@@ -236,6 +296,7 @@ output$ggpairsLowDiscrCtrl <- renderUI({
 
 output$ggpairsDiagContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsDiagCont')
     isolate(selectInput(
       'ggpairsDiagCont', NULL,
       c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
@@ -245,6 +306,7 @@ output$ggpairsDiagContCtrl <- renderUI({
 
 output$ggpairsDiagDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
+    updateWgtLoadedState('ggpairsDiagDiscr')
     isolate(selectInput(
       'ggpairsDiagDiscr', NULL,
       c('bar'='barDiag', 'blank'='blankDiag'),
@@ -333,7 +395,7 @@ output$labelFontSizeCtrl <- renderUI({
 
 output$labelFontColorCtrl <- renderUI({
   if (displayThemeWgts()) {
-    shinyjs::isolate(colourInput('labelFontColor', 'Label Font Color',
+    isolate(colourInput('labelFontColor', 'Label Font Color',
                                  value=labelFontColor()))
   }
 })
