@@ -71,7 +71,6 @@ position <- reactive({
 })
 
 jitter <- reactive({
-  browser()
   if (!is.null(input$jitter) && input$jitter 
       && !plotType() %in% c('line', 'path')) 'jitter' else 'identity'
 })
