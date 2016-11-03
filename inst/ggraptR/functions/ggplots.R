@@ -58,9 +58,9 @@ plotPointsOverlay <- function(plot, ls) {
   
   p <- plot + if (is.null(ls$size)) 
     geom_point(aes_string(shape=ls$shapeAsFactor), 
-               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
+               alpha=ls$alpha, size=ls$sizeMag) else 
                  geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
-                            alpha=ls$alpha, position=ls$jitter)
+                            alpha=ls$alpha)
   p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)

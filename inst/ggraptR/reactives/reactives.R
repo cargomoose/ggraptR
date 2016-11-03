@@ -3,7 +3,7 @@ plotInputsRegister <- reactive({
     scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape',
               'size', 'smooth', 'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
-    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
+    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 
                      'alpha', 'sizeMag'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
