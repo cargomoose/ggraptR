@@ -1,43 +1,6 @@
 # if we abandon keep the default first value of selectInput list
 # then we will lost any input state after collapsing aestetic elements block
 
-# last time this block of code spoiled dispX()->dispY() dependency
-# dynamically create new functions based on base shiny::xxInput()
-# for (inp in c('checkbox', 'select', 'slider', 'colour', 'numeric')) {
-#   newFunCode <- function(...) {
-#     args <- list(...)
-#     if (!plotLoading$status) {
-#       plotLoading$names <- c(plotLoading$names, args[[1]])
-#       if (setequal(plotLoading$names,  plotInputsRegister()[[isolate(plotType())]])) {
-#         plotLoading$status <- T  # trigger buildPlot
-#       }
-#     }
-#     do.call(paste0(inp, 'Input'), args)  # paste0() must be evaluated 'eval(body..'
-#   }
-#   stopifnot(body(newFunCode)[[4]][[2]] == quote(paste0(inp, "Input")))
-#   body(newFunCode)[[4]][[2]] <- eval(body(newFunCode)[[4]][[2]])
-#   
-#   assign(paste0(inp, 'Input'), newFunCode, envir=.GlobalEnv)
-# }
-
-# updateWgtLoadedState <- function(inpName) {
-#   isolate({
-#     if (!plotLoading$status) {
-#       plotLoading$names <- c(plotLoading$names, inpName)
-#       requiredNames <- plotInputsRegister()[[isolate(plotType())]]
-#       
-#       redund <- setdiff(plotLoading$names, requiredNames)
-#       if (length(redund)) stop('Redundant controls loading: ', redund)
-#       if (inpName == 'y') browser()
-# 
-#       if (setequal(plotLoading$names, requiredNames)) {
-#         plotLoading$itersBeforeBuildPlot <- 5  # will wait until all inputs are ready
-#       }
-#     }
-#   })
-# }
-
-
 output$plotTypeCtrl <- renderUI({
   if (!is.null(dataset())) {
     selectInput("plotType", "Plot type", 
