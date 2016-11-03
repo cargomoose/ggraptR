@@ -1,9 +1,9 @@
 plotInputsRegister <- reactive({
   inputs <- list(
     scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape',
-              'size', 'smooth', 'jitter', 'alpha', 'sizeMag', 'coordFlip'),
+              'size', 'smooth', 'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
-    linePtsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
+    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'jitter', 
                      'alpha', 'sizeMag'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
@@ -15,7 +15,6 @@ plotInputsRegister <- reactive({
                 'ggpairsDiagCont', 'ggpairsDiagDiscr',
                 'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
   inputs$path <- inputs$line
-  inputs$pathPtsOverlay <- inputs$linePtsOverlay
   inputs
 })
 
@@ -174,12 +173,12 @@ facetWidgetsLoaded <- reactive({
 noFacetSelected <- reactive({
   if (!facetWidgetsLoaded()) return(TRUE)
   facetFam <- c(facetCol(), facetRow(), facetWrap())
-  all('None' == facetFam) | all('' == facetFam) | all('.' == facetFam)
+  all('None' == facetFam) || all('' == facetFam) || all('.' == facetFam)
 })
 
 ## conditional: facet grid was selected
 facetGridSelected <- reactive({
-  facetWidgetsLoaded() && (facetCol() != '.' | facetRow() != '.')
+  facetWidgetsLoaded() && (facetCol() != '.' || facetRow() != '.')
 })
 
 ## conditional: facet wrap was selected
@@ -233,5 +232,4 @@ generateCodeReactive <- reactive({
 
 log <- reactiveValues(plot=NULL)
 
-readyWidgets <- reactiveValues()
-  
+plotLoading <- reactiveValues()

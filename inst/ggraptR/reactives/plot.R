@@ -1,30 +1,27 @@
 getPlotInputs <- reactive({
-  pType <- isolate(plotType())
-  inputNames <- plotInputsRegister()[[pType]]
+  inputNames <- plotInputsRegister()[[plotType()]]  # plotType() dependency
   # we need to isolate x(). It will effect through y()
   subscribedInputNames <- setdiff(inputNames, c('x', 'xAsFactor'))
   
   inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
   names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
-  # note that alpha() is the only reactive that is common for all plotTypes. It has 
-  # additional slightly sophisticated reactive behaviour.
   
-  # if (pType != 'pairs') ggpairsLowDiscr() # make dependency
-  if ('x' %in% inputNames) inputs$x <- isolate(x())
-  if ('xAsFactor' %in% inputNames) inputs$xAsFactor <- isolate(xAsFactor())
+  for (inp in c('x', 'xAsFactor')) {
+    if (inp %in% inputNames) inputs[[inp]] <- isolate(do.call(inp, list()))  # x(),xAs..()
+  }
   ensureCorrectPlotInputs(inputs, colnames(isolate(plotDF())))
 })
 
 getBasePlot <- function(plotDF, pType, inputs) {
   pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
-  p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))
+  p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))  # scatterPlot(args)
   
   if (pType %in% c('line', 'path')) {
-    overlayWidgets <- do.call.pasted(pType, 'PtsOverlayWidgets')
-    areLoaded <- checkWidgetsLoaded(input, overlayWidgets)
-    if (areLoaded && pointsOverlay()) {
-      overlayInputs <- do.call.pasted(pType, 'PtsOverlayInputs')
-      p <- plotPointsOverlay(p, overlayInputs)
+    if (pointsOverlay()) {
+      overInputNames <- plotInputsRegister()[['pointsOverlay']]
+      overInputs <- lapply(overInputNames, do.call, args=list(), envir=environment())
+      names(overInputs) <- overInputNames
+      p <- plotPointsOverlay(p, overInputs)
     }
   }
   p
@@ -36,25 +33,14 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  if (!readyWidgets$status) return()
+  if (!plotLoading$status) return()  # on exit here will erase all inputs dependencies
   isolate({
     plotDF <- plotDF()
     pType <- plotType()
   })
   
-  # if (is.null(pType) && is.null(y())) return()  # y() subscription for the first run
-  # subscription must be before first return(NULL)
   inputs <- getPlotInputs()
-  browser()
-  # isolate({
-  #   plotDF <- plotDF()
-    # plotWidgets <- do.call.pasted(pType, 'Widgets')
-    # arePlotWidgetsLoaded <- !is.null(plotWidgets) &&
-      # checkWidgetsLoaded(input, c('plotType', plotWidgets))
-  # })
-  # if (is.null(plotDF) || !arePlotWidgetsLoaded) return()
   p <- getBasePlot(plotDF, pType, inputs)
-  if (is.null(p)) return()
   
   if (pType != 'pairs') {
     if (!noFacetSelected()) {

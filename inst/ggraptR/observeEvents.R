@@ -23,6 +23,15 @@ observeEvent(input$reactive, {
   }
 })
 
+# delay plot building until all controls will be ready
+observe({
+  nInp <- input$plotLoadingInp
+  isolate({
+    n <- plotLoading$itersToDraw
+    if (notNulls(nInp, n) && n != 0) plotLoading$itersToDraw <- n - 1
+  })
+})
+
 # view plot from import tab
 observe({
   if (input$viewPlot > 0){

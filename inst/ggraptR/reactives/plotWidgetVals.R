@@ -1,6 +1,6 @@
 plotType <- reactive({
-  readyWidgets$names <- c()
-  readyWidgets$status <- F
+  plotLoading$status <- F
+  if (!is.null(input$plotType)) plotLoading$itersToDraw <- 5
   input$plotType
 })
 
@@ -24,22 +24,6 @@ y <- reactive({
 # pairsPlot
 columns <- reactive({
   input$columns
-})
-
-alphaOrig <- reactive({
-  input$alpha
-})
-
-# important reactive to trigger buildPlot()
-alpha <- reactive({
-  # solves problem: pairs ->(back to)-> scatter. y() is the same, dont trigger getInput()
-  # dep plotType() next problem: scatter -> violin premature getInput()
-  # dep dispY() problem: x()->Sep.Width premature getInput()
-  # if (isol(plotType()) == 'pairs') dispY() problem: back to scatter dont trigger Inp()
-  
-  # if (isolate(plotType()) == 'pairs') 
-    # displayYCond() else displayGgpairsWgtsCond()  # trigger
-  if (is.null(alphaOrig())) 1 else alphaOrig()
 })
 
 colorOrig <- reactive({
@@ -97,6 +81,14 @@ sizeMagOrig <- reactive({
 
 sizeMag <- reactive({
   if (is.null(input$sizeMag)) 4 else input$sizeMag
+})
+
+alphaOrig <- reactive({
+  input$alpha
+})
+
+alpha <- reactive({
+  if (is.null(alphaOrig())) 1 else alphaOrig()
 })
 
 densBlkLineCond <- reactive({
@@ -288,8 +280,7 @@ showFacetWgts <- reactive({
 })
 
 pointsOverlay <- reactive({
-  # displayPointsOverlayCond() && 
-  input$pointsOverlay
+  !is.null(input$pointsOverlay) && input$pointsOverlay
 })
 
 
