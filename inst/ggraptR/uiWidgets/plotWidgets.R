@@ -14,7 +14,6 @@ output$plotTypeCtrl <- renderUI({
 })
 
 output$plotLoadingCtrl <- renderUI({
-  # Sys.sleep(1)
   n <- plotLoading$itersToDraw
   if (is.null(n)) return()
   if (n > 0) {
@@ -27,7 +26,6 @@ output$plotLoadingCtrl <- renderUI({
 
 output$xCtrl <- renderUI({
   if (displayXCond()) {
-    # updateWgtLoadedState('x')
     isolate(selectInput('x', 'X', if (plotType() %in% c('violin', 'box', 'bar'))
       categoricalVars() else numericVars(), selected = x()))
   }
@@ -35,7 +33,6 @@ output$xCtrl <- renderUI({
 
 output$yCtrl <- renderUI({
   if (displayYCond()) {
-    # updateWgtLoadedState('y')
     isolate(selectInput('y','Y', setdiff(numericVars(), if (displayXCond()) x()), y()))
   }
 })
@@ -43,7 +40,6 @@ output$yCtrl <- renderUI({
 # columns for pairsPlot
 output$columnsCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('columns')
     isolate(selectInput(
       'columns', 'Columns', choices=names(dataset()), 
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
@@ -54,7 +50,6 @@ output$columnsCtrl <- renderUI({
 ## color control options
 output$colCtrl <- renderUI({
   if (displayColCond()) {
-    # updateWgtLoadedState('color')
     isolate({
       opts <- c('None', if (plotType() %in% c('scatter', 'pairs')) 
         names(dataset()) else categoricalVars())
@@ -66,7 +61,6 @@ output$colCtrl <- renderUI({
 ## treat-as-a-factor-variable option for color
 output$treatAsFacVarColCtrl <- renderUI({
   if (displayTreatAsFacVarColCond()) {
-    # updateWgtLoadedState('treatAsFacVarCol')
     isolate(checkboxInput('treatAsFacVarCol', 'Treat as a factor variable', 
                           value=treatAsFacVarCol()))
   }
@@ -74,7 +68,6 @@ output$treatAsFacVarColCtrl <- renderUI({
 
 output$fillCtrl <- renderUI({
   if (displayFillCond()) {
-    # updateWgtLoadedState('fill')
     isolate(selectInput('fill', 'Fill', c('None', categoricalVars()), fillOrig()))
   }
 })
@@ -82,7 +75,6 @@ output$fillCtrl <- renderUI({
 ## position (stack vs. dodge) control options
 output$posCtrl <- renderUI({
   if (displayPosCond()) {
-    # updateWgtLoadedState('position')
     isolate(selectInput('position', 'Position', c('None', 'dodge', 'stack'), position()))
   }
 })
@@ -90,7 +82,6 @@ output$posCtrl <- renderUI({
 ## jitter options
 output$jitCtrl <- renderUI({
   if (displayJitCond()) {
-    # updateWgtLoadedState('jitter')
     isolate(checkboxInput('jitter', 'Apply jitter effect', value=TRUE)) #jitter()
   }
 })
@@ -98,7 +89,6 @@ output$jitCtrl <- renderUI({
 ## geom smoothing options
 output$smthCtrl <- renderUI({
   if (displaySmthCond()) {
-    # updateWgtLoadedState('smooth')
     isolate(selectInput('smooth', 'Smoothing Effect',
                         c('None'='None', 'Linear'='lm', 'Non-linear'='auto'), 
                         smoothOrig()))
@@ -107,15 +97,12 @@ output$smthCtrl <- renderUI({
 
 output$sizeCtrl <- renderUI({
   if (displaySizeCond()) {
-    # updateWgtLoadedState('size')
     isolate(selectInput('size', 'Size', c('None', numericVars()), sizeOrig()))
   }
 })
 
 output$shapeCtrl <- renderUI({
   if (displayShapeCond()) {
-    # updateWgtLoadedState('shape')
-    # options = c('None', varsUniqValsCntLOEN())
     isolate(selectInput('shape', 'Shape', c('None', categoricalVars()), shapeOrig()))
   }
 })
@@ -123,9 +110,7 @@ output$shapeCtrl <- renderUI({
 ## histogram binwidth options
 output$binWidthCtrl <- renderUI({
   if (displayBinWidthCond()) {
-    # updateWgtLoadedState('binWidth')
     isolate({
-      # if (!is.null(dataset()) && x() %in% colnames(dataset)) {  # !is.null(x()) && 
       maxVal <- round(diff(range(dataset()[[x()]], na.rm=TRUE)))
       minVal <- stepVal <- if (maxVal > 10) 1 else 0.1
       sliderInput('binWidth', label = "Bin Width",
@@ -137,7 +122,6 @@ output$binWidthCtrl <- renderUI({
 ## density line color options
 output$densBlkLineCondCtrl <- renderUI({
   if (displayDensBlkLineCond()) {
-    # updateWgtLoadedState('densBlkLineCond')
     isolate(checkboxInput('densBlkLineCond', 'Draw black outline', 
                           value=densBlkLineCond()))
   }
@@ -182,10 +166,8 @@ output$facetScaleCtrl <- renderUI({
   }
 })
 
-## alpha (opacity) options
 output$alphaCtrl <- renderUI({
   if (showAesWgts()) {
-    # updateWgtLoadedState('alpha')
     sliderInput("alpha", label = "Opacity",
                 min=0, max=1, value=0.5, step=0.1) #isolate(alpha())
   }
@@ -194,7 +176,6 @@ output$alphaCtrl <- renderUI({
 ## size magnifier
 output$sizeMagCtrl <- renderUI({
   if (displaySizeMagCond()) {
-    # updateWgtLoadedState('sizeMag')
     sliderInput("sizeMag", label="Size Magnifier",
                 min=1, max=25, value=3, step=1) #isolate(sizeMag())
   }
@@ -209,7 +190,6 @@ output$coordFlipCtrl <- renderUI({
 
 output$ggpairsUpContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsUpCont')
     isolate(selectInput(
       'ggpairsUpCont', NULL, 
       c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
@@ -219,7 +199,6 @@ output$ggpairsUpContCtrl <- renderUI({
 
 output$ggpairsUpComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsUpCombo')
     isolate(selectInput(
       'ggpairsUpCombo', NULL,
       c('box', 'dot', 'facethist', 'facetdensity', 'denstrip','blank'),
@@ -229,7 +208,6 @@ output$ggpairsUpComboCtrl <- renderUI({
 
 output$ggpairsUpDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsUpDiscr')
     isolate(selectInput(
       'ggpairsUpDiscr', NULL,
       c('facetba'='facetbar', 'ratio', 'blank'),
@@ -239,7 +217,6 @@ output$ggpairsUpDiscrCtrl <- renderUI({
 
 output$ggpairsLowContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsLowCont')
     isolate(selectInput(
       'ggpairsLowCont', NULL, 
       c('points', 'smooth', 'smooth_loess', 'density', 'cor', 'blank'),
@@ -249,7 +226,6 @@ output$ggpairsLowContCtrl <- renderUI({
 
 output$ggpairsLowComboCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsLowCombo')
     isolate(selectInput(
       'ggpairsLowCombo', NULL, 
       c('box', 'dot', 'facethi'='facethist', 'facetdensity', 'denstrip', 'blank'),
@@ -259,7 +235,6 @@ output$ggpairsLowComboCtrl <- renderUI({
 
 output$ggpairsLowDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsLowDiscr')
     isolate(selectInput(
       'ggpairsLowDiscr', NULL, 
       c('facetba'='facetbar', 'ratio', 'blank'),
@@ -269,7 +244,6 @@ output$ggpairsLowDiscrCtrl <- renderUI({
 
 output$ggpairsDiagContCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsDiagCont')
     isolate(selectInput(
       'ggpairsDiagCont', NULL,
       c('density'='densityDiag', 'bar'='barDiag', 'blank'='blankDiag'),
@@ -279,7 +253,6 @@ output$ggpairsDiagContCtrl <- renderUI({
 
 output$ggpairsDiagDiscrCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    # updateWgtLoadedState('ggpairsDiagDiscr')
     isolate(selectInput(
       'ggpairsDiagDiscr', NULL,
       c('bar'='barDiag', 'blank'='blankDiag'),

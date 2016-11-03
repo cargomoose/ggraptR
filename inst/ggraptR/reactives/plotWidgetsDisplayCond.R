@@ -17,7 +17,6 @@ displayXCond <- reactive({
 displayYCond <- reactive({
   # isolate plotType because switching scatter to violin results premature
   # drawing of y-axis based on old x() value - Sepal.Length
-  
   # x() is the only reactive trigger. y options must be different from selected x value
   # so it does not make sense to render y before x is ready
   !is.null(displayXCond()) && !is.null(x()) &&
