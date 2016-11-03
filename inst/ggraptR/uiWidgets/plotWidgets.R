@@ -6,13 +6,13 @@
 # for (inp in c('checkbox', 'select', 'slider', 'colour', 'numeric')) {
 #   newFunCode <- function(...) {
 #     args <- list(...)
-#     if (!readyWidgets$status) {
-#       readyWidgets$names <- c(readyWidgets$names, args[[1]])
-#       if (setequal(readyWidgets$names,  plotInputsRegister()[[isolate(plotType())]])) {
-#         readyWidgets$status <- T  # trigger buildPlot
+#     if (!plotLoading$status) {
+#       plotLoading$names <- c(plotLoading$names, args[[1]])
+#       if (setequal(plotLoading$names,  plotInputsRegister()[[isolate(plotType())]])) {
+#         plotLoading$status <- T  # trigger buildPlot
 #       }
 #     }
-#     do.call(paste0(inp, 'Input'), args)  # this line will be evaluated further
+#     do.call(paste0(inp, 'Input'), args)  # paste0() must be evaluated 'eval(body..'
 #   }
 #   stopifnot(body(newFunCode)[[4]][[2]] == quote(paste0(inp, "Input")))
 #   body(newFunCode)[[4]][[2]] <- eval(body(newFunCode)[[4]][[2]])
@@ -20,22 +20,22 @@
 #   assign(paste0(inp, 'Input'), newFunCode, envir=.GlobalEnv)
 # }
 
-updateWgtLoadedState <- function(inpName) {
-  isolate({
-    if (!readyWidgets$status) {
-      readyWidgets$names <- c(readyWidgets$names, inpName)
-      requiredNames <- plotInputsRegister()[[isolate(plotType())]]
-      
-      redund <- setdiff(readyWidgets$names, requiredNames)
-      if (length(redund)) stop('Redundant controls loading: ', redund)
-      if (inpName == 'y') browser()
-
-      if (setequal(readyWidgets$names, requiredNames)) {
-        readyWidgets$status <- T  # trigger buildPlot
-      }
-    }
-  })
-}
+# updateWgtLoadedState <- function(inpName) {
+#   isolate({
+#     if (!plotLoading$status) {
+#       plotLoading$names <- c(plotLoading$names, inpName)
+#       requiredNames <- plotInputsRegister()[[isolate(plotType())]]
+#       
+#       redund <- setdiff(plotLoading$names, requiredNames)
+#       if (length(redund)) stop('Redundant controls loading: ', redund)
+#       if (inpName == 'y') browser()
+# 
+#       if (setequal(plotLoading$names, requiredNames)) {
+#         plotLoading$itersBeforeBuildPlot <- 5  # will wait until all inputs are ready
+#       }
+#     }
+#   })
+# }
 
 
 output$plotTypeCtrl <- renderUI({
@@ -50,9 +50,21 @@ output$plotTypeCtrl <- renderUI({
   }
 })
 
+output$plotLoadingCtrl <- renderUI({
+  # Sys.sleep(1)
+  n <- plotLoading$itersToDraw
+  if (is.null(n)) return()
+  if (n > 0) {
+    numericInput('plotLoadingInp', NULL, n, width = '80px')  # 1px
+  } else {
+    plotLoading$status <- T
+    NULL
+  }
+})
+
 output$xCtrl <- renderUI({
   if (displayXCond()) {
-    updateWgtLoadedState('x')
+    # updateWgtLoadedState('x')
     isolate(selectInput('x', 'X', if (plotType() %in% c('violin', 'box', 'bar'))
       categoricalVars() else numericVars(), selected = x()))
   }
@@ -60,7 +72,7 @@ output$xCtrl <- renderUI({
 
 output$yCtrl <- renderUI({
   if (displayYCond()) {
-    updateWgtLoadedState('y')
+    # updateWgtLoadedState('y')
     isolate(selectInput('y','Y', setdiff(numericVars(), if (displayXCond()) x()), y()))
   }
 })
@@ -68,7 +80,7 @@ output$yCtrl <- renderUI({
 # columns for pairsPlot
 output$columnsCtrl <- renderUI({
   if (displayGgpairsWgtsCond()) {
-    updateWgtLoadedState('columns')
+    # updateWgtLoadedState('columns')
     isolate(selectInput(
       'columns', 'Columns', choices=names(dataset()), 
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
@@ -79,7 +91,7 @@ output$columnsCtrl <- renderUI({
 ## color control options
 output$colCtrl <- renderUI({
   if (displayColCond()) {
-    updateWgtLoadedState('color')
+    # updateWgtLoadedState('color')
     isolate({
       opts <- c('None', if (plotType() %in% c('scatter', 'pairs')) 
         names(dataset()) else categoricalVars())
