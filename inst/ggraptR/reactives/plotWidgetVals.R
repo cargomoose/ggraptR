@@ -71,8 +71,9 @@ position <- reactive({
 })
 
 jitter <- reactive({
-  # if (is.null(input$jitter)) TRUE else input$jitter
-  if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
+  browser()
+  if (!is.null(input$jitter) && input$jitter 
+      && !plotType() %in% c('line', 'path')) 'jitter' else 'identity'
 })
 
 sizeMagOrig <- reactive({
