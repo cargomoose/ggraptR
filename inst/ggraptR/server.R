@@ -31,7 +31,6 @@ shinyServer(function(input, output, session) {
   source('./reactives/reactives.R', local=TRUE)  # general/miscellaneous
   source('./reactives/dataset.R', local=TRUE)
   source('./reactives/plotWidgetVals.R', local=TRUE)
-  source('./reactives/plotWidgetNames.R', local=TRUE)
   source('./reactives/plotWidgetsDisplayCond.R', local=TRUE)
   source('./reactives/plot.R', local=TRUE)
   
