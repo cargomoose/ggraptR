@@ -53,7 +53,7 @@ plotPath <- function(dataset, ls) {
   p
 }
 
-plotPointsOverlay <- function(plot, ls) {
+fillPlotWithPointsOverlay <- function(plot, ls) {
   flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
   
   p <- plot + if (is.null(ls$size)) 

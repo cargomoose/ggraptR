@@ -1,19 +1,18 @@
 plotInputsRegister <- reactive({
   inputs <- list(
-    scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape',
-              'size', 'smooth', 'jitter', 'alpha', 'sizeMag'),
+    scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape', 'size', 'smooth', 
+              'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
-    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 
-                     'alpha', 'sizeMag'),
+    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'alpha', 'sizeMag'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
     density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlkLineCond'),
     box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
     violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
     pairs=c('columns', 'color', 'fill', 'alpha',
-                'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
-                'ggpairsDiagCont', 'ggpairsDiagDiscr',
-                'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
+            'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
+            'ggpairsDiagCont', 'ggpairsDiagDiscr',
+            'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
   inputs$path <- inputs$line
   inputs
 })

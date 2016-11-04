@@ -1,28 +1,18 @@
-getPlotInputs <- reactive({
-  inputNames <- plotInputsRegister()[[plotType()]]  # plotType() dependency
-  # we need to isolate x(). It will effect through y()
-  subscribedInputNames <- setdiff(inputNames, c('x', 'xAsFactor'))
-  
-  inputs <- lapply(subscribedInputNames, do.call, args=list(), envir=environment())
-  names(inputs) <- subscribedInputNames  # results list(x=x(), y=y()...)
-  
-  for (inp in c('x', 'xAsFactor')) {
-    if (inp %in% inputNames) inputs[[inp]] <- isolate(do.call(inp, list()))  # x(),xAs..()
-  }
-  ensureCorrectPlotInputs(inputs, colnames(isolate(plotDF())))
-})
+getPlotInputs <- function(pType, plotDF) {
+  inputNames <- plotInputsRegister()[[pType]]
+  inputs <- lapply(inputNames, do.call, args=list(), envir=environment())
+  names(inputs) <- inputNames  # results list(x=eval(x()), y=eval(y())...)
+  ensureCorrectPlotInputs(inputs, colnames(plotDF))
+}
 
-getBasePlot <- function(plotDF, pType, inputs) {
+getBasePlot <- function(pType, plotDF) {
+  inputs <- getPlotInputs(pType, plotDF)
   pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
   p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))  # scatterPlot(args)
   
-  if (pType %in% c('line', 'path')) {
-    if (pointsOverlay()) {
-      overInputNames <- plotInputsRegister()[['pointsOverlay']]
-      overInputs <- lapply(overInputNames, do.call, args=list(), envir=environment())
-      names(overInputs) <- overInputNames
-      p <- plotPointsOverlay(p, overInputs)
-    }
+  if (pType %in% c('line', 'path') && pointsOverlay()) {
+    overInputs <- getPlotInputs('pointsOverlay', plotDF)
+    p <- fillPlotWithPointsOverlay(p, overInputs)
   }
   p
 }
@@ -33,14 +23,9 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  if (!plotLoading$status) return()  # on exit here will erase all inputs dependencies
-  isolate({
-    plotDF <- plotDF()
-    pType <- plotType()
-  })
-  
-  inputs <- getPlotInputs()
-  p <- getBasePlot(plotDF, pType, inputs)
+  if (!plotLoading$status) return()  # on exit here will erase all y(),fill().. deps
+  pType <- plotType()
+  p <- getBasePlot(pType, isolate(plotDF()))
   
   if (pType != 'pairs') {
     if (!noFacetSelected()) {
