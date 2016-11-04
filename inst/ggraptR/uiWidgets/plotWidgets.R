@@ -50,7 +50,7 @@ output$columnsCtrl <- renderUI({
 output$colCtrl <- renderUI({
   if (displayColCond()) {
     isolate({
-      opts <- c('None', if (plotType() %in% c('scatter', 'pairs')) 
+      opts <- c('None', if (plotType() == 'scatter') 
         names(dataset()) else categoricalVars())
       selectInput('color', 'Color', opts, color())
     })
