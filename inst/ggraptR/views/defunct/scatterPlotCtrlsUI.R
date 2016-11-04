@@ -27,7 +27,7 @@ verticalLayout(
            uiOutput('jitCtrl')
     ),
     column(6,
-           uiOutput('smthCtrl')
+           uiOutput('smoothCtrl')
     )
   ),
   

@@ -11,7 +11,7 @@ extraBlocksReady <- reactive({
 })
 
 displayXCond <- reactive({
-  !is.null(plotType()) && !(plotType() %in% c('pairs'))
+  !is.null(plotType()) && plotType() != 'pairs'
 })
 
 displayYCond <- reactive({
@@ -69,6 +69,10 @@ displaySmthCond <- reactive({
 
 displayCoordFlipCond <- reactive({
   aesReady() && isolate(plotType()) != 'pairs'
+})
+
+displayAlphaCond <- reactive({
+  displayCoordFlipCond()
 })
 
 displaySizeMagCond <- reactive({

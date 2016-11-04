@@ -28,12 +28,15 @@ generateCode <- function(p) {
   
   if ('ggmatrix' %in% class(p)) {
     cols <- paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', ')
-    aes <- clist(p$plots[[1]]$mapping[setdiff(names(p$plots[[1]]$mapping), c('x', 'y'))])
+    mapping <- p$plots[[1]]$mapping
+    print_mapping <- mapping[setdiff(names(mapping), c('x', 'y'))]
+    map_aes <- if (length(print_mapping)) 
+      sprintf(' mapping=aes(%s),', clist(print_mapping)) else ''
     adjustment <- if (is.null(state$pairs)) '' else paste0(', ',
       clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
     
-    return(sprintf('ggpairs(%s, mapping=aes(%s), columns=c(%s)%s)',
-                   state$dataset_name, aes, cols, adjustment))
+    return(sprintf('ggpairs(%s,%s columns=c(%s)%s)',
+                   state$dataset_name, map_aes, cols, adjustment))
   }
   
   p$mapping <- rev(p$mapping)

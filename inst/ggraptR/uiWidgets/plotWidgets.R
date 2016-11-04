@@ -86,7 +86,7 @@ output$jitCtrl <- renderUI({
 })
 
 ## geom smoothing options
-output$smthCtrl <- renderUI({
+output$smoothCtrl <- renderUI({
   if (displaySmthCond()) {
     isolate(selectInput('smooth', 'Smoothing Effect',
                         c('None'='None', 'Linear'='lm', 'Non-linear'='auto'), 
@@ -170,7 +170,7 @@ output$facetScaleCtrl <- renderUI({
 })
 
 output$alphaCtrl <- renderUI({
-  if (showAesWgts()) {
+  if (displayAlphaCond()) {
     sliderInput("alpha", label = "Opacity",
                 min=0, max=1, value=0.5, step=0.1) #isolate(alpha())
   }

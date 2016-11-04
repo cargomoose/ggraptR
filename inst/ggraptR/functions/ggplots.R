@@ -132,7 +132,7 @@ plotPairs <- function(dataset, ls) {
   ggpairs_pars <- Filter(
     function(x) !is.null(x), 
     list(dataset, columns=ls$columns,
-         mapping=aes_string(color=ls$color, fill=ls$fill, alpha=ls$alpha),
+         mapping=aes_string(color=ls$color, fill=ls$fill, alpha=0.5),
          upper=list(continuous=ls$ggpairsUpCont, combo=ls$ggpairsUpCombo, 
                     discrete=ls$ggpairsUpDiscr), 
          diag=list(continuous=ls$ggpairsDiagCont, discrete=ls$ggpairsDiagDiscr), 

@@ -42,7 +42,7 @@ verticalLayout(
     column(6, uiOutput('shapeCtrl'))),
   
   fluidRow(
-    column(6, uiOutput('smthCtrl'))),
+    column(6, uiOutput('smoothCtrl'))),
   
   fluidRow(
     column(6, uiOutput('coordFlipCtrl')),

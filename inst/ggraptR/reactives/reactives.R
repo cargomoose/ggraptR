@@ -9,7 +9,7 @@ plotInputsRegister <- reactive({
     density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlackLineCond'),
     box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
     violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
-    pairs=c('columns', 'color', 'fill', 'alpha',
+    pairs=c('columns', 'color', 'fill', #'alpha',
             'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
             'ggpairsDiagCont', 'ggpairsDiagDiscr',
             'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
