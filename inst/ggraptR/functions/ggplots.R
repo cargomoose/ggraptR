@@ -10,7 +10,8 @@ plotScatter <- function(dataset, ls) {
   p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
-  if (ls$treatAsFacVarCol) {
+  p <- p + if (ls$density2d) geom_density_2d()
+  if (ls$treatAsFactor) {
     p <- p + aes_string(color=ls$colorAsFactor) +
       guides(color=guide_legend(title=ls$color))
   } else {
@@ -84,12 +85,12 @@ plotDensity <- function(dataset, ls) {
 
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_density(alpha=ls$alpha,
-                 mapping=do.call(aes_string, 
-                                 c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
-                                   if (!ls$densBlkLineCond) list(color=ls$fillAsFactor))))
+                 mapping=do.call(
+                   aes_string, c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
+                                 if (!ls$densBlackLineCond) list(color=ls$fillAsFactor))))
   p <- p + if (!is.null(ls$fill)) do.call(
     guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
-              if (!ls$densBlkLineCond) list(color=guide_legend(title=ls$fill))))
+              if (!ls$densBlackLineCond) list(color=guide_legend(title=ls$fill))))
   
   flog.debug("plot::plotDensity() - End", name='all')
   p

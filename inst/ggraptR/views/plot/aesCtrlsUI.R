@@ -29,7 +29,7 @@ verticalLayout(
   
   fluidRow(
     column(6, uiOutput('colCtrl')),
-    column(6, br(), uiOutput('treatAsFacVarColCtrl'))),
+    column(6, br(), uiOutput('treatAsFactorCtrl'))),
   
   fluidRow(
     column(6, uiOutput('fillCtrl')),
@@ -48,9 +48,11 @@ verticalLayout(
     column(6, uiOutput('coordFlipCtrl')),
     column(6, uiOutput('jitCtrl'))),
   
+  uiOutput('density2dCtrl'),
+  
   uiOutput('alphaCtrl'),
   uiOutput('sizeMagCtrl'),
   uiOutput('binWidthCtrl'),
   
-  uiOutput('densBlkLineCondCtrl')
+  uiOutput('densBlackLineCtrl')
 )

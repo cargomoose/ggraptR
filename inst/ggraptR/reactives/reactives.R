@@ -1,12 +1,12 @@
 plotInputsRegister <- reactive({
   inputs <- list(
-    scatter=c('x', 'y', 'color', 'treatAsFacVarCol', 'shape', 'size', 'smooth', 
-              'jitter', 'alpha', 'sizeMag'),
+    scatter=c('x', 'y', 'color', 'treatAsFactor', 'shape', 'size', 'smooth', 
+              'jitter', 'alpha', 'sizeMag', 'density2d'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
     pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'alpha', 'sizeMag'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
-    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlkLineCond'),
+    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlackLineCond'),
     box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
     violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
     pairs=c('columns', 'color', 'fill', 'alpha',

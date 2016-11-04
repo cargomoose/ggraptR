@@ -8,8 +8,7 @@ output$plotTypeCtrl <- renderUI({
                             'Line'='line', 'Path'='path',
                             'Histogram'='histogram', 'Density'='density', 
                             'Box'='box', 'Bar'='bar'))
-                            #'Image'='image', 
-                            #'2-Density', 'density2d'
+                            #'Image'='image'
   }
 })
 
@@ -59,10 +58,10 @@ output$colCtrl <- renderUI({
 })
 
 ## treat-as-a-factor-variable option for color
-output$treatAsFacVarColCtrl <- renderUI({
-  if (displayTreatAsFacVarColCond()) {
-    isolate(checkboxInput('treatAsFacVarCol', 'Treat as a factor variable', 
-                          value=treatAsFacVarCol()))
+output$treatAsFactorCtrl <- renderUI({
+  if (displayTreatAsFactorCond()) {
+    isolate(checkboxInput('treatAsFactor', 'Treat as a factor variable', 
+                          value=treatAsFactor()))
   }
 })
 
@@ -119,21 +118,25 @@ output$binWidthCtrl <- renderUI({
   }
 })
 
-## density line color options
-output$densBlkLineCondCtrl <- renderUI({
-  if (displayDensBlkLineCond()) {
-    isolate(checkboxInput('densBlkLineCond', 'Draw black outline', 
-                          value=densBlkLineCond()))
+## density plot color options
+output$densBlackLineCtrl <- renderUI({
+  if (displayDensBlackLineCond()) {
+    isolate(checkboxInput('densBlackLineCond', 'Draw black outline', 
+                          value=densBlackLineCond()))
   }
 })
 
-## points overlay options
 output$pointsOverlayCtrl <- renderUI({  
   if (displayPointsOverlayCond()) { 
     isolate(checkboxInput('pointsOverlay', 'Points Overlay', value=pointsOverlay()))
   }
 })
 
+output$density2dCtrl <- renderUI({  
+  if (displayDensity2dCond()) { 
+    isolate(checkboxInput('density2d', 'Apply density 2D', value=F))
+  }
+})
 
 ## row-wise facet options
 output$facetRowCtrl <- renderUI({
@@ -348,15 +351,13 @@ output$labelFontColorCtrl <- renderUI({
 
 output$hjustCtrl <- renderUI({
   if (displayThemeWgts()) {
-    isolate(numericInput('hjust', 'Horizontal Adjust', value=hjust(),
-                         min=0, max=1, step=0.1))
+    isolate(numericInput('hjust', 'Horizontal Adjust', hjust(), min=0, max=1, step=0.1))
   }
 })
 
 output$vjustCtrl <- renderUI({
   if (displayThemeWgts()) {
-    isolate(numericInput('vjust', 'Vertical Adjust', value=vjust(), 
-                         min=0, max=1, step=0.1))
+    isolate(numericInput('vjust', 'Vertical Adjust', vjust(), min=0, max=1, step=0.1))
   }
 })
 

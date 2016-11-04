@@ -40,8 +40,8 @@ colorAsFactor <- reactive({
   varNameAsFactorOrNULL(color())
 })
 
-treatAsFacVarCol <- reactive({
-  if (is.null(input$treatAsFacVarCol)) FALSE else input$treatAsFacVarCol
+treatAsFactor <- reactive({
+  if (is.null(input$treatAsFactor)) FALSE else input$treatAsFactor
 })
 
 sizeOrig <- reactive({
@@ -90,8 +90,12 @@ alpha <- reactive({
   if (is.null(alphaOrig())) 1 else alphaOrig()
 })
 
-densBlkLineCond <- reactive({
-  if (!isolate(displayDensBlkLineCond())) NULL else input$densBlkLineCond
+densBlackLineCond <- reactive({
+  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLineCond
+})
+
+density2d <- reactive({
+  !is.null(input$density2d) && input$density2d
 })
 
 shapeOrig <- reactive({
