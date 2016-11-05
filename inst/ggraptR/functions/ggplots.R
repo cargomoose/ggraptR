@@ -73,7 +73,7 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
-    geom_histogram(alpha=ls$alpha, position='identity', binwidth=ls$binWidth) + 
+    geom_histogram(alpha=ls$alpha, position=ls$position, binwidth=ls$binWidth) + #'iden'
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotHistogram() - End", name='all')    
@@ -109,7 +109,7 @@ plotBox <- function(dataset, ls) {
 plotBar <- function(dataset, ls) {
   flog.debug("plot::plotBar() - Begin", name='all')   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bar(stat='identity', position='identity', alpha=ls$alpha) + 
+    geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) + # posi='identity'
     aes_string(fill=ls$fillAsFactor) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotBar() - End", name='all')

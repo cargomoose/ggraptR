@@ -74,7 +74,7 @@ output$fillCtrl <- renderUI({
 ## position (stack vs. dodge) control options
 output$posCtrl <- renderUI({
   if (displayPosCond()) {
-    isolate(selectInput('position', 'Position', c('None', 'dodge', 'stack'), position()))
+    isolate(selectInput('position', 'Position', c('stack', 'dodge', 'fill'), position()))
   }
 })
 
