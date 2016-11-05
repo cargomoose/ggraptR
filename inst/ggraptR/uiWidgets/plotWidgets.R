@@ -3,12 +3,13 @@
 
 output$plotTypeCtrl <- renderUI({
   if (!is.null(dataset())) {
+    pType <- isolate(input$plotType)
     selectInput("plotType", "Plot type", 
                 choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
                             'Line'='line', 'Path'='path',
                             'Histogram'='histogram', 'Density'='density', 
-                            'Box'='box', 'Bar'='bar'))
-                            #'Image'='image'
+                            'Box'='box', 'Bar'='bar'),   #'Image'='image'
+                if (!is.null(pType) && pType == 'scatter') 'histogram')
   }
 })
 
