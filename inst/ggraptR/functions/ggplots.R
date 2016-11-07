@@ -79,7 +79,7 @@ plotHistogram <- function(dataset, ls) {
     geom_histogram(alpha=ls$alpha, position=ls$position, binwidth=ls$binWidth) + #'iden'
     aes_string(fill=asFactor(ls$fill)) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  flog.debug("plot::plotHistogram() - End", name='all')    
+  flog.debug("plot::plotHistogram() - End", name='all') 
   p
 }
 
