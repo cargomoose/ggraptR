@@ -23,7 +23,15 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  if (!controlsLoading$ready) return()  # on exit here will erase all y(),fill().. deps
+  if (isolate(controlsLoading$ready)) {
+    isolate(controlsLoading$ready <- F)
+  } else {
+    isolate({controlsLoading$itersToDrawPlot <- 5})
+    controlsLoading$ready  # the only dep if exits here
+    return()
+  }
+  
+  # if (!controlsLoading$ready) return()  
   pType <- plotType()
   p <- getBasePlot(pType, isolate(plotDF()))
   

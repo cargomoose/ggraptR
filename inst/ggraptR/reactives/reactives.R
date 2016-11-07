@@ -233,4 +233,4 @@ generateCodeReactive <- reactive({
 
 log <- reactiveValues(plot=NULL)
 
-controlsLoading <- reactiveValues()
+controlsLoading <- reactiveValues(ready=F)

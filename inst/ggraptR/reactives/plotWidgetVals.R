@@ -1,6 +1,4 @@
 plotType <- reactive({
-  controlsLoading$ready <- F
-  if (!is.null(input$plotType)) controlsLoading$itersToDrawPlot <- 5
   input$plotType
 })
 
