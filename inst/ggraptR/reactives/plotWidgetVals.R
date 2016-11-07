@@ -1,6 +1,6 @@
 plotType <- reactive({
-  plotLoading$status <- F
-  if (!is.null(input$plotType)) plotLoading$itersToDraw <- 5
+  controlsLoading$ready <- F
+  if (!is.null(input$plotType)) controlsLoading$itersToDrawPlot <- 5
   input$plotType
 })
 
@@ -90,12 +90,8 @@ alpha <- reactive({
   if (is.null(alphaOrig())) 1 else alphaOrig()
 })
 
-densBlackLineCond <- reactive({
-  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLineCond
-})
-
-density2d <- reactive({
-  !is.null(input$density2d) && input$density2d
+densBlackLine <- reactive({
+  if (!isolate(displayDensBlackLine())) NULL else input$densBlackLine
 })
 
 shapeOrig <- reactive({
@@ -158,10 +154,6 @@ ggpairsLowDiscr <- reactive({
 
 binWidth <- reactive({
   input$binWidth
-})
-
-ptsOverlayCond <- reactive({
-  if (isolate(!displayPtsOverlayCond())) NULL else input$ptsOverlayCond
 })
 
 facetRowOrig <- reactive({

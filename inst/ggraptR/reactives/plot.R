@@ -1,17 +1,17 @@
-getPlotInputs <- function(pType, plotDF) {
-  inputNames <- plotInputsRegister()[[pType]]
+getPlotInputVals <- function(plotDF, inputNames=NULL) {
+  if (is.null(inputNames)) inputNames <- isolate(plotInputs())
   inputs <- lapply(inputNames, do.call, args=list(), envir=environment())
   names(inputs) <- inputNames  # results list(x=eval(x()), y=eval(y())...)
   ensureCorrectPlotInputs(inputs, colnames(plotDF))
 }
 
 getBasePlot <- function(pType, plotDF) {
-  inputs <- getPlotInputs(pType, plotDF)
+  inputs <- getPlotInputVals(plotDF)
   pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
   p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))  # scatterPlot(args)
   
-  if (pType %in% c('line', 'path') && pointsOverlay()) {
-    overInputs <- getPlotInputs('pointsOverlay', plotDF)
+  if ('pointsOverlay' %in% isolate(plotInputs()) && pointsOverlay()) {
+    overInputs <- getPlotInputVals(plotDF, pointsOverlayInputs())
     p <- fillPlotWithPointsOverlay(p, overInputs)
   }
   p
@@ -23,7 +23,7 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
-  if (!plotLoading$status) return()  # on exit here will erase all y(),fill().. deps
+  if (!controlsLoading$ready) return()  # on exit here will erase all y(),fill().. deps
   pType <- plotType()
   p <- getBasePlot(pType, isolate(plotDF()))
   

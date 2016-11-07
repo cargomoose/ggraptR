@@ -57,7 +57,7 @@ shinyUI(bootstrapPage(
                  column(2, uiOutput('generatePlotCodeCtl'))),
         br(),
         plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=T)),
-        uiOutput("plotLoadingCtrl", style="opacity: 0; pointer-events: none"),
+        uiOutput("controlsLoadingCtrl", style="opacity: 0; pointer-events: none"),
         value='plotTab'), 
       
       tabPanel("Table",

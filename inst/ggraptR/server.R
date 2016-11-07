@@ -22,7 +22,7 @@ source('./debug/debug.R', local=T)
 source('./functions/helper.R')
 source('./functions/ggplots.R')
 source('./functions/aggregate.R')
-source('./functions/ggraptplot.R')
+source('./functions/codeGen.R')
 
 options(shiny.maxRequestSize = 10000 * 1024^2)  # by default, the file size limit is 5MB
 

@@ -46,9 +46,7 @@ verticalLayout(
   
   fluidRow(
     column(6, uiOutput('coordFlipCtrl')),
-    column(6, uiOutput('jitCtrl'))),
-  
-  uiOutput('density2dCtrl'),
+    column(6, uiOutput('jitterCtrl'))),
   
   uiOutput('alphaCtrl'),
   uiOutput('sizeMagCtrl'),

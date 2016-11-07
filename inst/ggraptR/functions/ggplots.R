@@ -1,5 +1,5 @@
 plotScatter <- function(dataset, ls) {
-  flog.debug("plot::plotScatter() - Begin", name='all')  
+  flog.debug("plot::plotScatter() - Begin", name='all')
   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     if (is.null(ls$size))
@@ -10,7 +10,6 @@ plotScatter <- function(dataset, ls) {
   p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
-  p <- p + if (ls$density2d) geom_density_2d()
   if (ls$treatAsFactor) {
     p <- p + aes_string(color=ls$colorAsFactor) +
       guides(color=guide_legend(title=ls$color))
@@ -20,6 +19,10 @@ plotScatter <- function(dataset, ls) {
   
   flog.debug("plot::plotScatter() - End", name='all')  
   p
+}
+
+plotDensity2d <- function(dataset, ls) {
+  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + geom_density_2d()
 }
 
 plotLine <- function(dataset, ls) {
@@ -87,10 +90,10 @@ plotDensity <- function(dataset, ls) {
     geom_density(alpha=ls$alpha,
                  mapping=do.call(
                    aes_string, c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
-                                 if (!ls$densBlackLineCond) list(color=ls$fillAsFactor))))
+                                 if (!ls$densBlackLine) list(color=ls$fillAsFactor))))
   p <- p + if (!is.null(ls$fill)) do.call(
     guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
-              if (!ls$densBlackLineCond) list(color=guide_legend(title=ls$fill))))
+              if (!ls$densBlackLine) list(color=guide_legend(title=ls$fill))))
   
   flog.debug("plot::plotDensity() - End", name='all')
   p
@@ -118,8 +121,10 @@ plotBar <- function(dataset, ls) {
 
 plotViolin <- function(dataset, ls) {
   flog.debug("plot::plotViolin() - Begin", name='all')
-  p <- ggplot(dataset, aes_string(x=ls$xAsFactor, y=ls$y)) + 
-    geom_violin(alpha=ls$alpha) + 
+  dodge <- position_dodge(width = 0.4)
+  p <- ggplot(dataset, aes_string(x=ls$xAsFactor, y=ls$y))
+  p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
+  p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
     aes_string(fill=ls$fillAsFactor) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotViolin() - End", name='all')

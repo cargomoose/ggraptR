@@ -1,22 +1,24 @@
-plotInputsRegister <- reactive({
+plotInputs <- reactive({
+  if (is.null(plotType())) return(NULL)
   inputs <- list(
     scatter=c('x', 'y', 'color', 'treatAsFactor', 'shape', 'size', 'smooth', 
-              'jitter', 'alpha', 'sizeMag', 'density2d'),
-    line=c('x', 'y', 'color', 'colorAsFactor', 'alpha'),
-    pointsOverlay=c('shape', 'shapeAsFactor', 'size', 'smooth', 'alpha', 'sizeMag'),
+              'jitter', 'alpha', 'sizeMag'),
+    line=c('x', 'y', 'color', 'colorAsFactor', 'alpha', 'pointsOverlay'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
     histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
-    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlackLineCond'),
+    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlackLine'),
     box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
     violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
+    density2d=c('x', 'y', 'pointsOverlay'),
     pairs=c('columns', 'color', 'fill', #'alpha',
             'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
             'ggpairsDiagCont', 'ggpairsDiagDiscr',
             'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
   inputs$path <- inputs$line
-  inputs
+  inputs[[plotType()]]
 })
-
+pointsOverlayInputs <- reactive(c('shape', 'shapeAsFactor', 'size', 'smooth', 
+                                  'alpha', 'sizeMag'))
 
 #### variables for rawDataset() -- probably not very useful
 ## original variables
@@ -231,4 +233,4 @@ generateCodeReactive <- reactive({
 
 log <- reactiveValues(plot=NULL)
 
-plotLoading <- reactiveValues()
+controlsLoading <- reactiveValues()

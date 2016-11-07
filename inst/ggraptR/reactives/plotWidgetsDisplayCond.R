@@ -10,8 +10,13 @@ extraBlocksReady <- reactive({
   !is.null(plotType())
 })
 
+willDrawPoints <- reactive({
+  plotType() == 'scatter' || 
+    ('pointsOverlay' %in% plotInputs() && pointsOverlay())
+})
+
 displayXCond <- reactive({
-  !is.null(plotType()) && plotType() != 'pairs'
+  !is.null(plotType()) && any(c('x', 'xAsFactor') %in% isolate(plotInputs()))
 })
 
 displayYCond <- reactive({
@@ -20,7 +25,7 @@ displayYCond <- reactive({
   # x() is the only reactive trigger. y options must be different from selected x value
   # so it does not make sense to render y before x is ready
   !is.null(displayXCond()) && !is.null(x()) &&
-    !is.null(isolate(plotType())) && !(plotType() %in% c('pairs', 'histogram', 'density'))
+    !is.null(isolate(plotType())) && 'y' %in% plotInputs()
 })
 
 displayGgpairsWgtsCond <- reactive({
@@ -28,43 +33,43 @@ displayGgpairsWgtsCond <- reactive({
 })
 
 displayColCond <- reactive({
-  pairsReady() && aesReady() && 
-    isolate(plotType()) %in% c('line', 'scatter', 'path', 'pairs')
+  pairsReady() && aesReady() && 'color' %in% isolate(plotInputs())
 })
 
 displayTreatAsFactorCond <- reactive({
-  aesReady() && isolate(plotType()) == 'scatter'
-})
-
-displayDensity2dCond <- reactive({
-  displayTreatAsFactorCond()
+  aesReady() && 'treatAsFactor' %in% isolate(plotInputs())
 })
 
 displayFillCond <- reactive({
-  pairsReady() && aesReady() && 
-    isolate(plotType()) %in% c('histogram', 'bar', 'box', 'density', 'violin', 'pairs')
+  pairsReady() && aesReady() && 'fill' %in% isolate(plotInputs())
 })
 
 displayPosCond <- reactive({
-  aesReady() && isolate(plotType()) %in% c('histogram', 'bar')
+  aesReady() && 'position' %in% isolate(plotInputs())
 })
 
-displayJitCond <- reactive({
-  aesReady() && isolate(
-    plotType() == 'scatter' || (plotType() == 'line' && pointsOverlay()))
-})
-
-displayShapeCond <- reactive({
-  pType <- isolate(plotType())
-  aesReady() && (pType == 'scatter' || (pType %in% c('line', 'path') && pointsOverlay()))
-})
-
-displaySizeCond <- reactive({
-  displayShapeCond()
+displayJitterCond <- reactive({
+  aesReady() && 'jitter' %in% isolate(plotInputs())
 })
 
 displaySmthCond <- reactive({
-  displayJitCond()
+  aesReady() && 'smooth' %in% isolate(plotInputs())
+})
+
+displayShapeCond <- reactive({
+  aesReady() && willDrawPoints()
+})
+
+displaySizeCond <- reactive({
+  aesReady() && willDrawPoints()
+})
+
+displaySizeMagCond <- reactive({
+  aesReady() && willDrawPoints()
+})
+
+displayPointsOverlayCond <- reactive({
+  aesReady() && isolate('pointsOverlay' %in% plotInputs())
 })
 
 displayCoordFlipCond <- reactive({
@@ -72,24 +77,16 @@ displayCoordFlipCond <- reactive({
 })
 
 displayAlphaCond <- reactive({
-  displayCoordFlipCond()
-})
-
-displaySizeMagCond <- reactive({
-  displayShapeCond()
+  aesReady() && 'alpha' %in% isolate(plotInputs())
 })
 
 displayBinWidthCond <- reactive({
-  aesReady() && isolate(plotType()) == 'histogram'
+  aesReady() && 'binWidth' %in% isolate(plotInputs())
 })
 
 # density black line
 displayDensBlackLineCond <- reactive({
-  aesReady() && isolate(plotType()) == 'density'
-})
-
-displayPointsOverlayCond <- reactive({
-  aesReady() && isolate(plotType()) %in% c('line', 'path')
+  aesReady() && 'densBlackLine' %in% isolate(plotInputs())
 })
 
 displayFacetCond <- reactive({

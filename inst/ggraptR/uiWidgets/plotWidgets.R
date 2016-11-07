@@ -6,20 +6,21 @@ output$plotTypeCtrl <- renderUI({
     pType <- isolate(input$plotType)
     selectInput("plotType", "Plot type", 
                 choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
-                            'Line'='line', 'Path'='path',
+                            'Density 2D'='density2d', 'Line'='line', 'Path'='path',
                             'Histogram'='histogram', 'Density'='density', 
                             'Box'='box', 'Bar'='bar'),   #'Image'='image'
+                # need value to change plot type everytime dataset() changes. For trigger
                 if (!is.null(pType) && pType == 'scatter') 'histogram')
   }
 })
 
-output$plotLoadingCtrl <- renderUI({
-  n <- plotLoading$itersToDraw
+output$controlsLoadingCtrl <- renderUI({
+  n <- controlsLoading$itersToDrawPlot
   if (is.null(n)) return()
   if (n > 0) {
-    numericInput('plotLoadingInp', NULL, n, width = '80px')  # 1px
+    numericInput('controlsLoadingInp', NULL, n, width = '80px')  # 1px
   } else {
-    plotLoading$status <- T
+    controlsLoading$ready <- T
     NULL
   }
 })
@@ -80,8 +81,8 @@ output$posCtrl <- renderUI({
 })
 
 ## jitter options
-output$jitCtrl <- renderUI({
-  if (displayJitCond()) {
+output$jitterCtrl <- renderUI({
+  if (displayJitterCond()) {
     isolate(checkboxInput('jitter', 'Apply jitter effect', value=TRUE)) #jitter()
   }
 })
@@ -122,8 +123,8 @@ output$binWidthCtrl <- renderUI({
 ## density plot color options
 output$densBlackLineCtrl <- renderUI({
   if (displayDensBlackLineCond()) {
-    isolate(checkboxInput('densBlackLineCond', 'Draw black outline', 
-                          value=densBlackLineCond()))
+    isolate(checkboxInput('densBlackLine', 'Draw black outline', 
+                          value=densBlackLine()))
   }
 })
 
@@ -133,11 +134,7 @@ output$pointsOverlayCtrl <- renderUI({
   }
 })
 
-output$density2dCtrl <- renderUI({  
-  if (displayDensity2dCond()) { 
-    isolate(checkboxInput('density2d', 'Apply density 2D', value=F))
-  }
-})
+
 
 ## row-wise facet options
 output$facetRowCtrl <- renderUI({

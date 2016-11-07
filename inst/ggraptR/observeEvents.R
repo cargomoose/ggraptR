@@ -25,10 +25,10 @@ observeEvent(input$reactive, {
 
 # delay plot building until all controls will be ready
 observe({
-  nInp <- input$plotLoadingInp
+  nInp <- input$controlsLoadingInp
   isolate({
-    n <- plotLoading$itersToDraw
-    if (notNulls(nInp, n) && n != 0) plotLoading$itersToDraw <- n - 1
+    n <- controlsLoading$itersToDrawPlot
+    if (notNulls(nInp, n) && n != 0) controlsLoading$itersToDrawPlot <- n - 1
   })
 })
 
