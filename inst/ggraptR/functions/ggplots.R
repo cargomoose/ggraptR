@@ -10,7 +10,7 @@ plotScatter <- function(dataset, ls) {
   p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
-  if (ls$treatAsFactor) {
+  if (ls$treatColorAsFactor) {
     p <- p + aes_string(color=ls$colorAsFactor) +
       guides(color=guide_legend(title=ls$color))
   } else {

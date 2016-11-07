@@ -1,7 +1,8 @@
 plotInputs <- reactive({
   if (is.null(plotType())) return(NULL)
   inputs <- list(
-    scatter=c('x', 'y', 'color', 'treatAsFactor', 'shape', 'size', 'smooth', 
+    scatter=c('x', 'y', 'color','colorAsFactor', 'treatColorAsFactor',
+              'shape', 'shapeAsFactor', 'size', 'smooth', 
               'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'colorAsFactor', 'alpha', 'pointsOverlay'),
     bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),

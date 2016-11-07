@@ -37,7 +37,7 @@ displayColCond <- reactive({
 })
 
 displayTreatAsFactorCond <- reactive({
-  aesReady() && 'treatAsFactor' %in% isolate(plotInputs())
+  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs())
 })
 
 displayFillCond <- reactive({

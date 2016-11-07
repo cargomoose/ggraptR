@@ -29,7 +29,7 @@ verticalLayout(
   
   fluidRow(
     column(6, uiOutput('colCtrl')),
-    column(6, br(), uiOutput('treatAsFactorCtrl'))),
+    column(6, br(), uiOutput('treatColorAsFactorCtrl'))),
   
   fluidRow(
     column(6, uiOutput('fillCtrl')),

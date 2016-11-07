@@ -40,8 +40,8 @@ colorAsFactor <- reactive({
   varNameAsFactorOrNULL(color())
 })
 
-treatAsFactor <- reactive({
-  if (is.null(input$treatAsFactor)) FALSE else input$treatAsFactor
+treatColorAsFactor <- reactive({
+  if (is.null(input$treatColorAsFactor)) FALSE else input$treatColorAsFactor
 })
 
 sizeOrig <- reactive({

@@ -60,10 +60,10 @@ output$colCtrl <- renderUI({
 })
 
 ## treat-as-a-factor-variable option for color
-output$treatAsFactorCtrl <- renderUI({
+output$treatColorAsFactorCtrl <- renderUI({
   if (displayTreatAsFactorCond()) {
-    isolate(checkboxInput('treatAsFactor', 'Treat as a factor variable', 
-                          value=treatAsFactor()))
+    isolate(checkboxInput('treatColorAsFactor', 'Treat color as a factor', 
+                          value=treatColorAsFactor()))
   }
 })
 
