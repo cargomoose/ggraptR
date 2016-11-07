@@ -164,7 +164,7 @@ checkWidgetsLoaded <- function(input, widgets) {
 }
 
 
-## override GGally:::print.ggmatrix to prevent messages about binwidth
+## override GGally:::print.ggmatrix to prevent messages about binwdth
 print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
                            spacingProportion = 0.03, gridNewPage = TRUE, ...) {
   suppressMessages(GGally:::print.ggmatrix(

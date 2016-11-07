@@ -107,14 +107,14 @@ output$shapeCtrl <- renderUI({
   }
 })
 
-## histogram binwidth options
-output$binWidthCtrl <- renderUI({
+## histogram bins options
+output$nBinsCtrl <- renderUI({
   if (displayBinWidthCond()) {
     isolate({
-      maxVal <- round(diff(range(dataset()[[x()]], na.rm=TRUE)))
-      minVal <- stepVal <- if (maxVal > 10) 1 else 0.1
-      sliderInput('binWidth', label = "Bin Width",
-                  min=minVal, max=maxVal, value=binWidth(), step=stepVal)
+      maxVal <- 100  # round(diff(range(dataset()[[x()]], na.rm=TRUE)))
+      minVal <- 5
+      sliderInput('nBins', label = "Bin Width",
+                  min=minVal, max=maxVal, value=nBins())
     })
   }
 })

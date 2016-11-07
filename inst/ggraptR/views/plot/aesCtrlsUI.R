@@ -50,7 +50,7 @@ verticalLayout(
   
   uiOutput('alphaCtrl'),
   uiOutput('sizeMagCtrl'),
-  uiOutput('binWidthCtrl'),
+  uiOutput('nBinsCtrl'),
   
   uiOutput('densBlackLineCtrl')
 )

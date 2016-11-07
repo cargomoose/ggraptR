@@ -79,7 +79,7 @@ generateCode <- function(p) {
       if (any(param_mask)) {
         useful_params <- layer$stat_params[param_mask]
         geom_params <- paste(geom_params, clist(useful_params), sep=', ')
-        if ('binwidth' %in% names(useful_params) && geom_name == 'geom_bar') {
+        if ('bins' %in% names(useful_params) && geom_name == 'geom_bar') {
           geom_name <- 'geom_histogram'
         }
       }

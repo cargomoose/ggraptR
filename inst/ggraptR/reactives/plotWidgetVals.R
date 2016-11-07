@@ -134,8 +134,8 @@ ggpairsLowDiscr <- reactive({
 })
 
 
-binWidth <- reactive({
-  input$binWidth
+nBins <- reactive({
+  input$nBins
 })
 
 facetRowOrig <- reactive({

@@ -76,7 +76,7 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
-    geom_histogram(alpha=ls$alpha, position=ls$position, binwidth=ls$binWidth) + #'iden'
+    geom_histogram(alpha=ls$alpha, position=ls$position, bins=ls$nBins) + #'iden'
     aes_string(fill=asFactor(ls$fill)) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotHistogram() - End", name='all') 

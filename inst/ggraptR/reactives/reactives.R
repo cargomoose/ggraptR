@@ -5,7 +5,7 @@ plotInputs <- reactive({
               'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
     bar=c('x','y', 'fill', 'alpha', 'position'),
-    histogram=c('x', 'fill', 'alpha', 'position', 'binWidth'),
+    histogram=c('x', 'fill', 'alpha', 'position', 'nBins'),
     density=c('x', 'fill', 'alpha', 'densBlackLine'),
     box=c('x', 'y', 'fill', 'alpha'),
     violin=c('x', 'y', 'fill', 'alpha'),

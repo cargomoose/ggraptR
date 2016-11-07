@@ -79,7 +79,7 @@ displayAlphaCond <- reactive({
 })
 
 displayBinWidthCond <- reactive({
-  aesReady() && 'binWidth' %in% isolate(plotInputs())
+  aesReady() && 'nBins' %in% isolate(plotInputs())
 })
 
 # density black line
