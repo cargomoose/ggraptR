@@ -1,15 +1,14 @@
 plotInputs <- reactive({
   if (is.null(plotType())) return(NULL)
   inputs <- list(
-    scatter=c('x', 'y', 'color','colorAsFactor', 'treatColorAsFactor',
-              'shape', 'shapeAsFactor', 'size', 'smooth', 
+    scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
               'jitter', 'alpha', 'sizeMag'),
-    line=c('x', 'y', 'color', 'colorAsFactor', 'alpha', 'pointsOverlay'),
-    bar=c('x','y', 'fill', 'fillAsFactor', 'alpha', 'position'),
-    histogram=c('x', 'fill', 'fillAsFactor', 'alpha', 'position', 'binWidth'),
-    density=c('x', 'fill', 'fillAsFactor', 'alpha', 'densBlackLine'),
-    box=c('x', 'y', 'fill', 'fillAsFactor', 'alpha'),
-    violin=c('y', 'xAsFactor', 'fill', 'fillAsFactor', 'alpha'),
+    line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
+    bar=c('x','y', 'fill', 'alpha', 'position'),
+    histogram=c('x', 'fill', 'alpha', 'position', 'binWidth'),
+    density=c('x', 'fill', 'alpha', 'densBlackLine'),
+    box=c('x', 'y', 'fill', 'alpha'),
+    violin=c('x', 'y', 'fill', 'alpha'),
     density2d=c('x', 'y', 'pointsOverlay'),
     pairs=c('columns', 'color', 'fill', #'alpha',
             'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
@@ -18,7 +17,7 @@ plotInputs <- reactive({
   inputs$path <- inputs$line
   inputs[[plotType()]]
 })
-pointsOverlayInputs <- reactive(c('shape', 'shapeAsFactor', 'size', 'smooth', 
+pointsOverlayInputs <- reactive(c('shape', 'size', 'smooth', 
                                   'alpha', 'sizeMag'))
 
 #### variables for rawDataset() -- probably not very useful

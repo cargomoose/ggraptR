@@ -76,7 +76,7 @@ convertNoneToNULL <- function(var) {
   if (is.null(var) || tolower(var)=='none' || !nchar(var)) NULL else var
 }
 
-varNameAsFactorOrNULL <- function(var) {
+asFactor <- function(var) {
   if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
 }
 

@@ -8,10 +8,6 @@ x <- reactive({
   input$x
 })
 
-xAsFactor <- reactive({
-  varNameAsFactorOrNULL(x())
-})
-
 yOrig <- reactive({
   input$y
 })
@@ -36,10 +32,6 @@ color <- reactive({
             isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
-colorAsFactor <- reactive({
-  varNameAsFactorOrNULL(color())
-})
-
 treatColorAsFactor <- reactive({
   if (is.null(input$treatColorAsFactor)) FALSE else input$treatColorAsFactor
 })
@@ -60,10 +52,6 @@ fillOrig <- reactive({
 
 fill <- reactive({
  convertNoneToNULL(fillOrig())
-})
-
-fillAsFactor <- reactive({
-  varNameAsFactorOrNULL(fill())
 })
 
 position <- reactive({
@@ -100,10 +88,6 @@ shapeOrig <- reactive({
 
 shape <- reactive({
   convertNoneToNULL(shapeOrig())
-})
-
-shapeAsFactor <- reactive({
-  varNameAsFactorOrNULL(shape())
 })
 
 smoothOrig <- reactive({

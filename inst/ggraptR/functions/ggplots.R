@@ -3,15 +3,15 @@ plotScatter <- function(dataset, ls) {
   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     if (is.null(ls$size))
-      geom_point(aes_string(shape=ls$shapeAsFactor), 
+      geom_point(aes_string(shape=asFactor(ls$shape)), 
                  alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
-      geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
+      geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
                  alpha=ls$alpha, position=ls$jitter)
   p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
   if (ls$treatColorAsFactor) {
-    p <- p + aes_string(color=ls$colorAsFactor) +
+    p <- p + aes_string(color=asFactor(ls$color)) +
       guides(color=guide_legend(title=ls$color))
   } else {
     p <- p + aes_string(color=ls$color)
@@ -33,7 +33,7 @@ plotLine <- function(dataset, ls) {
     p <- p + geom_line(aes(group=1), alpha=ls$alpha) 
   } else {
     p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
-      aes_string(color=ls$colorAsFactor) + 
+      aes_string(color=asFactor(ls$color)) + 
       guides(color=guide_legend(title=ls$color))
   }
   
@@ -49,7 +49,7 @@ plotPath <- function(dataset, ls) {
     if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
       geom_line(aes_string(group=ls$color), alpha=ls$alpha)
   if (!is.null(ls$color)) {
-    p <- p + aes_string(color=ls$colorAsFactor) + 
+    p <- p + aes_string(color=asFactor(ls$color)) + 
       guides(color=guide_legend(title=ls$color))
   }
   
@@ -61,9 +61,9 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
   flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
   
   p <- plot + if (is.null(ls$size)) 
-    geom_point(aes_string(shape=ls$shapeAsFactor), 
+    geom_point(aes_string(shape=asFactor(ls$shape)), 
                alpha=ls$alpha, size=ls$sizeMag) else 
-                 geom_point(aes_string(shape=ls$shapeAsFactor, size=ls$size), 
+                 geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
                             alpha=ls$alpha)
   p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
@@ -77,7 +77,7 @@ plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram() - Begin", name='all')
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_histogram(alpha=ls$alpha, position=ls$position, binwidth=ls$binWidth) + #'iden'
-    aes_string(fill=ls$fillAsFactor) +  # ls$position
+    aes_string(fill=asFactor(ls$fill)) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotHistogram() - End", name='all')    
   p
@@ -89,8 +89,8 @@ plotDensity <- function(dataset, ls) {
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_density(alpha=ls$alpha,
                  mapping=do.call(
-                   aes_string, c(list(group=ls$fillAsFactor, fill=ls$fillAsFactor),
-                                 if (!ls$densBlackLine) list(color=ls$fillAsFactor))))
+                   aes_string, c(list(group=asFactor(ls$fill), fill=asFactor(ls$fill)),
+                                 if (!ls$densBlackLine) list(color=asFactor(ls$fill)))))
   p <- p + if (!is.null(ls$fill)) do.call(
     guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
               if (!ls$densBlackLine) list(color=guide_legend(title=ls$fill))))
@@ -103,7 +103,7 @@ plotBox <- function(dataset, ls) {
   flog.debug("plot::plotBox() - Begin", name='all')     
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
-    aes_string(fill=ls$fillAsFactor) +
+    aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotBox() - End", name='all')   
   p
@@ -113,7 +113,7 @@ plotBar <- function(dataset, ls) {
   flog.debug("plot::plotBar() - Begin", name='all')   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) + # posi='identity'
-    aes_string(fill=ls$fillAsFactor) +  # ls$position
+    aes_string(fill=asFactor(ls$fill)) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotBar() - End", name='all')
   p
@@ -122,10 +122,10 @@ plotBar <- function(dataset, ls) {
 plotViolin <- function(dataset, ls) {
   flog.debug("plot::plotViolin() - Begin", name='all')
   dodge <- position_dodge(width = 0.4)
-  p <- ggplot(dataset, aes_string(x=ls$xAsFactor, y=ls$y))
+  p <- ggplot(dataset, aes_string(x=asFactor(ls$x), y=ls$y))
   p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
   p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
-    aes_string(fill=ls$fillAsFactor) +
+    aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
   flog.debug("plot::plotViolin() - End", name='all')
   p

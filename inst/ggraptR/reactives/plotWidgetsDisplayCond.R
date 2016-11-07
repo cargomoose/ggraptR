@@ -16,7 +16,7 @@ willDrawPoints <- reactive({
 })
 
 displayXCond <- reactive({
-  !is.null(plotType()) && any(c('x', 'xAsFactor') %in% isolate(plotInputs()))
+  !is.null(plotType()) && 'x' %in% isolate(plotInputs())
 })
 
 displayYCond <- reactive({
@@ -37,7 +37,7 @@ displayColCond <- reactive({
 })
 
 displayTreatAsFactorCond <- reactive({
-  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs())
+  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs()) && !is.null(color())
 })
 
 displayFillCond <- reactive({
