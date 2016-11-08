@@ -446,5 +446,5 @@ output$generatePlotCodeCtl <- renderUI({
 })
 
 output$generateCode <- renderText({
-  generateCodeReactive()
+  log$plot[1]
 })

@@ -90,7 +90,7 @@ buildPlot <- reactive({
   flog.debug("time.taken", name='all')
   flog.debug(time.taken , name='all')
   
-  # add plot history entry
+  # add plot history entry. It will show at Log tab
   if (!is.null(p)) {
     logEntry <- generateCode(p)
     curLog <- isolate(log$plot)

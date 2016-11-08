@@ -227,10 +227,6 @@ semiAutoAggOn <- reactive({
   !is.null(plotAggMeth()) && tolower(plotAggMeth()) != 'none'
 })
 
-generateCodeReactive <- reactive({
-  generateCode(buildPlot())
-})
-
 log <- reactiveValues(plot=NULL)
 
 controlsLoading <- reactiveValues(ready=F)
