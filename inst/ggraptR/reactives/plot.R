@@ -7,6 +7,7 @@ getPlotInputVals <- function(plotDF, inputNames=NULL) {
 
 getBasePlot <- function(pType, plotDF) {
   inputs <- getPlotInputVals(plotDF)
+  for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
   pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
   p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))  # scatterPlot(args)
   

@@ -115,7 +115,7 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
     if (!is.null(plotInputsList[[name]])) {
       if (name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap') &&
           !(plotInputsList[[name]] %in% colnames)) {
-        warning('Incorrect plot input has been nulled: ', name)
+        # warning('Incorrect plot input has been nulled: ', name)
         plotInputsList[name] <- list(NULL)
       } else if (name %in% c('color', 'size', 'shape') &&
                  !(plotInputsList[[name]] %in% colnames)) {

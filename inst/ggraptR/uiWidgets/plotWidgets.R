@@ -27,14 +27,22 @@ output$controlsLoadingCtrl <- renderUI({
 
 output$xCtrl <- renderUI({
   if (displayXCond()) {
-    isolate(selectInput('x', 'X', if (plotType() %in% c('violin', 'box', 'bar'))
-      categoricalVars() else numericVars(), selected = x()))
+    isolate({
+      varType <- if (plotType() %in% c('violin', 'box', 'bar')) 
+        'categorical' else 'numeric'
+      vars <- do.call.pasted(varType, 'Vars')
+      if (!length(vars)) varType <- sprintf('%s. Absent' , varType)
+      selectInput('x', sprintf('X (%s)', varType), vars, selected = x())
+    })
   }
 })
 
 output$yCtrl <- renderUI({
   if (displayYCond()) {
-    isolate(selectInput('y','Y', setdiff(numericVars(), if (displayXCond()) x()), y()))
+    isolate({
+      vars <- setdiff(numericVars(), if (displayXCond()) x())
+      selectInput('y', paste0('Y (numeric', if (!length(vars)) '. Absent', ')'), vars,y())
+    })
   }
 })
 
@@ -110,12 +118,8 @@ output$shapeCtrl <- renderUI({
 ## histogram bins options
 output$nBinsCtrl <- renderUI({
   if (displayBinWidthCond()) {
-    isolate({
-      maxVal <- 100  # round(diff(range(dataset()[[x()]], na.rm=TRUE)))
-      minVal <- 5
-      sliderInput('nBins', label = "Bin Width",
-                  min=minVal, max=maxVal, value=nBins())
-    })
+    isolate(sliderInput('nBins', label = "Bin Width", min=5, max=100, 
+                        value=if (is.null(nBins())) 16 else nBins()))
   }
 })
 
