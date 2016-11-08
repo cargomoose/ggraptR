@@ -140,7 +140,9 @@ generateCode <- function(p) {
     res <- sprintf('%s + %s', res, format(p$facet) %>% 
                      gsub(',', ' +', .) %>% 
                      gsub('\\( ~', '(. ~', .) %>% 
-                     gsub('~ \\)', '~ .)', .))
+                     gsub('~ \\)', '~ .)', .) %>%
+                     gsub('\\(', '("', .) %>% 
+                     gsub('\\)', '")', .))
     free_mask <- unlist(p$facet$free)
     if (any(free_mask)) {
       res <- sub(')$', sprintf(
