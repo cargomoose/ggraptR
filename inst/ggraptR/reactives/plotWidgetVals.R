@@ -175,9 +175,9 @@ facetScale <- reactive({
   if (is.null(input$facetScale)) 'none' else input$facetScale
 })
 
-facetGrids <- reactive({  ####
-  row <- isolate(facetRow())
-  col <- isolate(facetCol())
+facetGrids <- reactive({
+  row <- facetRow()
+  col <- facetCol()
   if (anyNull(row, col)) '. ~ .' else paste(row, '~', col)
 })
 
