@@ -48,10 +48,13 @@ generateCode <- function(p) {
     for (i in 1:length(lim_range)) {
       ax <- lim_range[[i]]
       ax_name <- names(lim_range)[[i]]
+      isNum <- is.numeric(ax$val)
+      
       res_dataset_name <- sprintf('%s[%s %s c(%s)]',
-        res_dataset_name, as.character(p$mapping[[ax_name]]), 
-        if (ax$type == 'continuous') '%between%' else '%in%',
-        paste(round(ax$val, 2), collapse=', '))
+        res_dataset_name, deparse(p$mapping[[ax_name]]), 
+        if (isNum) '%between%' else '%in%',
+        paste(if (isNum) round(ax$val, 2) else 
+          gsub('\\b', '\\"', ax$val, perl = T), collapse=', '))
     }
   }
   res <- sprintf('ggplot(%s, aes(%s))', res_dataset_name, clist(p$mapping))
