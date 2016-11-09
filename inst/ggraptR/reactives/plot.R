@@ -34,7 +34,7 @@ buildPlot <- reactive({
   
   # if (!controlsLoading$ready) return()  
   pType <- plotType()
-  p <- getBasePlot(pType, isolate(plotDF()))
+  p <- getBasePlot(pType, plotDF())
   
   if (pType != 'pairs') {
     if (isFacetSelected()) {
