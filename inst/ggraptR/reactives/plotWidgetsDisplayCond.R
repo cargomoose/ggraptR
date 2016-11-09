@@ -11,8 +11,8 @@ extraBlocksReady <- reactive({
 })
 
 willDrawPoints <- reactive({
-  plotType() == 'scatter' || 
-    ('pointsOverlay' %in% plotInputs() && pointsOverlay())
+  !is.null(plotType()) && (plotType() == 'scatter' || 
+    ('pointsOverlay' %in% plotInputs() && pointsOverlay()))
 })
 
 displayXCond <- reactive({
@@ -42,14 +42,6 @@ displayFillCond <- reactive({
   pairsReady() && aesReady() && 'fill' %in% isolate(plotInputs())
 })
 
-displayPosCond <- reactive({
-  aesReady() && 'position' %in% isolate(plotInputs())
-})
-
-displayJitterCond <- reactive({
-  aesReady() && 'jitter' %in% isolate(plotInputs())
-})
-
 displaySmthCond <- reactive({
   aesReady() && 'smooth' %in% isolate(plotInputs())
 })
@@ -75,7 +67,15 @@ displayCoordFlipCond <- reactive({
 })
 
 displayAlphaCond <- reactive({
-  aesReady() && 'alpha' %in% isolate(plotInputs())
+  aesReady() && ('alpha' %in% plotInputs() || willDrawPoints())
+})
+
+displayJitterCond <- reactive({
+  aesReady() && ('jitter' %in% plotInputs() || willDrawPoints())
+})
+
+displayPosCond <- reactive({
+  aesReady() && 'position' %in% isolate(plotInputs())
 })
 
 displayBinWidthCond <- reactive({

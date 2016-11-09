@@ -17,8 +17,7 @@ plotInputs <- reactive({
   inputs$path <- inputs$line
   inputs[[plotType()]]
 })
-pointsOverlayInputs <- reactive(c('shape', 'size', 'smooth', 
-                                  'alpha', 'sizeMag'))
+pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter'))  # 'smooth'
 
 #### variables for rawDataset() -- probably not very useful
 ## original variables
@@ -171,10 +170,10 @@ facetWidgetsLoaded <- reactive({
 })
 
 ## conditional: no facet was selected
-noFacetSelected <- reactive({
-  if (!facetWidgetsLoaded()) return(TRUE)
+isFacetSelected <- reactive({
+  if (!facetWidgetsLoaded()) return(F)
   facetFam <- c(facetCol(), facetRow(), facetWrap())
-  all('None' == facetFam) || all('' == facetFam) || all('.' == facetFam)
+  !(all('None' == facetFam) || all('' == facetFam) || all('.' == facetFam))
 })
 
 ## conditional: facet grid was selected

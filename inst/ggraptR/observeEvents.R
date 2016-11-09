@@ -51,7 +51,7 @@ observeEvent(input$reset_input, {
 # disable/enable toggle between facet grid and facet wrap
 observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
   if (input$showFacetWgts) {
-    if (noFacetSelected()) {
+    if (!isFacetSelected()) {
       enable('facetCol')
       enable('facetRow')
       enable('facetWrap')

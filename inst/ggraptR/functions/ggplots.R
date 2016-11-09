@@ -62,12 +62,11 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
   
   p <- plot + if (is.null(ls$size)) 
     geom_point(aes_string(shape=asFactor(ls$shape)), 
-               alpha=ls$alpha, size=ls$sizeMag) else 
-                 geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
-                            alpha=ls$alpha)
+               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
+    geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
+               alpha=ls$alpha, position=ls$jitter)
   p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-  p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
   
   flog.debug("plot::plotPointsOverlay() - End", name='all')       
   p

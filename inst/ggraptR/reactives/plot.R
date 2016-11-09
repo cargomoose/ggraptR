@@ -37,7 +37,7 @@ buildPlot <- reactive({
   p <- getBasePlot(pType, isolate(plotDF()))
   
   if (pType != 'pairs') {
-    if (!noFacetSelected()) {
+    if (isFacetSelected()) {
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
       } else if (facetWrapSelected()) {  ## facet wrap

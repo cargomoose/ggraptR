@@ -90,7 +90,7 @@ output$posCtrl <- renderUI({
 ## jitter options
 output$jitterCtrl <- renderUI({
   if (displayJitterCond()) {
-    isolate(checkboxInput('jitter', 'Apply jitter effect', value=TRUE)) #jitter()
+    isolate(checkboxInput('jitter', 'Apply jitter effect', value=plotType() == 'scatter'))
   }
 })
 
