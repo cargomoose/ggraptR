@@ -77,7 +77,7 @@ alpha <- reactive({
 })
 
 densBlackLine <- reactive({
-  if (!isolate(displayDensBlackLine())) NULL else input$densBlackLine
+  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLine
 })
 
 shapeOrig <- reactive({
