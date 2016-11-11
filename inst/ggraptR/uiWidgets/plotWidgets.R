@@ -265,12 +265,11 @@ output$facetScaleCtrl <- renderUI({
 output$xlimCtrl <- renderUI({
   if (displayXlimCond()) {
     isolate({
-      browser()
-      if (x() %in% finalDFNumericVars() && !is.null(xRange())) {
+      if (x() %in% finalDFFactorVars()) {
+        selectInput('xlim', label='X Value', choices=xFactorVarUniqVals(), multiple=T)
+      } else if (x() %in% finalDFNumericVars() && !is.null(xRange())) {
         sliderInput("xlim", label="X Range",
                     min=xRange()[1], max=xRange()[2], value=xRange(), sep='')
-      } else if (x() %in% finalDFFactorVars()) {
-        selectInput('xlim', label='X Value', choices=xFactorVarUniqVals(), multiple=T)
       }
     })
   }
@@ -279,11 +278,11 @@ output$xlimCtrl <- renderUI({
 output$ylimCtrl <- renderUI({
   if (displayYlimCond()) {
     isolate({
-      if (y() %in% finalDFNumericVars() && !is.null(yRange())) {
+      if (y() %in% finalDFFactorVars()) {
+        selectInput('ylim', label='Y Value', choices=yFactorVarUniqVals(), multiple=T)
+      } else if (y() %in% finalDFNumericVars() && !is.null(yRange())) {
         sliderInput("ylim", label="Y Range",
                     min=yRange()[1], max=yRange()[2], value=yRange(), sep='')
-      } else if (y() %in% finalDFFactorVars()) {
-        selectInput('ylim', label='Y Value', choices=yFactorVarUniqVals(), multiple=T)
       }
     })
   }

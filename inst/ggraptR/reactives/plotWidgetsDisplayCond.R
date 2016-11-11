@@ -1,3 +1,11 @@
+# this function is used for early initialization of input$facet.. and others extra wgts. 
+# It prevents plot redrawing when user first time clicks on 'Apply facet' or 
+# similar extra block. The only block that redraws plot is xy limits because first init 
+# run does not supply x() value and I can initialize input$xLim with NULL only.
+isInit <- reactive({
+  is.null(dataset())
+})
+
 aesReady <- reactive({  # serves as trigger too
   !is.null(displayYCond()) && showAes() && isolate(x() %in% names(dataset()))
 })
@@ -83,21 +91,21 @@ displayDensBlackLineCond <- reactive({
   aesReady() && 'densBlackLine' %in% isolate(plotInputs())
 })
 
+displayFacetCond <- reactive({
+  (showFacet() && isolate(!is.null(plotType()) && plotType() != 'pairs')) || 
+    isolate(isInit())
+})
 
 displayXlimCond <- reactive({
-  showXYRange() && displayXCond()
+  showXYRange() && displayXCond()  # )|| isolate(isInit())
 })
 
 displayYlimCond <- reactive({
-  showXYRange() && displayYCond()
-})
-
-displayFacetCond <- reactive({
-  showFacet() && isolate(!is.null(plotType()) && plotType() != 'pairs')
+  showXYRange() && displayYCond()  # )|| isolate(isInit())
 })
 
 displayThemeCond <- reactive({
-  showTheme()
+  showTheme() || isolate(isInit())
 })
 
 displayTitlesCond <- reactive({
@@ -105,7 +113,7 @@ displayTitlesCond <- reactive({
 })
 
 displayAggCond <- reactive({
-  showDSTypeAndPlotAgg()
+  showDSTypeAndPlotAgg() || isolate(isInit())
 })
 
 displayPlotAddAggByCond <- reactive({
