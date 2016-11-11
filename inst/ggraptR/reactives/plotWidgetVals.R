@@ -52,10 +52,6 @@ fill <- reactive({
  convertNoneToNULL(fillOrig())
 })
 
-position <- reactive({
-  convertNoneToNULL(input$position)
-})
-
 jitter <- reactive({
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
 })
@@ -74,10 +70,6 @@ alphaOrig <- reactive({
 
 alpha <- reactive({
   if (is.null(alphaOrig())) 1 else alphaOrig()
-})
-
-densBlackLine <- reactive({
-  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLine
 })
 
 shapeOrig <- reactive({
@@ -133,10 +125,22 @@ ggpairsLowDiscr <- reactive({
   input$ggpairsLowDiscr
 })
 
-
 nBins <- reactive({
   input$nBins
 })
+
+pointsOverlay <- reactive({
+  !is.null(input$pointsOverlay) && input$pointsOverlay
+})
+
+position <- reactive({
+  convertNoneToNULL(input$position)
+})
+
+densBlackLine <- reactive({
+  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLine
+})
+
 
 facetRowOrig <- reactive({
   input$facetRow
@@ -183,15 +187,13 @@ facetGrids <- reactive({
 
 xlim <- reactive({
   input$xlim
-  if (isolate(!displayXlim())) NULL else input$xlim
+  if (isolate(!displayXlimCond())) NULL else input$xlim
 })
 
 ylim <- reactive({
   input$ylim
-  if (isolate(!displayYlim())) NULL else input$ylim
+  if (isolate(!displayYlimCond())) NULL else input$ylim
 })
-
-
 
 plotTitle <- reactive({
   input$plotTitle
@@ -229,8 +231,8 @@ vjust <- reactive({
   if (is.null(input$vjust)) 0.5 else input$vjust
 })
 
-showXYRangeWgts <- reactive({
-  !is.null(input$showXYRangeWgts) && input$showXYRangeWgts
+showXYRange <- reactive({
+  !is.null(input$showXYRange) && input$showXYRange
 })
 
 plotTheme <- reactive({
@@ -250,16 +252,26 @@ plotAddAggBy <- reactive({
   input$plotAddAggBy
 })
 
-showAesWgts <- reactive({
-  !is.null(input$showAesWgts) && input$showAesWgts
+showAes <- reactive({
+  !is.null(input$showAes) && input$showAes
 })
 
-showFacetWgts <- reactive({
-  !is.null(input$showFacetWgts) && input$showFacetWgts
+showFacet <- reactive({
+  !is.null(input$showFacet) && input$showFacet
 })
 
-pointsOverlay <- reactive({
-  !is.null(input$pointsOverlay) && input$pointsOverlay
+showXYRange <- reactive({
+  !is.null(input$showXYRange) && input$showXYRange
 })
 
+showTheme <- reactive({
+  !is.null(input$showTheme) && input$showTheme
+})
 
+showDSTypeAndPlotAgg <- reactive({
+  !is.null(input$showDSTypeAndPlotAgg) && input$showDSTypeAndPlotAgg
+})
+
+# showPlotAgg <- reactive({
+#   !is.null(input$showPlotAgg) && input$showPlotAgg
+# })

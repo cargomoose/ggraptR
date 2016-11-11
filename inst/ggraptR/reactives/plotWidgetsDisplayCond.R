@@ -1,13 +1,9 @@
 aesReady <- reactive({  # serves as trigger too
-  !is.null(displayYCond()) && showAesWgts() && isolate(x() %in% names(dataset()))
+  !is.null(displayYCond()) && showAes() && isolate(x() %in% names(dataset()))
 })
 
 pairsReady <- reactive({
-  !is.null(displayGgpairsWgtsCond())
-})
-
-extraBlocksReady <- reactive({
-  !is.null(plotType())
+  !is.null(displayGgpairsCond())
 })
 
 willDrawPoints <- reactive({
@@ -26,11 +22,11 @@ displayYCond <- reactive({
     !is.null(isolate(plotType())) && 'y' %in% plotInputs()
 })
 
-displayGgpairsWgtsCond <- reactive({
+displayGgpairsCond <- reactive({
   !is.null(plotType()) && plotType() == 'pairs'
 })
 
-displayColCond <- reactive({
+displayColorCond <- reactive({
   pairsReady() && aesReady() && 'color' %in% isolate(plotInputs())
 })
 
@@ -42,10 +38,6 @@ displayFillCond <- reactive({
   pairsReady() && aesReady() && 'fill' %in% isolate(plotInputs())
 })
 
-displaySmthCond <- reactive({
-  aesReady() && 'smooth' %in% isolate(plotInputs())
-})
-
 displayShapeCond <- reactive({
   aesReady() && willDrawPoints()
 })
@@ -54,24 +46,28 @@ displaySizeCond <- reactive({
   aesReady() && willDrawPoints()
 })
 
-displaySizeMagCond <- reactive({
-  aesReady() && willDrawPoints()
-})
-
-displayPointsOverlayCond <- reactive({
-  aesReady() && isolate('pointsOverlay' %in% plotInputs())
-})
-
 displayCoordFlipCond <- reactive({
   aesReady() && isolate(plotType()) != 'pairs'
+})
+
+displayJitterCond <- reactive({
+  aesReady() && ('jitter' %in% plotInputs() || willDrawPoints())
+})
+
+displaySmthCond <- reactive({
+  aesReady() && 'smooth' %in% isolate(plotInputs())
+})
+
+displaySizeMagCond <- reactive({
+  aesReady() && willDrawPoints()
 })
 
 displayAlphaCond <- reactive({
   aesReady() && ('alpha' %in% plotInputs() || willDrawPoints())
 })
 
-displayJitterCond <- reactive({
-  aesReady() && ('jitter' %in% plotInputs() || willDrawPoints())
+displayPointsOverlayCond <- reactive({
+  aesReady() && isolate('pointsOverlay' %in% plotInputs())
 })
 
 displayPosCond <- reactive({
@@ -87,32 +83,31 @@ displayDensBlackLineCond <- reactive({
   aesReady() && 'densBlackLine' %in% isolate(plotInputs())
 })
 
+
+displayXlimCond <- reactive({
+  showXYRange() && displayXCond()
+})
+
+displayYlimCond <- reactive({
+  showXYRange() && displayYCond()
+})
+
 displayFacetCond <- reactive({
-  extraBlocksReady() && isolate(plotType() != 'pairs') && showFacetWgts()
+  showFacet() && isolate(!is.null(plotType()) && plotType() != 'pairs')
 })
 
-displayPlotAddAggBy <- reactive({
-  extraBlocksReady() && 
-    notNulls(input$showDSTypeAndPlotAggWgts, input$semiAutoAggOn) &&
-    input$showDSTypeAndPlotAggWgts & semiAutoAggOn()
-})
-
-displayThemeWgts <- reactive({
-  extraBlocksReady() && !is.null(input$showThemeWgts) && input$showThemeWgts
+displayThemeCond <- reactive({
+  showTheme()
 })
 
 displayTitlesCond <- reactive({
-  extraBlocksReady() && displayThemeWgts() && !is.null(input$reactive) && !input$reactive
+  displayThemeCond() && !is.null(input$reactive) && !input$reactive
 })
 
-displayXlim <- reactive({
-  showXYRangeWgts() && displayXCond()
+displayAggCond <- reactive({
+  showDSTypeAndPlotAgg()
 })
 
-displayYlim <- reactive({
-  showXYRangeWgts() && displayYCond()
-})
-
-displayAgg <- reactive({
-  !is.null(input$showDSTypeAndPlotAggWgts) && input$showDSTypeAndPlotAggWgts
+displayPlotAddAggByCond <- reactive({
+  displayAggCond() & semiAutoAggOn()
 })

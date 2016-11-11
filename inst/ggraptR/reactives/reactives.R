@@ -70,21 +70,6 @@ varsUniqValsCntLOEN <- reactive({
 
 
 #### variables for finalDF()
-## number of rows
-nrows <- reactive({
-  dataset <- finalDF()
-  if (!is.null(dataset)) {
-    nrow(dataset)
-  }
-})
-
-finalDFVars <- reactive({
-  dataset <- finalDF()
-  if (!is.null(dataset)) {
-    colnames(dataset)
-  }
-})
-
 finalDFFactorVars <- reactive({
   dataset <- finalDF()
   if (!is.null(dataset)) {

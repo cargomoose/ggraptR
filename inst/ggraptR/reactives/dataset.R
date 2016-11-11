@@ -151,7 +151,7 @@ plotSemiAutoAggBy <- reactive({
     flog.debug("dataset::plotSemiAutoAggBy() - is.null(dataset()) - End", name='all')
     return()
   }
-  aggBy <- c(plotSemiAutoAggByBase(), input$plotAddAggBy)
+  aggBy <- c(plotSemiAutoAggByBase(), plotAddAggBy())
   aggBy <- cleanPlotAggBy(input$x, input$y, aggBy)
   aggBy <- aggBy[aggBy %in% colnames(dataset())]
   

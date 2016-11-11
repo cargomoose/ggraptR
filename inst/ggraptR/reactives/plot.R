@@ -40,7 +40,7 @@ buildPlot <- reactive({
     if (isFacetSelected()) {
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
-      } else if (facetWrapSelected()) {  ## facet wrap
+      } else if (facetWrapSelected()) {
         p <- p + facet_wrap(facets=facetWrap(), scales=facetScale())
       }
     }

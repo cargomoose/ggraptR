@@ -8,31 +8,31 @@ verticalLayout(
   
   ## widgets to show/hide advanced control widgets
   div(
-    uiOutput('showAesWgtsCtrl'),
+    uiOutput('showAesCtrl'),
     source('./views/plot/aesCtrlsUI.R', local=TRUE)$value,
     class="widblock"),
   
   conditionalPanel('input.plotType != "pairs"',
     div(
-      uiOutput('showFacetWgtsCtrl'),
+      uiOutput('showFacetCtrl'),
       source('./views/plot/facetCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
-      uiOutput('showXYRangeWgtsCtrl'),
+      uiOutput('showXYRangeCtrl'),
       source('./views/plot/xyRangeCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
-      uiOutput('showThemeWgtsCtrl'),
+      uiOutput('showThemeCtrl'),
       source('./views/plot/labelAndStyleCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
-      uiOutput('showDSTypeAndPlotAggWgtsCtrl'),
+      uiOutput('showDSTypeAndPlotAggCtrl'),
       source('./views/plot/DSTypeAndPlotAggCtrlsUI.R', local=TRUE)$value,
       class="widblock")
     
-    #uiOutput('showPlotAggWgtCtrl')
+    #uiOutput('showPlotAggCtrl')
   )
 )
