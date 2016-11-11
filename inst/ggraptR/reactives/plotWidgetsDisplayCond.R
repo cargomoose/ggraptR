@@ -1,5 +1,5 @@
-# this function is used for early initialization of input$facet.. and others extra wgts. 
-# It prevents plot redrawing when user first time clicks on 'Apply facet' or 
+# this function is used for early initialization of input$facet.. and other extra wgts. 
+# It prevents a plot redrawing when user first time clicks on 'Apply facet' or 
 # similar extra block. The only block that redraws plot is xy limits because first init 
 # run does not supply x() value and I can initialize input$xLim with NULL only.
 isInit <- reactive({
@@ -92,8 +92,8 @@ displayDensBlackLineCond <- reactive({
 })
 
 displayFacetCond <- reactive({
-  browser()
-  (showFacet() && !isolate(is.null(plotType()) && plotType() != 'pairs')) || isInit()
+  isInit <- isInit()  # dataset() trigger. Can be unavailable if omit separate assignment
+  (showFacet() && !isolate(is.null(plotType()) && plotType() != 'pairs')) || isInit
 })
 
 displayXlimCond <- reactive({
@@ -117,5 +117,5 @@ displayAggCond <- reactive({
 })
 
 displayPlotAddAggByCond <- reactive({
-  displayAggCond() && semiAutoAggOn() && !is.null(plotType())
+  !is.null(plotType()) && displayAggCond() && semiAutoAggOn()
 })
