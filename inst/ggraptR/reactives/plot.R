@@ -1,18 +1,18 @@
-getPlotInputVals <- function(plotDF, inputNames=NULL) {
+getPlotInputVals <- function(aggLimDf, inputNames=NULL) {
   if (is.null(inputNames)) inputNames <- isolate(plotInputs())
   inputs <- lapply(inputNames, do.call, args=list(), envir=environment())
   names(inputs) <- inputNames  # results list(x=eval(x()), y=eval(y())...)
-  ensureCorrectPlotInputs(inputs, colnames(plotDF))
+  ensureCorrectPlotInputs(inputs, colnames(aggLimDf))
 }
 
-getBasePlot <- function(pType, plotDF) {
-  inputs <- getPlotInputVals(plotDF)
+getBasePlot <- function(pType, aggLimDf) {
+  inputs <- getPlotInputVals(aggLimDf)
   for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
   pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
-  p <- do.call.pasted('plot', pTypeCapit, args=list(plotDF, inputs))  # scatterPlot(args)
+  p <- do.call.pasted('plot', pTypeCapit, args=list(aggLimDf, inputs))  # scatterPlot(args)
   
   if ('pointsOverlay' %in% isolate(plotInputs()) && pointsOverlay()) {
-    overInputs <- getPlotInputVals(plotDF, pointsOverlayInputs())
+    overInputs <- getPlotInputVals(aggLimDf, pointsOverlayInputs())
     p <- fillPlotWithPointsOverlay(p, overInputs)
   }
   p
@@ -34,7 +34,7 @@ buildPlot <- reactive({
   
   # if (!controlsLoading$ready) return()  
   pType <- plotType()
-  p <- getBasePlot(pType, plotDF())
+  p <- getBasePlot(pType, aggLimDf())
   
   if (pType != 'pairs') {
     if (isFacetSelected()) {

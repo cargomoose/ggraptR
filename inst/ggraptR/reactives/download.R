@@ -51,5 +51,5 @@ output$dlPlot <- downloadHandler(
 )
 
 ## register the final dataset to be used upon AJAX call from UI
-action <- reactive({DT::dataTableAjax(session, finalDF())})
+action <- reactive({DT::dataTableAjax(session, aggDf())})
 

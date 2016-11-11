@@ -11,7 +11,7 @@ yOrig <- reactive({
 })
 
 y <- reactive({
-  ensureProperVarName(colnames(isolate(finalDF())), yOrig(), 
+  ensureProperVarName(colnames(isolate(aggDf())), yOrig(), 
                       isolate(plotAggMeth()), isolate(semiAutoAggOn()))
 })
 
@@ -26,7 +26,7 @@ colorOrig <- reactive({
 
 color <- reactive({
   convertNoneToNULL(ensureProperVarName(
-    isolate(colnames(plotDF())), colorOrig(), 
+    isolate(colnames(aggLimDf())), colorOrig(), 
             isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
@@ -40,7 +40,7 @@ sizeOrig <- reactive({
 
 size <- reactive({
   convertNoneToNULL(ensureProperVarName(
-    isolate(colnames(plotDF())), sizeOrig(), 
+    isolate(colnames(aggLimDf())), sizeOrig(), 
     isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
@@ -147,10 +147,10 @@ facetRowOrig <- reactive({
 })
 
 facetRow <- reactive({
-  plotDF <- isolate(plotDF())  #####
-  if (anyNull(plotDF, input$facetRow)) return('.')
+  aggLimDf <- isolate(aggLimDf())  #####
+  if (anyNull(aggLimDf, input$facetRow)) return('.')
   fr <- ifelse(input$facetRow=='None', '.', input$facetRow)
-  if (fr != '.' && fr %in% colnames(plotDF)) fr else '.'
+  if (fr != '.' && fr %in% colnames(aggLimDf)) fr else '.'
 })
 
 facetColOrig <- reactive({
@@ -158,10 +158,10 @@ facetColOrig <- reactive({
 })
 
 facetCol <- reactive({
-  plotDF <- isolate(plotDF())  #####
-  if (anyNull(plotDF, input$facetCol)) return('.')
+  aggLimDf <- isolate(aggLimDf())  #####
+  if (anyNull(aggLimDf, input$facetCol)) return('.')
   fc <- ifelse(input$facetCol=='None', '.', input$facetCol)
-  if (fc != '.' && fc %in% colnames(plotDF)) fc else '.'
+  if (fc != '.' && fc %in% colnames(aggLimDf)) fc else '.'
 }) 
 
 facetWrapOrig <- reactive({
@@ -169,10 +169,10 @@ facetWrapOrig <- reactive({
 })
 
 facetWrap <- reactive({
-  plotDF <- isolate(plotDF())  #####
-  if (anyNull(plotDF, input$facetWrap)) return('.')
+  aggLimDf <- isolate(aggLimDf())  #####
+  if (anyNull(aggLimDf, input$facetWrap)) return('.')
   fw <- ifelse(input$facetWrap=='None', '.', input$facetWrap)
-  if (fw != '.' && fw %in% colnames(plotDF)) fw else '.'
+  if (fw != '.' && fw %in% colnames(aggLimDf)) fw else '.'
 })
 
 facetScale <- reactive({

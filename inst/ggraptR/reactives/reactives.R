@@ -69,33 +69,33 @@ varsUniqValsCntLOEN <- reactive({
 })
 
 
-#### variables for finalDF()
-finalDFFactorVars <- reactive({
-  dataset <- finalDF()
+#### variables for aggDf()
+aggDfFactorVars <- reactive({
+  dataset <- aggDf()
   if (!is.null(dataset)) {
     getIsFactorVarNames(dataset)
   }
 })
 
-finalDFNumericVars <- reactive({
-  dataset <- finalDF()
+aggDfNumericVars <- reactive({
+  dataset <- aggDf()
   if (!is.null(dataset)) {
     getIsNumericVarNames(dataset)
   }
 })
 
 # xRange <- reactive({
-#   dataset <- finalDF(); if (is.null(dataset)) return()
+#   dataset <- aggDf(); if (is.null(dataset)) return()
 #   if (is.null(input$x)) return()
-#   if (input$x %in% finalDFNumericVars())
+#   if (input$x %in% aggDfNumericVars())
 #     range(dataset[input$x], na.rm=TRUE)
 # })
 
 ## work-around for round error in sliderInput (for consistency w/ yRange())
 xRange <- reactive({
-  dataset <- finalDF()
+  dataset <- aggDf()
   if (!is.null(dataset) && !is.null(input$x)) {
-    if (input$x %in% finalDFNumericVars()) {
+    if (input$x %in% aggDfNumericVars()) {
       range <- range(dataset[input$x], na.rm=TRUE)
     }
     range[1] <- range[1] - 1
@@ -105,18 +105,18 @@ xRange <- reactive({
 })
 
 # yRange <- reactive({
-#   dataset <- finalDF(); if (is.null(dataset)) return()
+#   dataset <- aggDf(); if (is.null(dataset)) return()
 #   y <- y()
 #   if (is.null(y)) return()
-#   if (y %in% finalDFNumericVars())
+#   if (y %in% aggDfNumericVars())
 #     range(dataset[[y]], na.rm=TRUE)
 # })
 
 ## work-around for rounding error in sliderInput
 yRange <- reactive({
-  dataset <- finalDF()
+  dataset <- aggDf()
   if (!is.null(dataset) && !is.null(y())) {
-    if (y() %in% finalDFNumericVars()) {
+    if (y() %in% aggDfNumericVars()) {
       range <- range(dataset[[y()]], na.rm=TRUE)
     }
     range[1] <- range[1] - 1
@@ -126,15 +126,15 @@ yRange <- reactive({
 })
 
 xFactorVarUniqVals <- reactive({
-  dataset <- finalDF()
-  if (!is.null(dataset) && !is.null(input$x) && input$x %in% finalDFFactorVars()) {
+  dataset <- aggDf()
+  if (!is.null(dataset) && !is.null(input$x) && input$x %in% aggDfFactorVars()) {
     unique(as.character(dataset[[input$x]]))
   }
 })
 
 yFactorVarUniqVals <- reactive({
-  dataset <- finalDF()
-  if (!is.null(dataset) && !is.null(y()) && y() %in% finalDFFactorVars()) {
+  dataset <- aggDf()
+  if (!is.null(dataset) && !is.null(y()) && y() %in% aggDfFactorVars()) {
     levels(dataset[[y()]])
   }
 })
@@ -183,26 +183,26 @@ isXYCtrlPlot <- reactive({
 
 ## reactive that returns a value "discrete" or "continuous"
 xType <- reactive({
-  dataset <- finalDF()
+  dataset <- aggDf()
   if (!is.null(dataset) && !is.null(x())) {
-    if (x() %in% finalDFNumericVars()) 'continuous' else 'discrete'
+    if (x() %in% aggDfNumericVars()) 'continuous' else 'discrete'
   }
 })
 
 
 ## reactive that returns a value "discrete" or "continuous"
 yType <- reactive({
-  dataset <- finalDF()
+  dataset <- aggDf()
   if (!is.null(dataset) && isXYCtrlPlot() && !is.null(y())) {
-    if (y() %in% finalDFNumericVars()) 'continuous' else 'discrete'
+    if (y() %in% aggDfNumericVars()) 'continuous' else 'discrete'
   }
 })
 
 ## reactive that returns a value "discrete" or "continuous"
 colorType <- reactive({
-  dataset <- finalDF()
+  dataset <- aggDf()
   if (!is.null(dataset) && !is.null(color())) {
-    if (color() %in% finalDFNumericVars()) 'continuous' else 'discrete'
+    if (color() %in% aggDfNumericVars()) 'continuous' else 'discrete'
   } else 'none'
 })
 
