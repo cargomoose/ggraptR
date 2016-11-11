@@ -92,8 +92,8 @@ displayDensBlackLineCond <- reactive({
 })
 
 displayFacetCond <- reactive({
-  (showFacet() && isolate(!is.null(plotType()) && plotType() != 'pairs')) || 
-    isolate(isInit())
+  browser()
+  (showFacet() && !isolate(is.null(plotType()) && plotType() != 'pairs')) || isInit()
 })
 
 displayXlimCond <- reactive({
@@ -117,5 +117,5 @@ displayAggCond <- reactive({
 })
 
 displayPlotAddAggByCond <- reactive({
-  displayAggCond() & semiAutoAggOn()
+  displayAggCond() && semiAutoAggOn() && !is.null(plotType())
 })
