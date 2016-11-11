@@ -32,7 +32,6 @@ buildPlot <- reactive({
     return()
   }
   
-  # if (!controlsLoading$ready) return()  
   pType <- plotType()
   p <- getBasePlot(pType, aggLimDf())
   

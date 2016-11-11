@@ -140,16 +140,12 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
     if (semiAutoAggOn) {
       return(if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
     }
-  } 
-  
-  ## if original variable name is found in dataset's column names
-  else {
+  } else {  ## if original variable name is found in dataset's column names
     varAgg <- paste0(var, '_', aggMeth)
     if (varAgg %in% colnames) {
       return(varAgg)
     }
   }
-  
   var
 }
 

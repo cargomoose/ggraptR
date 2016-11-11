@@ -12,7 +12,7 @@ yOrig <- reactive({
 
 y <- reactive({
   ensureProperVarName(colnames(isolate(aggDf())), yOrig(), 
-                      isolate(plotAggMeth()), isolate(semiAutoAggOn()))
+                      isolate(plotAggMeth()), semiAutoAggOn())
 })
 
 # pairsPlot
