@@ -31,7 +31,7 @@ color <- reactive({
 })
 
 treatColorAsFactor <- reactive({
-  if (is.null(input$treatColorAsFactor)) FALSE else input$treatColorAsFactor
+  !is.null(input$treatColorAsFactor) && input$treatColorAsFactor
 })
 
 sizeOrig <- reactive({
@@ -187,12 +187,12 @@ facetGrids <- reactive({
 
 xlim <- reactive({
   input$xlim
-  if (isolate(!displayXlimCond())) NULL else input$xlim
+  if (!displayXlimCond()) NULL else input$xlim
 })
 
 ylim <- reactive({
   input$ylim
-  if (isolate(!displayYlimCond())) NULL else input$ylim
+  if (!displayYlimCond()) NULL else input$ylim
 })
 
 plotTitle <- reactive({
