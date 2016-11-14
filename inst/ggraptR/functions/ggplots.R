@@ -1,6 +1,5 @@
 plotScatter <- function(dataset, ls) {
-  flog.debug("plot::plotScatter() - Begin", name='all')
-  
+  flog.debug("plot::plotScatter()", name='all')
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     if (is.null(ls$size))
       geom_point(aes_string(shape=asFactor(ls$shape)), 
@@ -11,14 +10,11 @@ plotScatter <- function(dataset, ls) {
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
   p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
   if (ls$treatColorAsFactor) {
-    p <- p + aes_string(color=asFactor(ls$color)) +
+    p + aes_string(color=asFactor(ls$color)) +
       guides(color=guide_legend(title=ls$color))
   } else {
-    p <- p + aes_string(color=ls$color)
+    p + aes_string(color=ls$color)
   }
-  
-  flog.debug("plot::plotScatter() - End", name='all')  
-  p
 }
 
 plotDensity2d <- function(dataset, ls) {
@@ -26,24 +22,19 @@ plotDensity2d <- function(dataset, ls) {
 }
 
 plotLine <- function(dataset, ls) {
-  flog.debug("plot::plotLine() - Begin", name='all')
-  
+  flog.debug("plot::plotLine()", name='all')
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y))
   if (is.null(ls$color))  {
-    p <- p + geom_line(aes(group=1), alpha=ls$alpha) 
+    p + geom_line(aes(group=1), alpha=ls$alpha) 
   } else {
-    p <- p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
+    p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
       aes_string(color=asFactor(ls$color)) + 
       guides(color=guide_legend(title=ls$color))
   }
-  
-  flog.debug("plot::plotLine() - End", name='all')
-  p
 }
 
 plotPath <- function(dataset, ls) {
-  flog.debug("plot::plotPath() - Begin", name='all')   
-  
+  flog.debug("plot::plotPath()", name='all')   
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_path(alpha=ls$alpha) + 
     if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
@@ -52,14 +43,11 @@ plotPath <- function(dataset, ls) {
     p <- p + aes_string(color=asFactor(ls$color)) + 
       guides(color=guide_legend(title=ls$color))
   }
-  
-  flog.debug("plot::plotPath() - End", name='all')    
   p
 }
 
 fillPlotWithPointsOverlay <- function(plot, ls) {
-  flog.debug("plot::plotPointsOverlay() - Begin", name='all')    
-  
+  flog.debug("plot::plotPointsOverlay()", name='all')    
   p <- plot + if (is.null(ls$size)) 
     geom_point(aes_string(shape=asFactor(ls$shape)), 
                alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
@@ -67,71 +55,59 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
                alpha=ls$alpha, position=ls$jitter)
   p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-  
-  flog.debug("plot::plotPointsOverlay() - End", name='all')       
   p
 }
 
 plotHistogram <- function(dataset, ls) {
-  flog.debug("plot::plotHistogram() - Begin", name='all')
-  p <- ggplot(dataset, aes_string(x=ls$x)) + 
-    geom_histogram(alpha=ls$alpha, position=ls$position, bins=ls$nBins) + #'iden'
-    aes_string(fill=asFactor(ls$fill)) +  # ls$position
+  flog.debug("plot::plotHistogram()", name='all')
+  ggplot(dataset, aes_string(x=ls$x)) + 
+    geom_histogram(alpha=ls$alpha, position=ls$position, bins=ls$nBins) +
+    aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  flog.debug("plot::plotHistogram() - End", name='all') 
-  p
 }
 
 plotDensity <- function(dataset, ls) {
-  flog.debug("plot::plotDensity() - Begin", name='all')      
+  flog.debug("plot::plotDensity()", name='all')      
 
   p <- ggplot(dataset, aes_string(x=ls$x)) + 
     geom_density(alpha=ls$alpha,
                  mapping=do.call(
                    aes_string, c(list(group=asFactor(ls$fill), fill=asFactor(ls$fill)),
                                  if (!ls$densBlackLine) list(color=asFactor(ls$fill)))))
-  p <- p + if (!is.null(ls$fill)) do.call(
+  p + if (!is.null(ls$fill)) do.call(
     guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
               if (!ls$densBlackLine) list(color=guide_legend(title=ls$fill))))
-  
-  flog.debug("plot::plotDensity() - End", name='all')
-  p
 }
 
 plotBox <- function(dataset, ls) {
-  flog.debug("plot::plotBox() - Begin", name='all')     
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+  flog.debug("plot::plotBox()", name='all')     
+  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
     geom_boxplot(alpha=ls$alpha) + 
     aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  flog.debug("plot::plotBox() - End", name='all')   
-  p
 }
 
 plotBar <- function(dataset, ls) {
-  flog.debug("plot::plotBar() - Begin", name='all')   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+  flog.debug("plot::plotBar()", name='all')   
+  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) + # posi='identity'
     aes_string(fill=asFactor(ls$fill)) +  # ls$position
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  flog.debug("plot::plotBar() - End", name='all')
-  p
 }
 
 plotViolin <- function(dataset, ls) {
-  flog.debug("plot::plotViolin() - Begin", name='all')
+  flog.debug("plot::plotViolin()", name='all')
   dodge <- position_dodge(width = 0.4)
   p <- ggplot(dataset, aes_string(x=asFactor(ls$x), y=ls$y))
   p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
   p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
     aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  flog.debug("plot::plotViolin() - End", name='all')
   p
 }
 
 plotPairs <- function(dataset, ls) {
-  flog.debug("plot::plotPairs() - Begin", name='all')  
+  flog.debug("plot::plotPairs()", name='all')  
   
   ggpairs_pars <- Filter(
     function(x) !is.null(x), 
@@ -153,8 +129,5 @@ plotPairs <- function(dataset, ls) {
   }
   
   # print.ggmatrix() is overrided in helper.R script
-  p <- do.call(ggpairs, ggpairs_pars)
-  
-  flog.debug("plot::plotPairs() - End", name='all')  
-  p
+  do.call(ggpairs, ggpairs_pars)
 }
