@@ -93,6 +93,7 @@ displayDensBlackLineCond <- reactive({
 
 displayFacetCond <- reactive({
   isInit <- isInit()  # dataset() trigger. Can be unavailable if omit separate assignment
+  # because of boolen lazy evaluation
   (showFacet() && !isolate(is.null(plotType()) && plotType() != 'pairs')) || isInit
 })
 

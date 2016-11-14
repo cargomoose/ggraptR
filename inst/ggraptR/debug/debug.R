@@ -1,4 +1,4 @@
-#### debugger configuration
+# debugger configuration
 
 # prepare txtCfg to read configuration file
 tryCatch({

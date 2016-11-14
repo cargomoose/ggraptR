@@ -70,7 +70,7 @@ observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
 ## disable plot title, x and y label text fields when reactivity is enabled
 # observeEvent(c(input$plotTitle, input$xLabel, input$yLabel), {
 #   if (input$showTheme) {
-#     if (plotLabelWidgetsLoaded()) {
+#     if (checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel'))) {
 #       if (input$reactive) {
 #         print('hi')
 #         disable('plotTitle')

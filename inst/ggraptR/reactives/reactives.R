@@ -19,8 +19,9 @@ plotInputs <- reactive({
 })
 pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter'))  # 'smooth'
 
-#### variables for rawDataset() -- probably not very useful
-## original variables
+
+# variables for rawDataset() -- probably not very useful
+# original variables
 origVars <- reactive({
   dataset <- rawDataset()
   if (!is.null(dataset)) {
@@ -45,7 +46,7 @@ origNumericVars <- reactive({
 })
 
 
-#### variables for dataset() -- raw or manually aggregated dataset
+# variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
   unique(c(getIsFactorVarNames(dataset()), 
@@ -69,7 +70,7 @@ varsUniqValsCntLOEN <- reactive({
 })
 
 
-#### variables for aggDf()
+# variables for aggDf()
 aggDfFactorVars <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset)) {
@@ -139,14 +140,6 @@ yFactorVarUniqVals <- reactive({
   }
 })
 
-
-
-
-####
-## conditional: plot label widgets loaded
-plotLabelWidgetsLoaded <- reactive({
-  checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel'))
-})
 
 
 ## conditional: facet widgets are loaded

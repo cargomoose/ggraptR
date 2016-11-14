@@ -89,7 +89,7 @@ smooth <- reactive({
 })
 
 coordFlip <- reactive({
-  if (is.null(input$coordFlip)) FALSE else input$coordFlip  #####
+  !is.null(input$coordFlip) && input$coordFlip
 })
 
 
@@ -138,7 +138,7 @@ position <- reactive({
 })
 
 densBlackLine <- reactive({
-  if (!isolate(displayDensBlackLineCond())) NULL else input$densBlackLine
+  input$densBlackLine
 })
 
 
@@ -147,7 +147,7 @@ facetRowOrig <- reactive({
 })
 
 facetRow <- reactive({
-  aggLimDf <- isolate(aggLimDf())  #####
+  aggLimDf <- aggLimDf()
   if (anyNull(aggLimDf, input$facetRow)) return('.')
   fr <- ifelse(input$facetRow=='None', '.', input$facetRow)
   if (fr != '.' && fr %in% colnames(aggLimDf)) fr else '.'
@@ -158,7 +158,7 @@ facetColOrig <- reactive({
 })
 
 facetCol <- reactive({
-  aggLimDf <- isolate(aggLimDf())  #####
+  aggLimDf <- aggLimDf()
   if (anyNull(aggLimDf, input$facetCol)) return('.')
   fc <- ifelse(input$facetCol=='None', '.', input$facetCol)
   if (fc != '.' && fc %in% colnames(aggLimDf)) fc else '.'
@@ -169,7 +169,7 @@ facetWrapOrig <- reactive({
 })
 
 facetWrap <- reactive({
-  aggLimDf <- isolate(aggLimDf())  #####
+  aggLimDf <- aggLimDf()
   if (anyNull(aggLimDf, input$facetWrap)) return('.')
   fw <- ifelse(input$facetWrap=='None', '.', input$facetWrap)
   if (fw != '.' && fw %in% colnames(aggLimDf)) fw else '.'

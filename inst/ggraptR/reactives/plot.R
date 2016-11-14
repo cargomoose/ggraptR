@@ -58,7 +58,7 @@ buildPlot <- reactive({
       theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
       
       state$theme_name <- theme_name
-      isColorTypeDiscr <- isolate(colorType()) == 'discrete'  ########
+      isColorTypeDiscr <- isolate(colorType()) == 'discrete' #colorType() bases on color()
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
         scale_color_name <- sprintf('scale_colour_%s', theme_name)
         if (theme_name == 'calc') {
