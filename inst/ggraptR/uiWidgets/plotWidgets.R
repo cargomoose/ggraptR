@@ -16,12 +16,10 @@ output$controlsLoadingCtrl <- renderUI({
 output$plotTypeCtrl <- renderUI({
   if (!is.null(dataset())) {
     pType <- isolate(input$plotType)
-    selectInput("plotType", "Plot type", 
-                choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
-                            'Density 2D'='density2d', 'Line'='line', 'Path'='path',
-                            'Bin 2D'='bin2d',
-                            'Histogram'='histogram', 'Density'='density', 
-                            'Box'='box', 'Bar'='bar'),   #'Image'='image'
+    opts <- names(definedPlotInputs)
+    names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
+    
+    selectInput("plotType", "Plot type", opts,
                 # need value to change plot type everytime dataset() changes. For trigger
                 if (!is.null(pType) && pType == 'scatter') 'histogram')
   }
@@ -131,7 +129,7 @@ output$sizeMagCtrl <- renderUI({
 ## histogram bins options
 output$nBinsCtrl <- renderUI({
   if (displayBinWidthCond()) {
-    isolate(sliderInput('nBins', label = "n bins", min=5, max=100, 
+    isolate(sliderInput('nBins', label = "Number of bins", min=5, max=100, 
                         value=if (is.null(nBins())) 16 else nBins()))
   }
 })

@@ -180,6 +180,10 @@ anyNull <- function(...) {
 
 na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
 
+capitalize <- function(x) {
+  paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
+}
+
 do.call.pasted <- function(..., args=list()) {
   do.call(paste(na_omit(list(...)), collapse=''), args, envir=parent.env(parent.frame()))
 }

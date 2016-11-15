@@ -59,6 +59,17 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
   p
 }
 
+plotViolin <- function(dataset, ls) {
+  flog.debug("plot::plotViolin()", name='all')
+  dodge <- position_dodge(width = 0.4)
+  p <- ggplot(dataset, aes_string(x=asFactor(ls$x), y=ls$y))
+  p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
+  p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
+    aes_string(fill=asFactor(ls$fill)) +
+    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
+  p
+}
+
 plotBin2d <- function(dataset, ls) {
   p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
     geom_bin2d(alpha=ls$alpha, bins=ls$nBins)  # position=ls$position,
@@ -68,6 +79,18 @@ plotBin2d <- function(dataset, ls) {
   p
 }
 
+plotHex <- function(dataset, ls) {
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+    geom_hex(alpha=ls$alpha, bins=ls$nBins)
+  if (!is.null(ls$fill)) {
+    p <- p + aes_string(fill=asFactor(ls$fill)) + guides(fill=guide_legend(title=ls$fill))
+  }
+  p
+}
+
+
+
+# only one column as axis
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram()", name='all')
   ggplot(dataset, aes_string(x=ls$x, fill=asFactor(ls$fill))) +
@@ -104,17 +127,9 @@ plotBar <- function(dataset, ls) {
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
 }
 
-plotViolin <- function(dataset, ls) {
-  flog.debug("plot::plotViolin()", name='all')
-  dodge <- position_dodge(width = 0.4)
-  p <- ggplot(dataset, aes_string(x=asFactor(ls$x), y=ls$y))
-  p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
-  p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
-    aes_string(fill=asFactor(ls$fill)) +
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  p
-}
 
+
+# multiple columns
 plotPairs <- function(dataset, ls) {
   flog.debug("plot::plotPairs()", name='all')  
   

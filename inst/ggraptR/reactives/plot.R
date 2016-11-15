@@ -7,9 +7,9 @@ getPlotInputVals <- function(aggLimDf, inputNames=NULL) {
 
 getBasePlot <- function(pType, aggLimDf) {
   inputs <- getPlotInputVals(aggLimDf)
-  for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
-  pTypeCapit <- paste0(toupper(substr(pType, 1, 1)), substr(pType, 2, nchar(pType)))
-  p <- do.call.pasted('plot', pTypeCapit, args=list(aggLimDf, inputs))  # scatterPlot(args)
+  # for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
+  # calls function from ggplots.R like plotPath(df, inputs)
+  p <- do.call.pasted('plot', capitalize(pType), args=list(aggLimDf, inputs))
   
   if ('pointsOverlay' %in% isolate(plotInputs()) && pointsOverlay()) {
     overInputs <- getPlotInputVals(aggLimDf, pointsOverlayInputs())
@@ -24,6 +24,7 @@ buildPlot <- reactive({
   start.time <- Sys.time()
   flog.debug(start.time, name='all')
   
+  # this block waits for controls and prevents premature plot drawing
   if (isolate(controlsLoading$ready)) {
     isolate(controlsLoading$ready <- F)
   } else {

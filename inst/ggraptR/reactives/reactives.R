@@ -1,23 +1,22 @@
-plotInputs <- reactive({
-  if (is.null(plotType())) return(NULL)
-  inputs <- list(
-    scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
-              'jitter', 'alpha', 'sizeMag'),
-    line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
-    bin2d=c('x', 'y', 'alpha', 'nBins', 'fill'), # position
-    bar=c('x','y', 'fill', 'alpha', 'position'),
-    histogram=c('x', 'fill', 'alpha', 'position', 'nBins'),
-    density=c('x', 'fill', 'alpha', 'densBlackLine'),
-    box=c('x', 'y', 'fill', 'alpha'),
-    violin=c('x', 'y', 'fill', 'alpha'),
-    density2d=c('x', 'y', 'pointsOverlay'),
-    pairs=c('columns', 'color', 'fill', #'alpha',
-            'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
-            'ggpairsDiagCont', 'ggpairsDiagDiscr',
-            'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
-  inputs$path <- inputs$line
-  inputs[[plotType()]]
-})
+definedPlotInputs <- list(
+  scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
+            'jitter', 'alpha', 'sizeMag'),
+  line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
+  bin2d=c('x', 'y', 'alpha', 'fill', 'nBins'), # position
+  hex=c('x', 'y', 'alpha','color',  'fill', 'size', 'nBins'),
+  bar=c('x','y', 'fill', 'alpha', 'position'),
+  histogram=c('x', 'fill', 'alpha', 'position', 'nBins'),
+  density=c('x', 'fill', 'alpha', 'densBlackLine'),
+  box=c('x', 'y', 'fill', 'alpha'),
+  violin=c('x', 'y', 'fill', 'alpha'),
+  density2d=c('x', 'y', 'pointsOverlay'),
+  pairs=c('columns', 'color', 'fill', #'alpha',
+          'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
+          'ggpairsDiagCont', 'ggpairsDiagDiscr',
+          'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
+definedPlotInputs$path <- definedPlotInputs$line
+
+plotInputs <- reactive(if (!is.null(plotType())) definedPlotInputs[[plotType()]])
 pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter')) #'smooth'
 
 
