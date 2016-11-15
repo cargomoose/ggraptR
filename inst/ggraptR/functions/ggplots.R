@@ -35,21 +35,22 @@ plotLine <- function(dataset, ls) {
 
 plotPath <- function(dataset, ls) {
   flog.debug("plot::plotPath()", name='all')   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_path(alpha=ls$alpha) + 
-    if (is.null(ls$color)) geom_line(aes(group=1), alpha=ls$alpha) else
-      geom_line(aes_string(group=ls$color), alpha=ls$alpha)
-  if (!is.null(ls$color)) {
-    p <- p + aes_string(color=asFactor(ls$color)) + 
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
+    geom_path(alpha=ls$alpha)
+  
+  if (is.null(ls$color)) {
+    p + geom_line(aes(group=1), alpha=ls$alpha) 
+  } else {
+    p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
+      aes_string(color=asFactor(ls$color)) + 
       guides(color=guide_legend(title=ls$color))
   }
-  p
 }
 
 fillPlotWithPointsOverlay <- function(plot, ls) {
   flog.debug("plot::plotPointsOverlay()", name='all')    
   p <- plot + if (is.null(ls$size)) 
-    geom_point(aes_string(shape=asFactor(ls$shape)), 
+    geom_point(aes_string(shape=asFactor(ls$shape)),
                alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
     geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
                alpha=ls$alpha, position=ls$jitter)
@@ -58,11 +59,19 @@ fillPlotWithPointsOverlay <- function(plot, ls) {
   p
 }
 
+plotBin2d <- function(dataset, ls) {
+  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
+    geom_bin2d(alpha=ls$alpha, bins=ls$nBins)  # position=ls$position,
+  if (!is.null(ls$fill)) {
+    p <- p + aes_string(fill=asFactor(ls$fill)) + guides(fill=guide_legend(title=ls$fill))
+  }
+  p
+}
+
 plotHistogram <- function(dataset, ls) {
   flog.debug("plot::plotHistogram()", name='all')
-  ggplot(dataset, aes_string(x=ls$x)) + 
+  ggplot(dataset, aes_string(x=ls$x, fill=asFactor(ls$fill))) +
     geom_histogram(alpha=ls$alpha, position=ls$position, bins=ls$nBins) +
-    aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
 }
 
@@ -90,8 +99,8 @@ plotBox <- function(dataset, ls) {
 plotBar <- function(dataset, ls) {
   flog.debug("plot::plotBar()", name='all')   
   ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) + # posi='identity'
-    aes_string(fill=asFactor(ls$fill)) +  # ls$position
+    geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) +
+    aes_string(fill=asFactor(ls$fill)) +
     if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
 }
 

@@ -19,6 +19,7 @@ output$plotTypeCtrl <- renderUI({
     selectInput("plotType", "Plot type", 
                 choices = c('Scatter'='scatter', 'Pairs'='pairs', 'Violin'='violin',
                             'Density 2D'='density2d', 'Line'='line', 'Path'='path',
+                            'Bin 2D'='bin2d',
                             'Histogram'='histogram', 'Density'='density', 
                             'Box'='box', 'Bar'='bar'),   #'Image'='image'
                 # need value to change plot type everytime dataset() changes. For trigger
@@ -130,7 +131,7 @@ output$sizeMagCtrl <- renderUI({
 ## histogram bins options
 output$nBinsCtrl <- renderUI({
   if (displayBinWidthCond()) {
-    isolate(sliderInput('nBins', label = "Bin Width", min=5, max=100, 
+    isolate(sliderInput('nBins', label = "n bins", min=5, max=100, 
                         value=if (is.null(nBins())) 16 else nBins()))
   }
 })

@@ -4,6 +4,7 @@ plotInputs <- reactive({
     scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
               'jitter', 'alpha', 'sizeMag'),
     line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
+    bin2d=c('x', 'y', 'alpha', 'nBins', 'fill'), # position
     bar=c('x','y', 'fill', 'alpha', 'position'),
     histogram=c('x', 'fill', 'alpha', 'position', 'nBins'),
     density=c('x', 'fill', 'alpha', 'densBlackLine'),
@@ -17,7 +18,7 @@ plotInputs <- reactive({
   inputs$path <- inputs$line
   inputs[[plotType()]]
 })
-pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter'))  # 'smooth'
+pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter')) #'smooth'
 
 
 # variables for rawDataset() -- probably not very useful
