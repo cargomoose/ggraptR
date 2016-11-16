@@ -8,8 +8,8 @@ getPlotInputVals <- function(aggLimDf, inputNames=NULL) {
 getBasePlot <- function(pType, aggLimDf) {
   inputs <- getPlotInputVals(aggLimDf)
   # for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
-  # calls function from ggplots.R like plotPath(df, inputs)
-  p <- do.call.pasted('plot', capitalize(pType), args=list(aggLimDf, inputs))
+  p <- do.call.pasted('plot', if (pType == 'pairs') 'Pairs' else 'Ggplot', 
+                      args=list(aggLimDf, inputs, pType))
   
   if ('pointsOverlay' %in% isolate(plotInputs()) && pointsOverlay()) {
     overInputs <- getPlotInputVals(aggLimDf, pointsOverlayInputs())

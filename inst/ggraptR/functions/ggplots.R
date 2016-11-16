@@ -1,141 +1,65 @@
-plotScatter <- function(dataset, ls) {
-  flog.debug("plot::plotScatter()", name='all')
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
-    if (is.null(ls$size))
-      geom_point(aes_string(shape=asFactor(ls$shape)), 
-                 alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else
-      geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
-                 alpha=ls$alpha, position=ls$jitter)
-  p <- p + if (is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
-  p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-  p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
-  if (ls$treatColorAsFactor) {
-    p + aes_string(color=asFactor(ls$color)) +
-      guides(color=guide_legend(title=ls$color))
-  } else {
-    p + aes_string(color=ls$color)
-  }
-}
-
-plotDensity2d <- function(dataset, ls) {
-  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + geom_density_2d()
-}
-
-plotLine <- function(dataset, ls) {
-  flog.debug("plot::plotLine()", name='all')
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y))
-  if (is.null(ls$color))  {
-    p + geom_line(aes(group=1), alpha=ls$alpha) 
-  } else {
-    p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
-      aes_string(color=asFactor(ls$color)) + 
-      guides(color=guide_legend(title=ls$color))
-  }
-}
-
-plotPath <- function(dataset, ls) {
-  flog.debug("plot::plotPath()", name='all')   
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
-    geom_path(alpha=ls$alpha)
-  
-  if (is.null(ls$color)) {
-    p + geom_line(aes(group=1), alpha=ls$alpha) 
-  } else {
-    p + geom_line(aes_string(group=ls$color), alpha=ls$alpha) +
-      aes_string(color=asFactor(ls$color)) + 
-      guides(color=guide_legend(title=ls$color))
-  }
-}
-
 fillPlotWithPointsOverlay <- function(plot, ls) {
-  flog.debug("plot::plotPointsOverlay()", name='all')    
   p <- plot + if (is.null(ls$size)) 
     geom_point(aes_string(shape=asFactor(ls$shape)),
                alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
-    geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
-               alpha=ls$alpha, position=ls$jitter)
+                 geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
+                            alpha=ls$alpha, position=ls$jitter)
   p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
   p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-  p
 }
 
-plotViolin <- function(dataset, ls) {
-  flog.debug("plot::plotViolin()", name='all')
-  dodge <- position_dodge(width = 0.4)
-  p <- ggplot(dataset, aes_string(x=asFactor(ls$x), y=ls$y))
-  p <- p + if (!is.null(ls$viol_box)) geom_boxplot(width=0.2, position=dodge)
-  p <- p + geom_violin(alpha=ls$alpha, position=dodge) + 
-    aes_string(fill=asFactor(ls$fill)) +
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-  p
-}
-
-plotBin2d <- function(dataset, ls) {
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bin2d(alpha=ls$alpha, bins=ls$nBins)  # position=ls$position,
-  if (!is.null(ls$fill)) {
-    p <- p + aes_string(fill=asFactor(ls$fill)) + guides(fill=guide_legend(title=ls$fill))
+addAes <- function(p, ls, aesKey, aesVal=NULL, as_factor=T) {
+  if (is.null(aesVal)) aesVal <- ls[[aesKey]]
+  if (is.null(aesVal)) return(p)
+  args <- list()
+  args[[aesKey]] <- if (as_factor) asFactor(aesVal) else aesVal
+  
+  p <- p + do.call(aes_string, args)
+  if (as_factor) {
+    args[[aesKey]] <- guide_legend(title=aesVal)
+    p <- p + do.call(guides, args)
   }
-  p
+  p  
 }
 
-plotHex <- function(dataset, ls) {
-  p <- ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_hex(alpha=ls$alpha, bins=ls$nBins)
-  if (!is.null(ls$fill)) {
-    p <- p + aes_string(fill=asFactor(ls$fill)) + guides(fill=guide_legend(title=ls$fill))
-  }
-  p
+plotGgplot <- function(dataset, ls, pType) {
+  pMap <- c('box'='boxplot', 'scatter'='point')
+  ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
+  apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
+                densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
+  
+  p <- ggplot(dataset, do.call(aes_string, trimList(x=ls$x, y=ls$y)))
+  p <- p + do.call(ggpType, trimList(  # geom_bar(stat='identity'
+    alpha=ls$alpha, 
+    bins=ls$nBins, 
+    position=if (!is.null(ls$jitter)) ls$jitter else 
+             if (pType == 'violin') position_dodge(width = 0.4) else ls$position, 
+    size=if (apply$sizeMag) ls$sizeMag,
+    stat=if (pType == 'bar') 'identity'))
+  
+  p <- addAes(p, ls, 'shape')
+  p <- addAes(p, ls, 'fill')
+  p <- addAes(p, ls, 'size', as_factor=F)
+  p <- addAes(p, ls, 'color', 
+              as_factor=is.null(ls$treatColorAsFactor) || ls$treatColorAsFactor)
+  if (apply$densBlackLine) p <- addAes(p, ls, aesKey='color', aesVal=ls$fill)
+  
+  if (apply$sizeMag) p <- p + scale_size(range=c(1, ls$sizeMag))
+  p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
+  
+  # if (!is.null(ls$viol_box)) 
+    # geom_boxplot(width=0.2, position=position_dodge(width = 0.4))
 }
-
-
-
-# only one column as axis
-plotHistogram <- function(dataset, ls) {
-  flog.debug("plot::plotHistogram()", name='all')
-  ggplot(dataset, aes_string(x=ls$x, fill=asFactor(ls$fill))) +
-    geom_histogram(alpha=ls$alpha, position=ls$position, bins=ls$nBins) +
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-}
-
-plotDensity <- function(dataset, ls) {
-  flog.debug("plot::plotDensity()", name='all')      
-
-  p <- ggplot(dataset, aes_string(x=ls$x)) + 
-    geom_density(alpha=ls$alpha,
-                 mapping=do.call(
-                   aes_string, c(list(group=asFactor(ls$fill), fill=asFactor(ls$fill)),
-                                 if (!ls$densBlackLine) list(color=asFactor(ls$fill)))))
-  p + if (!is.null(ls$fill)) do.call(
-    guides, c(list(group=guide_legend(title=ls$fill), fill=guide_legend(title=ls$fill)), 
-              if (!ls$densBlackLine) list(color=guide_legend(title=ls$fill))))
-}
-
-plotBox <- function(dataset, ls) {
-  flog.debug("plot::plotBox()", name='all')     
-  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) + 
-    geom_boxplot(alpha=ls$alpha) + 
-    aes_string(fill=asFactor(ls$fill)) +
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-}
-
-plotBar <- function(dataset, ls) {
-  flog.debug("plot::plotBar()", name='all')   
-  ggplot(dataset, aes_string(x=ls$x, y=ls$y)) +
-    geom_bar(stat='identity', position=ls$position, alpha=ls$alpha) +
-    aes_string(fill=asFactor(ls$fill)) +
-    if (!is.null(ls$fill)) guides(fill=guide_legend(title=ls$fill))
-}
-
 
 
 # multiple columns
-plotPairs <- function(dataset, ls) {
+plotPairs <- function(dataset, ls, pType) {
   flog.debug("plot::plotPairs()", name='all')  
   
   ggpairs_pars <- Filter(
     function(x) !is.null(x), 
     list(dataset, columns=ls$columns,
+         # alpha does not distinguish 0.2 from 0.8. It's binary. Looks like a ggpairs bug
          mapping=aes_string(color=ls$color, fill=ls$fill, alpha=0.5),
          upper=list(continuous=ls$ggpairsUpCont, combo=ls$ggpairsUpCombo, 
                     discrete=ls$ggpairsUpDiscr), 

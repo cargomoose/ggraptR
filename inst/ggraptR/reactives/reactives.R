@@ -10,14 +10,14 @@ definedPlotInputs <- list(
   box=c('x', 'y', 'fill', 'alpha'),
   violin=c('x', 'y', 'fill', 'alpha'),
   density2d=c('x', 'y', 'pointsOverlay'),
-  pairs=c('columns', 'color', 'fill', #'alpha',
+  pairs=c('columns', 'color', 'fill',
           'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
           'ggpairsDiagCont', 'ggpairsDiagDiscr',
           'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
 definedPlotInputs$path <- definedPlotInputs$line
 
 plotInputs <- reactive(if (!is.null(plotType())) definedPlotInputs[[plotType()]])
-pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter')) #'smooth'
+pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter'))
 
 
 # variables for rawDataset() -- probably not very useful

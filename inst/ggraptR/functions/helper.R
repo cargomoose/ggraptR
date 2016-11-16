@@ -178,14 +178,14 @@ anyNull <- function(...) {
   !notNulls(...)
 }
 
-na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
+trimList <- function(...) Filter(function(x) !is.null(x) && length(x), list(...))
 
 capitalize <- function(x) {
   paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
 }
 
 do.call.pasted <- function(..., args=list()) {
-  do.call(paste(na_omit(list(...)), collapse=''), args, envir=parent.env(parent.frame()))
+  do.call(paste(trimList(...), collapse=''), args, envir=parent.env(parent.frame()))
 }
 
 getFirstNonNull <- function(...) {

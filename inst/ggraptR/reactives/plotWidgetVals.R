@@ -52,6 +52,10 @@ fill <- reactive({
  convertNoneToNULL(fillOrig())
 })
 
+position <- reactive({
+  convertNoneToNULL(input$position)
+})
+
 jitter <- reactive({
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
 })
@@ -131,10 +135,6 @@ nBins <- reactive({
 
 pointsOverlay <- reactive({
   !is.null(input$pointsOverlay) && input$pointsOverlay
-})
-
-position <- reactive({
-  convertNoneToNULL(input$position)
 })
 
 densBlackLine <- reactive({

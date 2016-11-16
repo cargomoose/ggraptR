@@ -1,6 +1,6 @@
 # this function is used for early initialization of input$facet.. and other extra wgts. 
-# It prevents a plot redrawing when user first time clicks on 'Apply facet' or 
-# similar extra block. The only block that redraws plot is xy limits because first init 
+# It prevents the plot redrawing when user clicks on 'Apply facet' the first time or 
+# similar extra block. The only block that redraws plot is xy limits because the 1st init 
 # run does not supply x() value and I can initialize input$xLim with NULL only.
 isInit <- reactive({
   is.null(dataset())
@@ -39,7 +39,8 @@ displayColorCond <- reactive({
 })
 
 displayTreatAsFactorCond <- reactive({
-  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs()) && !is.null(color())
+  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs()) && !is.null(color()) &&
+    isolate(color() %in% numericVars())
 })
 
 displayFillCond <- reactive({
@@ -67,7 +68,7 @@ displaySmthCond <- reactive({
 })
 
 displaySizeMagCond <- reactive({
-  aesReady() && willDrawPoints()
+  aesReady() && willDrawPoints() && is.null(size())
 })
 
 displayAlphaCond <- reactive({

@@ -90,6 +90,12 @@ output$shapeCtrl <- renderUI({
   }
 })
 
+## position (stack vs. dodge) control options
+output$posCtrl <- renderUI({
+  if (displayPosCond()) {
+    isolate(selectInput('position', 'Position', c('stack', 'dodge', 'fill'), position()))
+  }
+})
 
 output$jitterCtrl <- renderUI({
   if (displayJitterCond()) {
@@ -131,13 +137,6 @@ output$nBinsCtrl <- renderUI({
   if (displayBinWidthCond()) {
     isolate(sliderInput('nBins', label = "Number of bins", min=5, max=100, 
                         value=if (is.null(nBins())) 16 else nBins()))
-  }
-})
-
-## position (stack vs. dodge) control options
-output$posCtrl <- renderUI({
-  if (displayPosCond()) {
-    isolate(selectInput('position', 'Position', c('stack', 'dodge', 'fill'), position()))
   }
 })
 
