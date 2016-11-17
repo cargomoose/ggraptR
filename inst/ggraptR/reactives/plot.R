@@ -5,19 +5,6 @@ getPlotInputVals <- function(aggLimDf, inputNames=NULL) {
   ensureCorrectPlotInputs(inputs, colnames(aggLimDf))
 }
 
-getBasePlot <- function(pType, aggLimDf) {
-  inputs <- getPlotInputVals(aggLimDf)
-  # for (axes in c('x', 'y')) if (!is.null(input[[axes]]) && input[[axes]] == '') return()
-  p <- do.call.pasted('plot', if (pType == 'pairs') 'Pairs' else 'Ggplot', 
-                      args=list(aggLimDf, inputs, pType))
-  
-  if ('pointsOverlay' %in% isolate(plotInputs()) && pointsOverlay()) {
-    overInputs <- getPlotInputVals(aggLimDf, pointsOverlayInputs())
-    p <- fillPlotWithPointsOverlay(p, overInputs)
-  }
-  p
-}
-
 buildPlot <- reactive({
   flog.debug("plot::buildPlot() - Begin", name='all')
   flog.debug("systime - begin", name='all')
@@ -25,18 +12,21 @@ buildPlot <- reactive({
   flog.debug(start.time, name='all')
   
   # this block waits for controls and prevents premature plot drawing
-  if (isolate(controlsLoading$ready)) {
-    isolate(controlsLoading$ready <- F)
+  if (isolate(reactVals$readyToDraw)) {
+    isolate(reactVals$readyToDraw <- F)
   } else {
-    isolate({controlsLoading$itersToDrawPlot <- 5})
-    controlsLoading$ready  # the only dep if exits here
+    isolate({reactVals$itersToDraw <- 5})
+    reactVals$readyToDraw  # the only dep if exits here
     return()
   }
+  return()
   
-  pType <- plotType()
-  p <- getBasePlot(pType, aggLimDf())
+  pTypes <- plotTypes()
+  inputs <- getPlotInputVals(aggLimDf())
+  p <- do.call.pasted('plot', if (pTypes == 'pairs') 'Pairs' else 'Ggplot', 
+                      args=list(aggLimDf(), inputs, pTypes))
   
-  if (pType != 'pairs') {
+  if (any(pTypes != 'pairs')) {
     if (isFacetSelected()) {
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
@@ -93,11 +83,11 @@ buildPlot <- reactive({
   # add plot history entry. It will show at Log tab
   if (!is.null(p)) {
     logEntry <- generateCode(p)
-    curLog <- isolate(log$plot)
+    curLog <- isolate(reactVals$log)
     isFirstEntry <- is.null(curLog)
     
     if (isFirstEntry || curLog[[1]] != logEntry) {
-      log$plot <- if (isFirstEntry) logEntry else c(logEntry, curLog)
+      reactVals$log <- if (isFirstEntry) logEntry else c(logEntry, curLog)
     }
   }
   

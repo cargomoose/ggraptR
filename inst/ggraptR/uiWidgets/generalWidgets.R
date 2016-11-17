@@ -17,5 +17,5 @@ output$submitCtrl <- renderUI({
 })
 
 output$plotLog <- renderText({
-  paste(log$plot, collapse='<hr>')
+  paste(reactVals$log, collapse='<hr>')
 })

@@ -30,7 +30,7 @@ shinyUI(bootstrapPage(
       condition = 'input.conditionedPanels != "logTab"',
       fluidRow(column(6, uiOutput('datasetCtrl')),
                conditionalPanel('input.conditionedPanels == "plotTab"',
-                                column(6, uiOutput('plotTypeCtrl'))))),
+                                column(6, uiOutput('plotTypesCtrl'))))),
     
     conditionalPanel(
       condition = 'input.conditionedPanels == "plotTab"',
@@ -57,7 +57,7 @@ shinyUI(bootstrapPage(
                  column(2, uiOutput('generatePlotCodeCtl'))),
         br(),
         plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=T)),
-        uiOutput("controlsLoadingCtrl", style="opacity: 0; pointer-events: none"),
+        uiOutput("itersToDrawCtrl", style="opacity: 0; pointer-events: none"),
         value='plotTab'), 
       
       tabPanel("Table",

@@ -39,7 +39,7 @@ output$dlPlot <- downloadHandler(
       inputHeight <- fileDefault$DPI
     }
     
-    if (plotType() == 'pairs') {
+    if (plotTypes() == 'pairs') {
       dev <- ggplot2:::plot_dev(NULL, file, inputDPI)
       dev(file=file, width=inputWidth, height=inputHeight)
       print(buildPlot())

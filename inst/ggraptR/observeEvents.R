@@ -23,11 +23,22 @@ observeEvent(input$reactive, {
 
 # delay plot building until all controls will be ready
 observe({
-  nInp <- input$controlsLoadingInp
+  nInp <- input$itersToDrawInp
   isolate({
-    n <- controlsLoading$itersToDrawPlot
-    if (notNulls(nInp, n) && n != 0) controlsLoading$itersToDrawPlot <- n - 1
+    n <- reactVals$itersToDraw
+    if (notNulls(nInp, n) && n != 0) reactVals$itersToDraw <- n - 1
   })
+})
+
+# trigger update of plopType options
+observe({
+  if (is.null(plotTypes()) || 
+      # prevents trigger on reducing of the number of plots from 2 to 1
+      (length(plotTypes()) == 1 && 
+       length(isolate(plotTypeOpts())) == length(unlist(pScheme)))) {
+    # Sys.time() instead of random number generation
+    isolate(reactVals$updatePlotTypeOpts <- Sys.time())
+  }
 })
 
 # view plot from import tab

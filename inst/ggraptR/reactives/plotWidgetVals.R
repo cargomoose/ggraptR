@@ -1,5 +1,14 @@
-plotType <- reactive({
-  input$plotType
+plotTypes <- reactive({
+  input$plotTypes
+})
+
+plotTypeOpts <- reactive({
+  reactVals$updatePlotTypeOpts  # updates using an observer
+  selOpt <- isolate(plotTypes())
+  opts <- unlist(pScheme[if (is.null(selOpt)) T else 
+    sapply(pScheme, function(el) selOpt %in% el)])
+  names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
+  opts
 })
 
 x <- reactive({
@@ -131,10 +140,6 @@ ggpairsLowDiscr <- reactive({
 
 nBins <- reactive({
   input$nBins
-})
-
-pointsOverlay <- reactive({
-  !is.null(input$pointsOverlay) && input$pointsOverlay
 })
 
 densBlackLine <- reactive({

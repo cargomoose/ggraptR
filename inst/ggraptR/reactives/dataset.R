@@ -156,8 +156,7 @@ aggLimDf <- reactive({
   ## subset with ylim filter (if applicable)
   if (!is.null(ylim())) {
     flog.debug("dataset::aggLimDf() - !is.null(ylim())", name='all')
-    if (isXYCtrlPlot()) {
-      flog.debug("dataset::aggLimDf() - isXYCtrlPlot()", name='all')
+    if ('y' %in% plotInputs()) {
       y <- y()
       if (is.null(y) || is.null(yType())) {
         return()

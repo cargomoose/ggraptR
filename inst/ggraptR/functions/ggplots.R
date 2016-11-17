@@ -22,20 +22,20 @@ addAes <- function(p, ls, aesKey, aesVal=NULL, as_factor=T) {
   p  
 }
 
-plotGgplot <- function(dataset, ls, pType) {
+plotGgplot <- function(dataset, ls, pTypes) {
   pMap <- c('box'='boxplot', 'scatter'='point')
-  ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
+  ggpTypes <- paste0('geom_', if (pTypes %in% names(pMap)) pMap[[pTypes]] else pTypes)
   apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
                 densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
   
   p <- ggplot(dataset, do.call(aes_string, trimList(x=ls$x, y=ls$y)))
-  p <- p + do.call(ggpType, trimList(  # geom_bar(stat='identity'
+  p <- p + do.call(ggpTypes, trimList(  # geom_bar(stat='identity'
     alpha=ls$alpha, 
     bins=ls$nBins, 
     position=if (!is.null(ls$jitter)) ls$jitter else 
-             if (pType == 'violin') position_dodge(width = 0.4) else ls$position, 
+             if (pTypes == 'violin') position_dodge(width = 0.4) else ls$position, 
     size=if (apply$sizeMag) ls$sizeMag,
-    stat=if (pType == 'bar') 'identity'))
+    stat=if (pTypes == 'bar') 'identity'))
   
   p <- addAes(p, ls, 'shape')
   p <- addAes(p, ls, 'fill')
@@ -53,7 +53,7 @@ plotGgplot <- function(dataset, ls, pType) {
 
 
 # multiple columns
-plotPairs <- function(dataset, ls, pType) {
+plotPairs <- function(dataset, ls, pTypes) {
   flog.debug("plot::plotPairs()", name='all')  
   
   ggpairs_pars <- Filter(

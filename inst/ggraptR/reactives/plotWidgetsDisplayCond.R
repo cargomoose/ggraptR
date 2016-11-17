@@ -7,60 +7,58 @@ isInit <- reactive({
 })
 
 aesReady <- reactive({  # serves as trigger too
-  !is.null(displayYCond()) && showAes() && isolate(x() %in% names(dataset()))
+  displayYCond()
+  showAes() # && isolate(x() %in% names(dataset()))
 })
 
-pairsReady <- reactive({
-  !is.null(displayGgpairsCond())
-})
-
-willDrawPoints <- reactive({
-  !is.null(plotType()) && (plotType() == 'scatter' || 
-    ('pointsOverlay' %in% plotInputs() && pointsOverlay()))
+displayPlotTypesCond <- reactive({
+  !is.null(dataset())
 })
 
 displayXCond <- reactive({
-  !is.null(plotType()) && 'x' %in% isolate(plotInputs())
+  'x' %in% plotInputs()
 })
 
 displayYCond <- reactive({
-  # y options must be different from selected x value 
+  # y() exists only when x(). y options must be different from selected x value 
   # so it does not make sense to render y before x is ready
-  !is.null(displayXCond()) && !is.null(x()) &&
-    !is.null(isolate(plotType())) && 'y' %in% plotInputs()
+  displayXCond() && !is.null(x()) && 'y' %in% plotInputs()
+})
+
+displayGgpairsColumnsCond <- reactive({
+  'pairs' %in% plotTypes()
 })
 
 displayGgpairsCond <- reactive({
-  !is.null(plotType()) && plotType() == 'pairs'
+  displayGgpairsColumnsCond() && showAes()
 })
 
 displayColorCond <- reactive({
-  pairsReady() && aesReady() && 'color' %in% isolate(plotInputs())
+  aesReady() && 'color' %in% isolate(plotInputs())
 })
 
-displayTreatAsFactorCond <- reactive({
-  aesReady() && 'treatColorAsFactor' %in% isolate(plotInputs()) && !is.null(color()) &&
-    isolate(color() %in% numericVars())
+displayTreatAsFactorCond <- reactive({  # aesReady() is inside color()
+  'treatColorAsFactor' %in% isolate(plotInputs()) && color() %in% isolate(numericVars())
 })
 
 displayFillCond <- reactive({
-  pairsReady() && aesReady() && 'fill' %in% isolate(plotInputs())
+  aesReady() && 'fill' %in% isolate(plotInputs())
 })
 
 displayShapeCond <- reactive({
-  aesReady() && willDrawPoints()
+  aesReady() && 'shape' %in% isolate(plotInputs())
 })
 
 displaySizeCond <- reactive({
-  aesReady() && willDrawPoints()
+  aesReady() && 'size' %in% isolate(plotInputs())
 })
 
 displayCoordFlipCond <- reactive({
-  aesReady() && isolate(plotType()) != 'pairs'
+  aesReady() && !'pairs' %in% isolate(plotTypes())
 })
 
 displayJitterCond <- reactive({
-  aesReady() && ('jitter' %in% plotInputs() || willDrawPoints())
+  aesReady() && 'jitter' %in% isolate(plotInputs())
 })
 
 displaySmthCond <- reactive({
@@ -68,26 +66,21 @@ displaySmthCond <- reactive({
 })
 
 displaySizeMagCond <- reactive({
-  aesReady() && willDrawPoints() && is.null(size())
+  aesReady() && 'sizeMag' %in% isolate(plotInputs()) && is.null(size())
 })
 
 displayAlphaCond <- reactive({
-  aesReady() && ('alpha' %in% plotInputs() || willDrawPoints())
-})
-
-displayPointsOverlayCond <- reactive({
-  aesReady() && isolate('pointsOverlay' %in% plotInputs())
+  aesReady() && 'alpha' %in% isolate(plotInputs())
 })
 
 displayPosCond <- reactive({
   aesReady() && 'position' %in% isolate(plotInputs())
 })
 
-displayBinWidthCond <- reactive({
+displayBinsCond <- reactive({
   aesReady() && 'nBins' %in% isolate(plotInputs())
 })
 
-# density black line
 displayDensBlackLineCond <- reactive({
   aesReady() && 'densBlackLine' %in% isolate(plotInputs())
 })
@@ -95,7 +88,7 @@ displayDensBlackLineCond <- reactive({
 displayFacetCond <- reactive({
   isInit <- isInit()  # dataset() trigger. Can be unavailable if omit separate assignment
   # because of boolen lazy evaluation
-  (showFacet() && !isolate(is.null(plotType()) && plotType() != 'pairs')) || isInit
+  (showFacet() && isolate(!is.null(plotTypes()) && !'pairs' %in% plotTypes())) || isInit
 })
 
 displayXlimCond <- reactive({
@@ -119,5 +112,5 @@ displayAggCond <- reactive({
 })
 
 displayPlotAddAggByCond <- reactive({
-  !is.null(plotType()) && displayAggCond() && semiAutoAggOn()
+  !is.null(plotTypes()) && displayAggCond() && semiAutoAggOn()
 })

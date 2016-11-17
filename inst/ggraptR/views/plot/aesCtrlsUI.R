@@ -1,6 +1,6 @@
 verticalLayout(
   
-  conditionalPanel(condition = 'input.plotType == "pairs"',
+  conditionalPanel(condition = 'input.plotTypes == "pairs"',
     fluidRow(
       column(2, div()), 
       column(3, div(strong('Upper plots'))),
@@ -34,8 +34,6 @@ verticalLayout(
   fluidRow(
     column(6, uiOutput('fillCtrl')),
     column(6, uiOutput('posCtrl'))),
-  
-  uiOutput('pointsOverlayCtrl'),
   
   fluidRow(
     column(6, uiOutput('sizeCtrl')),

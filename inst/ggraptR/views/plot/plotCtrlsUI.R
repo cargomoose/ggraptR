@@ -12,7 +12,7 @@ verticalLayout(
     source('./views/plot/aesCtrlsUI.R', local=TRUE)$value,
     class="widblock"),
   
-  conditionalPanel('input.plotType != "pairs"',
+  conditionalPanel('input.plotTypes != "pairs"',
     div(
       uiOutput('showFacetCtrl'),
       source('./views/plot/facetCtrlsUI.R', local=TRUE)$value,

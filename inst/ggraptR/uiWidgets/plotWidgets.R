@@ -1,34 +1,32 @@
 # if we abandon keep the default first value of selectInput list
 # then we will lost any input state after collapsing aestetic elements block
 
-output$controlsLoadingCtrl <- renderUI({
-  n <- controlsLoading$itersToDrawPlot
+output$itersToDrawCtrl <- renderUI({
+  n <- reactVals$itersToDraw
   if (is.null(n)) return()
   if (n > 0) {
-    numericInput('controlsLoadingInp', NULL, n, width = '80px')  # 1px
+    numericInput('itersToDrawInp', NULL, n, width = '80px')  # 1px
   } else {
-    controlsLoading$ready <- T
+    reactVals$readyToDraw <- T
     NULL
   }
 })
 
-
-output$plotTypeCtrl <- renderUI({
-  if (!is.null(dataset())) {
-    pType <- isolate(input$plotType)
-    opts <- names(definedPlotInputs)
-    names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
-    
-    selectInput("plotType", "Plot type", opts,
+output$plotTypesCtrl <- renderUI({
+  if (displayPlotTypesCond()) {
+    opts <- plotTypeOpts()  # the second trigger
+    selectInput("plotTypes", "Plot type", opts,
                 # need value to change plot type everytime dataset() changes. For trigger
-                if (!is.null(pType) && pType == 'scatter') 'histogram')
+                isolate(input$plotTypes), 
+                  # if pTypes == 'scatter') 'histogram'
+                multiple = T)
   }
 })
 
 output$xCtrl <- renderUI({
   if (displayXCond()) {
     isolate({
-      varType <- if (plotType() %in% c('violin', 'box', 'bar')) 
+      varType <- if (any(c('violin', 'box', 'bar') %in% plotTypes()))
         'categorical' else 'numeric'
       vars <- do.call.pasted(varType, 'Vars')
       if (!length(vars)) varType <- sprintf('%s. Absent' , varType)
@@ -48,7 +46,7 @@ output$yCtrl <- renderUI({
 
 # columns for pairsPlot
 output$columnsCtrl <- renderUI({
-  if (displayGgpairsCond()) {
+  if (displayGgpairsColumnsCond()) {
     isolate(selectInput(
       'columns', 'Columns', choices=names(dataset()), 
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
@@ -59,7 +57,7 @@ output$columnsCtrl <- renderUI({
 output$colorCtrl <- renderUI({
   if (displayColorCond()) {
     isolate({
-      opts <- c('None', if (plotType() == 'scatter') 
+      opts <- c('None', if ('scatter' %in% plotTypes()) 
         names(dataset()) else categoricalVars())
       selectInput('color', 'Color', opts, color())
     })
@@ -99,7 +97,7 @@ output$posCtrl <- renderUI({
 
 output$jitterCtrl <- renderUI({
   if (displayJitterCond()) {
-    isolate(checkboxInput('jitter', 'Apply jitter effect', value=plotType() == 'scatter'))
+    isolate(checkboxInput('jitter', 'Apply jitter effect', 'scatter' %in% plotTypes()))
   }
 })
 
@@ -134,7 +132,7 @@ output$sizeMagCtrl <- renderUI({
 
 ## histogram bins options
 output$nBinsCtrl <- renderUI({
-  if (displayBinWidthCond()) {
+  if (displayBinsCond()) {
     isolate(sliderInput('nBins', label = "Number of bins", min=5, max=100, 
                         value=if (is.null(nBins())) 16 else nBins()))
   }
@@ -145,12 +143,6 @@ output$densBlackLineCtrl <- renderUI({
   if (displayDensBlackLineCond()) {
     isolate(checkboxInput('densBlackLine', 'Draw black outline', 
                           value=densBlackLine()))
-  }
-})
-
-output$pointsOverlayCtrl <- renderUI({  
-  if (displayPointsOverlayCond()) { 
-    isolate(checkboxInput('pointsOverlay', 'Points Overlay', value=pointsOverlay()))
   }
 })
 
@@ -398,39 +390,34 @@ output$plotAggMethCtrl <- renderUI({
 
 # checkboxes for widgets groups
 output$showAesCtrl <- renderUI({
-  if (!is.null(plotType())) {
-    isolate(checkboxInput('showAes', 'Show aesthetics', 
-                          value=is.null(input$showAes) || showAes()))
-  }
+  plotTypes()
+  isolate(checkboxInput('showAes', 'Show aesthetics', 
+                        value=!is.null(plotTypes())))# is.null(input$showAes) || showAes()
 })
 
 output$showFacetCtrl <- renderUI({
-  if (!is.null(plotType())) {
-    isolate(checkboxInput('showFacet', 'Show facets', value=showFacet()))
-  }
+  plotTypes()
+  isolate(checkboxInput('showFacet', 'Show facets', value=showFacet()))
 })
 
 output$showXYRangeCtrl <- renderUI({
-  if (!is.null(plotType())) {
-    checkboxInput('showXYRange', 'Show ranges', value=showXYRange())
-  }
+  plotTypes()
+  checkboxInput('showXYRange', 'Show ranges', value=showXYRange())
 })
 
 output$showThemeCtrl <- renderUI({
-  if (!is.null(plotType())) {
-    checkboxInput('showTheme', 'Show themes', value=showTheme())
-  }
+  plotTypes()
+  checkboxInput('showTheme', 'Show themes', value=showTheme())
 })
 
 output$showDSTypeAndPlotAggCtrl <- renderUI({
-  if (!is.null(plotType())) {
-    checkboxInput('showDSTypeAndPlotAgg', 
-                  'Show dataset type and aggregation method', showDSTypeAndPlotAgg())
-  }
+  plotTypes()
+  checkboxInput('showDSTypeAndPlotAgg', 
+                'Show dataset type and aggregation method', showDSTypeAndPlotAgg())
 })
 
 # output$showPlotAggCtrl <- renderUI({
-#   if (!is.null(plotType())) {
+#   if (!is.null(plotTypes())) {
 #     checkboxInput('showPlotAgg', 'Show plot aggregations', value=showPlotAgg())
 #   }
 # })
@@ -442,5 +429,5 @@ output$generatePlotCodeCtl <- renderUI({
 })
 
 output$generateCode <- renderText({
-  log$plot[1]
+  reactVals$log[1]
 })

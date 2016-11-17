@@ -1,7 +1,7 @@
 definedPlotInputs <- list(
   scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
             'jitter', 'alpha', 'sizeMag'),
-  line=c('x', 'y', 'color', 'alpha', 'pointsOverlay'),
+  line=c('x', 'y', 'color', 'alpha'),
   bin2d=c('x', 'y', 'alpha', 'fill', 'nBins'), # position
   hex=c('x', 'y', 'alpha','color',  'fill', 'size', 'nBins'),
   bar=c('x','y', 'fill', 'alpha', 'position'),
@@ -9,15 +9,24 @@ definedPlotInputs <- list(
   density=c('x', 'fill', 'alpha', 'densBlackLine'),
   box=c('x', 'y', 'fill', 'alpha'),
   violin=c('x', 'y', 'fill', 'alpha'),
-  density2d=c('x', 'y', 'pointsOverlay'),
+  density2d=c('x', 'y'),
   pairs=c('columns', 'color', 'fill',
           'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
           'ggpairsDiagCont', 'ggpairsDiagDiscr',
           'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
 definedPlotInputs$path <- definedPlotInputs$line
 
-plotInputs <- reactive(if (!is.null(plotType())) definedPlotInputs[[plotType()]])
-pointsOverlayInputs <- reactive(c('shape', 'size', 'sizeMag', 'alpha', 'jitter'))
+pScheme <- list(
+  c('scatter', 'density2d', 'bin2d', 'hex', 'line', 'path'),
+  c('box', 'violin'),
+  'histogram', 'density', 'bar', 'pairs')
+
+plotInputs <- reactive({
+  if (is.null(plotTypes())) return()
+  unique(unlist(lapply(plotTypes(), function(pTypes) {
+    definedPlotInputs[[pTypes]]
+  })))
+})
 
 
 # variables for rawDataset() -- probably not very useful
@@ -166,14 +175,6 @@ facetWrapSelected <- reactive({
 
 
 
-## reactive that returns TRUE if plot utilizes both x and y controls
-isXYCtrlPlot <- reactive({
-  if (!is.null(plotType())) {
-    plotType() %in% c('line', 'scatter', 'bar', 'box', 'path')
-  }
-})
-
-
 ## reactive that returns a value "discrete" or "continuous"
 xType <- reactive({
   dataset <- aggDf()
@@ -186,7 +187,7 @@ xType <- reactive({
 ## reactive that returns a value "discrete" or "continuous"
 yType <- reactive({
   dataset <- aggDf()
-  if (!is.null(dataset) && isXYCtrlPlot() && !is.null(y())) {
+  if (!is.null(dataset) && 'y' %in% plotInputs() && !is.null(y())) {
     if (y() %in% aggDfNumericVars()) 'continuous' else 'discrete'
   }
 })
@@ -204,6 +205,4 @@ semiAutoAggOn <- reactive({
   !is.null(plotAggMeth()) && tolower(plotAggMeth()) != 'none'
 })
 
-log <- reactiveValues(plot=NULL)
-
-controlsLoading <- reactiveValues(ready=F)
+reactVals <- reactiveValues(log=NULL, readyToDraw=F)
