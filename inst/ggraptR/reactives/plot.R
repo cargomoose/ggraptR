@@ -19,14 +19,13 @@ buildPlot <- reactive({
     reactVals$readyToDraw  # the only dep if exits here
     return()
   }
-  return()
   
   pTypes <- plotTypes()
-  inputs <- getPlotInputVals(aggLimDf())
+  if (is.null(pTypes)) return()
   p <- do.call.pasted('plot', if (pTypes == 'pairs') 'Pairs' else 'Ggplot', 
-                      args=list(aggLimDf(), inputs, pTypes))
+                      args=list(aggLimDf(), getPlotInputVals(aggLimDf()), pTypes))
   
-  if (any(pTypes != 'pairs')) {
+  if ('pairs' != pTypes) {
     if (isFacetSelected()) {
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())

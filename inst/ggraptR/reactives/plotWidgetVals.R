@@ -5,8 +5,8 @@ plotTypes <- reactive({
 plotTypeOpts <- reactive({
   reactVals$updatePlotTypeOpts  # updates using an observer
   selOpt <- isolate(plotTypes())
-  opts <- unlist(pScheme[if (is.null(selOpt)) T else 
-    sapply(pScheme, function(el) selOpt %in% el)])
+  opts <- unlist(plotTypeRelations[if (is.null(selOpt)) T else 
+    sapply(plotTypeRelations, function(el) selOpt %in% el)])
   names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
   opts
 })

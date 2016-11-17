@@ -1,13 +1,3 @@
-fillPlotWithPointsOverlay <- function(plot, ls) {
-  p <- plot + if (is.null(ls$size)) 
-    geom_point(aes_string(shape=asFactor(ls$shape)),
-               alpha=ls$alpha, position=ls$jitter, size=ls$sizeMag) else 
-                 geom_point(aes_string(shape=asFactor(ls$shape), size=ls$size), 
-                            alpha=ls$alpha, position=ls$jitter)
-  p <- p + if (!is.null(ls$size)) scale_size(range=c(1, ls$sizeMag))
-  p <- p + if (!is.null(ls$shape)) guides(shape = guide_legend(title=ls$shape))
-}
-
 addAes <- function(p, ls, aesKey, aesVal=NULL, as_factor=T) {
   if (is.null(aesVal)) aesVal <- ls[[aesKey]]
   if (is.null(aesVal)) return(p)
@@ -24,18 +14,20 @@ addAes <- function(p, ls, aesKey, aesVal=NULL, as_factor=T) {
 
 plotGgplot <- function(dataset, ls, pTypes) {
   pMap <- c('box'='boxplot', 'scatter'='point')
-  ggpTypes <- paste0('geom_', if (pTypes %in% names(pMap)) pMap[[pTypes]] else pTypes)
-  apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
-                densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
-  
   p <- ggplot(dataset, do.call(aes_string, trimList(x=ls$x, y=ls$y)))
-  p <- p + do.call(ggpTypes, trimList(  # geom_bar(stat='identity'
-    alpha=ls$alpha, 
-    bins=ls$nBins, 
-    position=if (!is.null(ls$jitter)) ls$jitter else 
-             if (pTypes == 'violin') position_dodge(width = 0.4) else ls$position, 
-    size=if (apply$sizeMag) ls$sizeMag,
-    stat=if (pTypes == 'bar') 'identity'))
+  
+  for (pType in pTypes) {
+    ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
+    apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
+                  densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
+    p <- p + do.call(ggpType, trimList(  # geom_bar(stat='identity'
+      alpha=ls$alpha, 
+      bins=ls$nBins, 
+      position=if (!is.null(ls$jitter)) ls$jitter else 
+               if (pType == 'violin') position_dodge(width = 0.4) else ls$position, 
+      size=if (apply$sizeMag) ls$sizeMag,
+      stat=if (pType == 'bar') 'identity'))
+  }
   
   p <- addAes(p, ls, 'shape')
   p <- addAes(p, ls, 'fill')

@@ -1,30 +1,7 @@
-definedPlotInputs <- list(
-  scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
-            'jitter', 'alpha', 'sizeMag'),
-  line=c('x', 'y', 'color', 'alpha'),
-  bin2d=c('x', 'y', 'alpha', 'fill', 'nBins'), # position
-  hex=c('x', 'y', 'alpha','color',  'fill', 'size', 'nBins'),
-  bar=c('x','y', 'fill', 'alpha', 'position'),
-  histogram=c('x', 'fill', 'alpha', 'position', 'nBins'),
-  density=c('x', 'fill', 'alpha', 'densBlackLine'),
-  box=c('x', 'y', 'fill', 'alpha'),
-  violin=c('x', 'y', 'fill', 'alpha'),
-  density2d=c('x', 'y'),
-  pairs=c('columns', 'color', 'fill',
-          'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
-          'ggpairsDiagCont', 'ggpairsDiagDiscr',
-          'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
-definedPlotInputs$path <- definedPlotInputs$line
-
-pScheme <- list(
-  c('scatter', 'density2d', 'bin2d', 'hex', 'line', 'path'),
-  c('box', 'violin'),
-  'histogram', 'density', 'bar', 'pairs')
-
 plotInputs <- reactive({
   if (is.null(plotTypes())) return()
-  unique(unlist(lapply(plotTypes(), function(pTypes) {
-    definedPlotInputs[[pTypes]]
+  unique(unlist(lapply(plotTypes(), function(pType) {
+    flattenList(definedPlotInputs)[[pType]]
   })))
 })
 

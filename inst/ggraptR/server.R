@@ -13,17 +13,16 @@ library(svglite)
 library(futile.logger)
 library(GGally)
 
-## import global variables
+source('./functions/helper.R')
 source('./global_variables.R', local=T)
+
+source('./functions/ggplots.R')
+source('./functions/aggregate.R')
+source('./functions/codeGen.R')
 
 ## set debug logs
 source('./debug/debug.R', local=T)
 
-## import functions
-source('./functions/helper.R')
-source('./functions/ggplots.R')
-source('./functions/aggregate.R')
-source('./functions/codeGen.R')
 
 options(shiny.maxRequestSize = 10000 * 1024^2)  # by default, the file size limit is 5MB
 

@@ -180,6 +180,36 @@ anyNull <- function(...) {
 
 trimList <- function(...) Filter(function(x) !is.null(x) && length(x), list(...))
 
+flattenList <- function(lst) {
+  res <- list()
+  for (lsti in 1:length(lst)) {
+    el <- lst[lsti]
+    if (is.list(el[[1]])) {
+      i <- (1:length(el[[1]])) + length(res)
+      res[i] <- el[[1]]
+      names(res)[i] <- names(el[[1]])
+    } else {
+      i <- length(res) + 1
+      res[i] <- el
+      names(res)[i] <- names(el)
+    }
+  }
+  res
+}
+
+getStructListNames <- function(lst) {
+  res <- list()
+  for (i in 1:length(lst)) {
+    el <- lst[i]
+    if (is.list(el[[1]])) {
+      res[[length(res) + 1]] <- c(names(el[[1]]))
+    } else {
+      res[[i]] <- names(el)
+    }
+  }
+  res
+}
+
 capitalize <- function(x) {
   paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
 }
