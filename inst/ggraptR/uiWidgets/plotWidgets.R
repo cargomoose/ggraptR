@@ -15,11 +15,16 @@ output$itersToDrawCtrl <- renderUI({
 output$plotTypesCtrl <- renderUI({
   if (displayPlotTypesCond()) {
     opts <- plotTypeOpts()  # the second trigger
-    selectInput("plotTypes", "Plot type", opts,
-                # need value to change plot type everytime dataset() changes. For trigger
-                isolate(input$plotTypes), 
-                  # if pTypes == 'scatter') 'histogram'
-                multiple = T)
+    isUpdatedDataset <- isolate(!is.null(x()) && !x() %in% names(dataset()))
+    if (isUpdatedDataset) {
+      opts <- if (is.null(plotTypes())) list('Histogram' = 'histogram')
+    }
+    val <- if (isUpdatedDataset) {
+      if (!is.null(opts)) opts[[1]]
+    } else {
+      isolate(input$plotTypes)
+    }
+    selectInput("plotTypes", "Plot type", opts, val, multiple = T)
   }
 })
 

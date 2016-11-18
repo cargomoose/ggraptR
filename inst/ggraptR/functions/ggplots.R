@@ -26,17 +26,15 @@ plotGgplot <- function(dataset, inpVals) {
       mapping=generateAes(ls),
       alpha=ls$alpha, 
       bins=ls$nBins, 
-      position=if (!is.null(ls$jitter)) ls$jitter else 
-               if (pType == 'violin') position_dodge(width = 0.4) else ls$position, 
+      position=if (!is.null(ls$jitter)) ls$jitter else ls$position,
       size=if (apply$sizeMag) ls$sizeMag,
-      stat=if (pType == 'bar') 'identity'))
+      stat=if (pType == 'bar') 'identity',
+      width=if (pType == 'box') 0.2))
   
-    if (apply$sizeMag) p <- p + scale_size(range=c(1, ls$sizeMag))
+    p <- p + if (apply$sizeMag) scale_size(range=c(1, ls$sizeMag))
     p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
   }
   p
-  # if (!is.null(ls$viol_box)) 
-    # geom_boxplot(width=0.2, position=position_dodge(width = 0.4))
 }
 
 
