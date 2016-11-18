@@ -135,7 +135,10 @@ yFactorVarUniqVals <- reactive({
 
 ## conditional: facet widgets are loaded
 facetWidgetsLoaded <- reactive({
-  checkWidgetsLoaded(input, c('facetCol', 'facetRow', 'facetWrap','facetScale'))
+  for (widget in c('facetCol', 'facetRow', 'facetWrap','facetScale')) {
+    if (is.null(input[[widget]])) return(FALSE)
+  }
+  TRUE
 })
 
 ## conditional: no facet was selected

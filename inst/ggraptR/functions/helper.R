@@ -149,16 +149,9 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   var
 }
 
-checkWidgetsLoaded <- function(input, widgets) {
-  if (is.null(widgets)) return(FALSE)
-  for (widget in widgets) {
-    if (is.null(input[[widget]])) {
-      return(FALSE)
-    }
-  }
-  TRUE
+needCatX <- function(plotTypes) {
+  any(c('violin', 'box', 'bar') %in% plotTypes)
 }
-
 
 ## override GGally:::print.ggmatrix to prevent messages about binwdth
 print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,

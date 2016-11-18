@@ -14,7 +14,8 @@ plotGgplot <- function(dataset, inpVals) {
   pMap <- c('box'='boxplot', 'scatter'='point')
   # ensure all plots have y==T or y==F
   stopifnot(length(unique(sapply(inpVals, function(pt) is.null(pt$y)))) == 1)
-  p <- ggplot(dataset, do.call(aes_string, trimList(x=inpVals[[1]]$x, y=inpVals[[1]]$y)))
+  x <- if (needCatX(names(inpVals))) asFactor(inpVals[[1]]$x) else inpVals[[1]]$x
+  p <- ggplot(dataset, do.call(aes_string, trimList(x=x, y=inpVals[[1]]$y)))
   
   for (lsi in 1:length(inpVals)) {
     ls <- inpVals[[lsi]]
@@ -26,7 +27,8 @@ plotGgplot <- function(dataset, inpVals) {
       mapping=generateAes(ls),
       alpha=ls$alpha, 
       bins=ls$nBins, 
-      position=if (!is.null(ls$jitter)) ls$jitter else ls$position,
+      position=if (!is.null(ls$jitter)) ls$jitter else 
+        if (pType %in% c('box', 'violin')) position_dodge(width=0.4) else ls$position,
       size=if (apply$sizeMag) ls$sizeMag,
       stat=if (pType == 'bar') 'identity',
       width=if (pType == 'box') 0.2))

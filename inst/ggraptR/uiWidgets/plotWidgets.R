@@ -31,8 +31,7 @@ output$plotTypesCtrl <- renderUI({
 output$xCtrl <- renderUI({
   if (displayXCond()) {
     isolate({
-      varType <- if (any(c('violin', 'box', 'bar') %in% plotTypes()))
-        'categorical' else 'numeric'
+      varType <- if (needCatX(plotTypes())) 'categorical' else 'numeric'
       vars <- do.call.pasted(varType, 'Vars')
       if (!length(vars)) varType <- sprintf('%s. Absent' , varType)
       selectInput('x', sprintf('X (%s)', varType), vars, selected = x())
