@@ -42,6 +42,7 @@ plotGgplot <- function(dataset, inpVals) {
 
 # multiple columns
 plotPairs <- function(dataset, inpVals) {
+  stopifnot(length(inpVals) == 1)
   ls <- inpVals[[1]]  
   
   ggpairs_pars <- Filter(
