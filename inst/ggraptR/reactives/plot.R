@@ -1,8 +1,11 @@
-getPlotInputVals <- function(aggLimDf, inputNames=NULL) {
-  if (is.null(inputNames)) inputNames <- isolate(plotInputs())
-  inputs <- lapply(inputNames, do.call, args=list(), envir=environment())
-  names(inputs) <- inputNames  # results list(x=eval(x()), y=eval(y())...)
-  ensureCorrectPlotInputs(inputs, colnames(aggLimDf))
+getPlotInputVals <- function(structInpNames, df) {
+  inputs <- lapply(structInpNames, function(onePlotTypeNames) {
+    inp <- lapply(onePlotTypeNames, do.call, args=list(), envir=environment())
+    names(inp) <- onePlotTypeNames
+    ensureCorrectPlotInputs(inp, colnames(df))
+  })
+  names(inputs) <- names(structInpNames)
+  inputs
 }
 
 buildPlot <- reactive({
@@ -22,10 +25,13 @@ buildPlot <- reactive({
   
   pTypes <- plotTypes()
   if (is.null(pTypes)) return()
-  p <- do.call.pasted('plot', if (pTypes == 'pairs') 'Pairs' else 'Ggplot', 
-                      args=list(aggLimDf(), getPlotInputVals(aggLimDf()), pTypes))
+  df <- aggLimDf()
+  isPairsPlot <- all('pairs' == pTypes)
   
-  if ('pairs' != pTypes) {
+  p <- do.call.pasted('plot', if (isPairsPlot) 'Pairs' else 'Ggplot', 
+                      args=list(df, getPlotInputVals(separatePlotInputs(), df)))
+  
+  if (!isPairsPlot) {
     if (isFacetSelected()) {
       if (facetGridSelected()) {
         p <- p + facet_grid(facets=facetGrids(), scales=facetScale())
@@ -48,7 +54,7 @@ buildPlot <- reactive({
       theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
       
       state$theme_name <- theme_name
-      isColorTypeDiscr <- isolate(colorType()) == 'discrete' #colorType() bases on color()
+      isColorTypeDiscr <- colorType() == 'discrete' #colorType() bases on color()
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
         scale_color_name <- sprintf('scale_colour_%s', theme_name)
         if (theme_name == 'calc') {

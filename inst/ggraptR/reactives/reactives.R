@@ -1,10 +1,15 @@
-plotInputs <- reactive({
+separatePlotInputs <- reactive({
   if (is.null(plotTypes())) return()
-  unique(unlist(lapply(plotTypes(), function(pType) {
+  inputs <- lapply(plotTypes(), function(pType) {
     flattenList(definedPlotInputs)[[pType]]
-  })))
+  })
+  names(inputs) <- plotTypes()
+  inputs
 })
 
+plotInputs <- reactive({
+  unique(unlist(separatePlotInputs()))
+})
 
 # variables for rawDataset() -- probably not very useful
 # original variables

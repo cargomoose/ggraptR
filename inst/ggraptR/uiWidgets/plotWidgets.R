@@ -57,7 +57,7 @@ output$columnsCtrl <- renderUI({
 output$colorCtrl <- renderUI({
   if (displayColorCond()) {
     isolate({
-      opts <- c('None', if ('scatter' %in% plotTypes()) 
+      opts <- c('None', if (all('scatter' == plotTypes())) 
         names(dataset()) else categoricalVars())
       selectInput('color', 'Color', opts, color())
     })

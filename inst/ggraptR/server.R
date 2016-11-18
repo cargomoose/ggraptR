@@ -14,7 +14,7 @@ library(futile.logger)
 library(GGally)
 
 source('./functions/helper.R')
-source('./global_variables.R', local=T)
+source('./globals.R', local=T)
 
 source('./functions/ggplots.R')
 source('./functions/aggregate.R')
