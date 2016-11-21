@@ -1,15 +1,3 @@
-generateAes <- function(ls) {
-  args <- trimList(
-    shape=asFactor(ls$shape),
-    fill=asFactor(ls$fill),
-    size=ls$size,
-    color=if (is.null(ls$treatColorAsFactor) || ls$treatColorAsFactor) 
-      asFactor(ls$color) else ls$color
-    # if (apply$densBlackLine) addAes(ls, aesKey='color', aesVal=ls$fill)
-  )
-  do.call(aes_string, args)
-}
-
 plotGgplot <- function(dataset, inpVals) {
   pMap <- c('box'='boxplot', 'scatter'='point')
   # ensure all plots have y==T or y==F
@@ -23,8 +11,16 @@ plotGgplot <- function(dataset, inpVals) {
     ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
     apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
                   densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
-    p <- p + do.call(ggpType, trimList(  # geom_bar(stat='identity'
-      mapping=generateAes(ls),
+    
+    geomMapArgs <- trimList(
+      shape=asFactor(ls$shape),
+      fill=asFactor(ls$fill),
+      size=ls$size,
+      color=if (!is.null(ls$treatColorAsFactor) && ls$treatColorAsFactor) 
+        asFactor(ls$color) else if (apply$densBlackLine) ls$fill else ls$color)
+    
+    p <- p + do.call(ggpType, trimList(
+      mapping= do.call(aes_string, geomMapArgs),
       alpha=ls$alpha, 
       bins=ls$nBins, 
       position=if (!is.null(ls$jitter)) ls$jitter else 
@@ -32,7 +28,16 @@ plotGgplot <- function(dataset, inpVals) {
       size=if (apply$sizeMag) ls$sizeMag,
       stat=if (pType == 'bar') 'identity',
       width=if (pType == 'box') 0.2))
-  
+    
+    guides_args <- na_omit(sapply(names(geomMapArgs), function(aes) {
+      if (apply$densBlackLine && aes == 'color') {
+        guide_legend(title=ls$fill)
+      } else if (grepl('^as.factor', geomMapArgs[[aes]])) {
+        guide_legend(title=ls[[aes]])
+      }
+    }, simplify=F))
+    
+    p <- p + if (length(guides_args)) do.call(guides, guides_args)
     p <- p + if (apply$sizeMag) scale_size(range=c(1, ls$sizeMag))
     p <- p + if (!is.null(ls$smooth)) stat_smooth(method=ls$smooth)
   }
@@ -40,7 +45,6 @@ plotGgplot <- function(dataset, inpVals) {
 }
 
 
-# multiple columns
 plotPairs <- function(dataset, inpVals) {
   stopifnot(length(inpVals) == 1)
   ls <- inpVals[[1]]  

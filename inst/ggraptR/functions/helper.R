@@ -171,7 +171,9 @@ anyNull <- function(...) {
   !notNulls(...)
 }
 
-trimList <- function(...) Filter(function(x) !is.null(x) && length(x), list(...))
+na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
+
+trimList <- function(...) na_omit(list(...))
 
 flattenList <- function(lst) {
   res <- list()
