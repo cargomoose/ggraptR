@@ -90,19 +90,34 @@ generateCode <- function(p) {
     }
   }
   
-  if ('guides' %in% names(p)) {
-    guide_params <- c()
-    for (guide_i in 1:length(p$guides)) {
-      guide_name <- names(p$guides)[guide_i]
-      guide <- p$guides[[guide_i]]
-      if (!is.null(guide$title) && guide_name != guide$title) {
-        guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', 
-                                                guide_name, guide$title))
-      }
+  if (all(class(p$facet) != 'FacetNull')) {
+    isWrap <- !is.null(p$facet$params$facets)
+    facetFormula <- sapply(if (isWrap)'facets' else  c('rows', 'cols'), function(ax) {
+      dividers <- p$facet$params[[ax]]
+      if (!length(dividers)) '.' else paste(names(dividers), collapse = '+')
+    })
+    res <- sprintf('%s + facet_%s(%s%s)', res, 
+                   if (isWrap) 'wrap' else 'grid', 
+                   if (isWrap) '~ ' else '',
+                   paste(facetFormula, collapse = ' ~ '))
+    
+    free_mask <- unlist(p$facet$free)
+    if (any(free_mask)) {
+      res <- sub(')$', sprintf(
+        ', scales="free%s")', 
+        if (all(free_mask)) '' else if (free_mask['x']) '_x' else '_y'), res)
     }
-    if (length(guide_params)) {
-      res <- sprintf('%s + guides(%s)', res, paste(guide_params, collapse=', '))
-    }
+  }
+  
+  if (class(p$coordinates)[1] == 'CoordFlip') {
+    res <- sprintf('%s + %s()', res, snakeize(class(p$coordinates)[1]))
+  }
+  
+  if (!is.null(state$theme_name)) {
+    res <- sprintf('%s + theme_%s()', res, state$theme_name)
+  }
+  if (!is.null(state$theme_attrs)) {
+    res <- sprintf('%s + theme(text=element_text(%s))', res, clist(state$theme_attrs))
   }
   
   for (scale in p$scales$scales) {
@@ -120,15 +135,19 @@ generateCode <- function(p) {
     }
   }
   
-  if (class(p$coordinates)[1] == 'CoordFlip') {
-    res <- sprintf('%s + %s()', res, snakeize(class(p$coordinates)[1]))
-  }
-  
-  if (!is.null(state$theme_name)) {
-    res <- sprintf('%s + theme_%s()', res, state$theme_name)
-  }
-  if (!is.null(state$theme_attrs)) {
-    res <- sprintf('%s + theme(text=element_text(%s))', res, clist(state$theme_attrs))
+  if ('guides' %in% names(p)) {
+    guide_params <- c()
+    for (guide_i in 1:length(p$guides)) {
+      guide_name <- names(p$guides)[guide_i]
+      guide <- p$guides[[guide_i]]
+      if (!is.null(guide$title) && guide_name != guide$title) {
+        guide_params <- c(guide_params, sprintf('%s=guide_legend(title="%s")', 
+                                                guide_name, guide$title))
+      }
+    }
+    if (length(guide_params)) {
+      res <- sprintf('%s + guides(%s)', res, paste(guide_params, collapse=', '))
+    }
   }
   
   for (lab in c('title', 'x', 'y')) {
@@ -136,21 +155,6 @@ generateCode <- function(p) {
       res <- sprintf('%s + %s("%s")', res, 
                      if (lab == 'title') 'ggtitle' else paste0(lab, 'lab'), 
                      p$labels[[lab]])
-    }
-  }
-  
-  if (all(class(p$facet) != 'null')) {
-    res <- sprintf('%s + %s', res, format(p$facet) %>% 
-                     gsub(',', ' +', .) %>% 
-                     gsub('\\( ~', '(. ~', .) %>% 
-                     gsub('~ \\)', '~ .)', .) %>%
-                     gsub('\\(', '("', .) %>% 
-                     gsub('\\)', '")', .))
-    free_mask <- unlist(p$facet$free)
-    if (any(free_mask)) {
-      res <- sub(')$', sprintf(
-        ', scales="free%s")', 
-        if (all(free_mask)) '' else if (free_mask['x']) '_x' else '_y'), res)
     }
   }
   

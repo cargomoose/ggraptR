@@ -20,7 +20,7 @@ Suggests:
     knitr
 Depends:
     R (>= 3.1.0),
-    ggplot2 (>= 1.0.1),
+    ggplot2 (>= 2.2.0),
     ggthemes (>= 2.2.1),
     shinyjs (>= 0.2.0),
     shinyBS(>= 0.61)
