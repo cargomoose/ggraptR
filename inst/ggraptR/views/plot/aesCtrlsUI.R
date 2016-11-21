@@ -33,7 +33,7 @@ verticalLayout(
   
   fluidRow(
     column(6, uiOutput('fillCtrl')),
-    column(6, uiOutput('posCtrl'))),
+    column(6, uiOutput('positionCtrl'))),
   
   fluidRow(
     column(6, uiOutput('sizeCtrl')),

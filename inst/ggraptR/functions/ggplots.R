@@ -40,7 +40,7 @@ plotGgplot <- function(dataset, inpVals) {
     p <- p + if (length(guides_args)) do.call(guides, guides_args)
     p <- p + if (apply$sizeMag) scale_size(range=c(1, ls$sizeMag))
     p <- p + if (!is.null(ls$smooth)) {
-      # we need to avoid two different color aestetics, one in geom_, one in smooth 
+      # we need to avoid two different color aestetics: one in geom_, one in smooth 
       # That's why 'else if(is.null(ls$color))' is used
       smoothMapGrp <- if (!is.null(ls$color) && 
                           ls$color %in% getVarNamesUniqValsCntLOEN(dataset))

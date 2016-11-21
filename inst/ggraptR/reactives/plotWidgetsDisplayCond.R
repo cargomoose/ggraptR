@@ -74,8 +74,8 @@ displayAlphaCond <- reactive({
   aesReady() && 'alpha' %in% isolate(plotInputs())
 })
 
-displayPosCond <- reactive({
-  aesReady() && 'position' %in% isolate(plotInputs())
+displayPositionCond <- reactive({
+  aesReady() && 'position' %in% isolate(plotInputs()) && !is.null(fill())
 })
 
 displayBinsCond <- reactive({
