@@ -68,7 +68,7 @@ getIsNumericVarNames <- function(df) {
 
 ## grabs the names variables of whose number of unique values does not exceed 
 ## a specified threshold (LOE: less than or equal to)
-getVarNamesUniqValsCntLOEN <- function(df, n=100) {
+getVarNamesUniqValsCntLOEN <- function(df, n=6) {
   colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
 }
 

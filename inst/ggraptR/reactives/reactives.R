@@ -41,7 +41,7 @@ origNumericVars <- reactive({
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
   unique(c(getIsFactorVarNames(dataset()), 
-           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(dataset(), 6)))
+           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(dataset())))
 })
 
 numericVars <- reactive({
@@ -55,7 +55,7 @@ varsUniqValsCntLOEN <- reactive({
   if (!is.null(dataset)) {
     n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
     if (!is.null(n)) {
-      getVarNamesUniqValsCntLOEN(dataset, n)
+      getVarNamesUniqValsCntLOEN(dataset)
     }
   }
 })
