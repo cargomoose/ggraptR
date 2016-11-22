@@ -260,7 +260,8 @@ output$xlimCtrl <- renderUI({
   if (displayXlimCond()) {
     isolate({
       if (x() %in% aggDfFactorVars()) {
-        selectInput('xlim', label='X Value', choices=xFactorVarUniqVals(), multiple=T)
+        selectInput('xlim', label='X Value', choices=unique(as.character(aggDf()[[x()]])), 
+                    multiple=T)
       } else if (x() %in% aggDfNumericVars() && !is.null(xRange())) {
         sliderInput("xlim", label="X Range",
                     min=xRange()[1], max=xRange()[2], value=xRange(), sep='')
@@ -273,7 +274,7 @@ output$ylimCtrl <- renderUI({
   if (displayYlimCond()) {
     isolate({
       if (y() %in% aggDfFactorVars()) {
-        selectInput('ylim', label='Y Value', choices=yFactorVarUniqVals(), multiple=T)
+        selectInput('ylim', label='Y Value', choices=levels(aggDf()[[y()]]), multiple=T)
       } else if (y() %in% aggDfNumericVars() && !is.null(yRange())) {
         sliderInput("ylim", label="Y Range",
                     min=yRange()[1], max=yRange()[2], value=yRange(), sep='')
@@ -367,8 +368,8 @@ output$plotThemeCtrl <- renderUI({
 output$plotAddAggByCtrl <- renderUI({
   if (displayPlotAddAggByCond()) {
     isolate(selectInput('plotAddAggBy', 'Additional Aggregation Variables', 
-                        choices=setdiff(origVars(), plotSemiAutoAggByBase()), multiple=T,
-                        selected=plotAddAggBy()))
+                        choices=setdiff(colnames(rawDataset()), plotSemiAutoAggByBase()), 
+                        multiple=T, selected=plotAddAggBy()))
   }
 })
 

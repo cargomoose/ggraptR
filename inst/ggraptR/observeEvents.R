@@ -30,11 +30,12 @@ observe({
   })
 })
 
-# trigger update of plopType options
+# trigger update for plopType options
 observe({
+  plotTypeRelations <- getStructListNames(definedPlotInputs)
   if (is.null(plotTypes()) || 
-      # prevents trigger on reducing of the number of plots from 2 to 1
       (length(plotTypes()) == 1 && 
+       # prevents trigger on reducing of the number of plots from 2 to 1
        length(isolate(plotTypeOpts())) == length(unlist(plotTypeRelations)))) {
     # Sys.time() instead of random number generation
     isolate(reactVals$updatePlotTypeOpts <- Sys.time())

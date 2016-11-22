@@ -23,5 +23,3 @@ definedPlotInputs <- list(
           'pairsUpCont', 'pairsUpCombo', 'pairsUpDiscr',
           'pairsDiagCont', 'pairsDiagDiscr',
           'pairsLowCont', 'pairsLowCombo', 'pairsLowDiscr'))
-
-plotTypeRelations <- getStructListNames(definedPlotInputs)

@@ -13,5 +13,6 @@ vignettes/*.R
 .Rproj.user
 inst/doc
 *.Rproj
+/inst/ggraptR/rsconnect
 # for test files like 1.csv, 1.png, etc
 1.*

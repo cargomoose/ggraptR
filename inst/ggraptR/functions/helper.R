@@ -73,11 +73,11 @@ getVarNamesUniqValsCntLOEN <- function(df, n=6) {
 }
 
 convertNoneToNULL <- function(var) {
-  if (is.null(var) || tolower(var)=='none' || !nchar(var)) NULL else var
+  if (!is.null(var) && tolower(var) != 'none' && nchar(var)) var  # implicit else NULL
 }
 
 asFactor <- function(var) {
-  if (!is.null(var)) paste0('as.factor(', var, ')') else NULL
+  if (!is.null(var)) paste0('as.factor(', var, ')')
 }
 
 ## gets all variable names of data frame objects that are loaded into memory
@@ -172,6 +172,7 @@ na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
 
 trimList <- function(...) na_omit(list(...))
 
+# makes structured list like one in globals.R simple flat list with vectors like elements
 flattenList <- function(lst) {
   res <- list()
   for (lsti in 1:length(lst)) {
@@ -189,6 +190,7 @@ flattenList <- function(lst) {
   res
 }
 
+# preserves list structure and extracts only list elements names
 getStructListNames <- function(lst) {
   res <- list()
   for (i in 1:length(lst)) {
@@ -202,6 +204,7 @@ getStructListNames <- function(lst) {
   res
 }
 
+# 'foo' -> 'Foo'
 capitalize <- function(x) {
   paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
 }

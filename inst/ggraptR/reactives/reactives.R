@@ -11,31 +11,6 @@ plotInputs <- reactive({
   unique(unlist(separatePlotInputs()))
 })
 
-# variables for rawDataset() -- probably not very useful
-# original variables
-origVars <- reactive({
-  dataset <- rawDataset()
-  if (!is.null(dataset)) {
-    colnames(dataset)
-  }
-})
-
-## original factor variables
-origFactorVars <- reactive({
-  dataset <- rawDataset()
-  if (!is.null(dataset)) {
-    getIsFactorVarNames(dataset)
-  }
-})
-
-## original numeric variables
-origNumericVars <- reactive({
-  dataset <- rawDataset()
-  if (!is.null(dataset)) {
-    getIsNumericVarNames(dataset)
-  }
-})
-
 
 # variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
@@ -76,14 +51,7 @@ aggDfNumericVars <- reactive({
   }
 })
 
-# xRange <- reactive({
-#   dataset <- aggDf(); if (is.null(dataset)) return()
-#   if (is.null(input$x)) return()
-#   if (input$x %in% aggDfNumericVars())
-#     range(dataset[input$x], na.rm=TRUE)
-# })
-
-## work-around for round error in sliderInput (for consistency w/ yRange())
+# work-around for round error in sliderInput (for consistency w/ yRange())
 xRange <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset) && !is.null(input$x)) {
@@ -96,15 +64,7 @@ xRange <- reactive({
   }
 })
 
-# yRange <- reactive({
-#   dataset <- aggDf(); if (is.null(dataset)) return()
-#   y <- y()
-#   if (is.null(y)) return()
-#   if (y %in% aggDfNumericVars())
-#     range(dataset[[y]], na.rm=TRUE)
-# })
-
-## work-around for rounding error in sliderInput
+# work-around for rounding error in sliderInput
 yRange <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset) && !is.null(y())) {
@@ -116,21 +76,6 @@ yRange <- reactive({
     range
   }
 })
-
-xFactorVarUniqVals <- reactive({
-  dataset <- aggDf()
-  if (!is.null(dataset) && !is.null(input$x) && input$x %in% aggDfFactorVars()) {
-    unique(as.character(dataset[[input$x]]))
-  }
-})
-
-yFactorVarUniqVals <- reactive({
-  dataset <- aggDf()
-  if (!is.null(dataset) && !is.null(y()) && y() %in% aggDfFactorVars()) {
-    levels(dataset[[y()]])
-  }
-})
-
 
 
 ## conditional: facet widgets are loaded

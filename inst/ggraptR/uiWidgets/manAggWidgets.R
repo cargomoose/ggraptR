@@ -1,13 +1,12 @@
 ## aggregation-by options
 output$aggByCtrl <- renderUI({
-  aggByOpts <- origVars()
-  selectInput('aggBy', 'Aggregate By', choices=aggByOpts, multiple=T)
+  selectInput('aggBy', 'Aggregate By', choices=colnames(rawDataset()), multiple=T)
 })
 
 ## aggregation target options
 output$aggTargetCtrl <- renderUI({
-  aggTargetOpts <- origNumericVars()
-  selectInput('aggTarget', 'Aggregation Target', choices=aggTargetOpts, multiple=T)
+  selectInput('aggTarget', 'Aggregation Target', getIsNumericVarNames(rawDataset()), 
+              multiple=T)
 })
 
 ## aggregation method options
