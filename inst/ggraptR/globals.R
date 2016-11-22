@@ -20,8 +20,8 @@ definedPlotInputs <- list(
   bar=c('x','y', 'fill', 'alpha', 'position'),
   density=c('x', 'fill', 'alpha', 'densBlackLine'),
   pairs=c('columns', 'color', 'fill',
-          'ggpairsUpCont', 'ggpairsUpCombo', 'ggpairsUpDiscr',
-          'ggpairsDiagCont', 'ggpairsDiagDiscr',
-          'ggpairsLowCont', 'ggpairsLowCombo', 'ggpairsLowDiscr'))
+          'pairsUpCont', 'pairsUpCombo', 'pairsUpDiscr',
+          'pairsDiagCont', 'pairsDiagDiscr',
+          'pairsLowCont', 'pairsLowCombo', 'pairsLowDiscr'))
 
 plotTypeRelations <- getStructListNames(definedPlotInputs)

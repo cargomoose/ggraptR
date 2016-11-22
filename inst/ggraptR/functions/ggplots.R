@@ -63,11 +63,11 @@ plotPairs <- function(dataset, inpVals) {
     list(dataset, columns=ls$columns,
          # alpha doesnt distinguish 0.2 from 0.8. It's boolean. Looks like a ggpairs bug
          mapping=aes_string(color=ls$color, fill=ls$fill, alpha=0.5),
-         upper=list(continuous=ls$ggpairsUpCont, combo=ls$ggpairsUpCombo, 
-                    discrete=ls$ggpairsUpDiscr), 
-         diag=list(continuous=ls$ggpairsDiagCont, discrete=ls$ggpairsDiagDiscr), 
-         lower=list(continuous=ls$ggpairsLowCont, combo=ls$ggpairsLowCombo, 
-                    discrete=ls$ggpairsLowDiscr)))
+         upper=list(continuous=ls$pairsUpCont, combo=ls$pairsUpCombo, 
+                    discrete=ls$pairsUpDiscr), 
+         diag=list(continuous=ls$pairsDiagCont, discrete=ls$pairsDiagDiscr), 
+         lower=list(continuous=ls$pairsLowCont, combo=ls$pairsLowCombo, 
+                    discrete=ls$pairsLowDiscr)))
   
   state <- sys.frames()[[1]]
   for(i in 1:length(ggpairs_pars)) {

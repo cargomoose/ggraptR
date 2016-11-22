@@ -106,36 +106,36 @@ coordFlip <- reactive({
 })
 
 
-ggpairsUpCont <- reactive({
-  input$ggpairsUpCont
+pairsUpCont <- reactive({
+  input$pairsUpCont
 })
 
-ggpairsUpCombo <- reactive({
-  input$ggpairsUpCombo
+pairsUpCombo <- reactive({
+  input$pairsUpCombo
 })
 
-ggpairsUpDiscr <- reactive({
-  input$ggpairsUpDiscr
+pairsUpDiscr <- reactive({
+  input$pairsUpDiscr
 })
 
-ggpairsDiagCont <- reactive({
-  input$ggpairsDiagCont
+pairsDiagCont <- reactive({
+  input$pairsDiagCont
 })
 
-ggpairsDiagDiscr <- reactive({
-  input$ggpairsDiagDiscr
+pairsDiagDiscr <- reactive({
+  input$pairsDiagDiscr
 })
 
-ggpairsLowCont <- reactive({
-  input$ggpairsLowCont
+pairsLowCont <- reactive({
+  input$pairsLowCont
 })
 
-ggpairsLowCombo <- reactive({
-  input$ggpairsLowCombo
+pairsLowCombo <- reactive({
+  input$pairsLowCombo
 })
 
-ggpairsLowDiscr <- reactive({
-  input$ggpairsLowDiscr
+pairsLowDiscr <- reactive({
+  input$pairsLowDiscr
 })
 
 nBins <- reactive({

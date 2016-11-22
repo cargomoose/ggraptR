@@ -10,20 +10,20 @@ verticalLayout(
     
     fluidRow(
       column(2, div(strong('Continu'))), 
-      column(3, uiOutput('ggpairsUpContCtrl')),
-      column(3, uiOutput('ggpairsLowContCtrl')), 
-      column(3, uiOutput('ggpairsDiagContCtrl'))),
+      column(3, uiOutput('pairsUpContCtrl')),
+      column(3, uiOutput('pairsLowContCtrl')), 
+      column(3, uiOutput('pairsDiagContCtrl'))),
       
     fluidRow(
       column(2, div(strong('Discrete'))), 
-      column(3, uiOutput('ggpairsUpDiscrCtrl')),
-      column(3, uiOutput('ggpairsLowDiscrCtrl')), 
-      column(3, uiOutput('ggpairsDiagDiscrCtrl'))),
+      column(3, uiOutput('pairsUpDiscrCtrl')),
+      column(3, uiOutput('pairsLowDiscrCtrl')), 
+      column(3, uiOutput('pairsDiagDiscrCtrl'))),
     
     fluidRow(
       column(2, div(strong('Combo'))), 
-      column(3, uiOutput('ggpairsUpComboCtrl')),
-      column(3, uiOutput('ggpairsLowComboCtrl'))),
+      column(3, uiOutput('pairsUpComboCtrl')),
+      column(3, uiOutput('pairsLowComboCtrl'))),
     hr()),
     
   
