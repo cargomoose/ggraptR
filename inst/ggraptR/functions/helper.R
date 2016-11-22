@@ -154,11 +154,8 @@ needCatX <- function(plotTypes) {
 }
 
 ## override GGally:::print.ggmatrix to prevent messages about binwdth
-print.ggmatrix <- function(x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
-                           spacingProportion = 0.03, gridNewPage = TRUE, ...) {
-  suppressMessages(GGally:::print.ggmatrix(
-    x, leftWidthProportion = 0.2, bottomHeightProportion = 0.1,
-    spacingProportion = 0.03, gridNewPage = TRUE, list(...)))
+print.ggmatrix <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+  suppressMessages(GGally:::print.ggmatrix(x, newpage, vp, list(...)))
 }
 
 
