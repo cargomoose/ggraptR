@@ -56,8 +56,10 @@ output$xCtrl <- renderUI({
 output$yCtrl <- renderUI({
   if (displayYCond()) {
     isolate({
+      isInit <- is.null(y())
       vars <- setdiff(numericVars(), if (displayXCond()) x())
-      selectInput('y', paste0('Y (numeric', if (!length(vars)) '. Absent', ')'), vars,y())
+      selectInput('y', paste0('Y (numeric', if (!length(vars)) '. Absent', ')'), vars,
+                  if (isInit && input$dataset == 'diamonds') 'price' else y())
     })
   }
 })
