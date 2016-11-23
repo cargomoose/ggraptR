@@ -1,4 +1,3 @@
-## import libraries
 library(shiny)
 library(ggplot2)
 library(dplyr)
@@ -13,37 +12,22 @@ library(svglite)
 library(futile.logger)
 library(GGally)
 
-source('./functions/helper.R')
-source('./globals.R', local=T)
-
-source('./functions/ggplots.R')
-source('./functions/aggregate.R')
-source('./functions/codeGen.R')
-
-## set debug logs
-source('./debug/debug.R', local=T)
-
-
 options(shiny.maxRequestSize = 10000 * 1024^2)  # by default, the file size limit is 5MB
 
+source('globals.R')
+source('debug/debug.R', local=T)  # set debug logs
+source('functions/helper.R')
+sourceAllInDir('functions', except='helper.R')
+
 shinyServer(function(input, output, session) {
-  ## reactive variables
-  source('./reactives/reactives.R', local=TRUE)  # general/miscellaneous
-  source('./reactives/dataset.R', local=TRUE)
-  source('./reactives/plotWidgetVals.R', local=TRUE)
-  source('./reactives/plotWidgetsDisplayCond.R', local=TRUE)
-  source('./reactives/plot.R', local=TRUE)
+  reactVals <- reactiveValues(log=NULL, readyToDraw=F, plotState=list())  # like globals
   
-  ## UI controls
-  source('./uiWidgets/generalWidgets.R', local=TRUE)
-  source('./uiWidgets/fileWidgets.R', local=TRUE)
-  source('./uiWidgets/manAggWidgets.R', local=TRUE)
-  source('./uiWidgets/plotWidgets.R', local=TRUE)
+  sourceAllInDir('reactives', local=T)  # reactive variables
+  sourceAllInDir('uiWidgets', local=T)  # UI controls
   
   output$rappy <- renderImage({
     list(src = "www/RAPPY.png", height = "140px", width = "120px",
       contentType = "image/png", alt = "ggraptR")}, deleteFile = FALSE)  
   
-  source('./reactives/download.R', local=TRUE)
-  source('./observeEvents.R', local=TRUE)
+  source('observeEvents.R', local=TRUE)
 })

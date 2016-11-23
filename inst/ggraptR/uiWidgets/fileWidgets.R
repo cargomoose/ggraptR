@@ -1,4 +1,4 @@
-## file input select control
+# file input select control
 output$fileInputSelectCtrl <- renderUI({
   fileInput('file', 'Choose file to upload',
             accept=c(
@@ -10,14 +10,14 @@ output$fileInputSelectCtrl <- renderUI({
               '.tsv'))  
 })
 
-## file input header control
+# file input header control
 output$fileInputHeaderCtrl <- renderUI({
   checkboxGroupInput('header', 'Header Options', 
                      choices=c('Header'=TRUE),
                      selected=c(TRUE))  
 })
 
-## file input quote control
+# file input quote control
 output$fileInputQuoteCtrl <- renderUI({
   radioButtons('quote', 'Quote',
                c(None='',
@@ -26,7 +26,7 @@ output$fileInputQuoteCtrl <- renderUI({
                '"')  
 })
 
-## file input separator control
+# file input separator control
 output$fileInputSepCtrl <- renderUI({
   radioButtons('sep', 'Separator',
                c(Comma=',',
@@ -35,7 +35,7 @@ output$fileInputSepCtrl <- renderUI({
                ',')  
 })
 
-## CSV download button (for UI)
+# CSV download button (for UI)
 output$dlBtnCSV <- renderUI({
   downloadButton('dlCSV', 'Download')
 })
@@ -45,7 +45,7 @@ output$dlBtnPlot <- renderUI({
   downloadButton('dlPlot', 'Download')
 })
 
-## user-defined factor variables control options
+# user-defined factor variables control options
 # output$usrDefFacVarsCtrl <- renderUI({
 #   if (is.null(dataset()) | is.null(factorVars())) return()  
 #   selectInput('usrDefFacVars', 'User-Defined Factor Variables',

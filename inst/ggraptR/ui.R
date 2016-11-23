@@ -13,12 +13,12 @@ shinyUI(bootstrapPage(
       cellWidths = c("25%", "75%"),
       imageOutput("rappy", height = "100%"),
       div(
-          ## use shinyjs to disable/enable buttons w/ JS
+          # use shinyjs to disable/enable buttons w/ JS
           shinyjs::useShinyjs(),
           uiOutput('resetable_input'),
           actionButton("reset_input", "Reset inputs", width = "100%"),
           br(), br(),
-          ## reactive vs. upon-manual-submit calculations
+          # reactive vs. upon-manual-submit calculations
           
           fluidRow(
             column(6, uiOutput('submitCtrl')), 

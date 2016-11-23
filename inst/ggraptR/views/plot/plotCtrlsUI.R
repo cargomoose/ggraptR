@@ -1,4 +1,4 @@
-## plot options
+# plot options
 verticalLayout(
   fluidRow(
     column(6, uiOutput('xCtrl')),
@@ -6,7 +6,7 @@ verticalLayout(
   
   uiOutput('columnsCtrl'),  # for ggpairs
   
-  ## widgets to show/hide advanced control widgets
+  # widgets to show/hide advanced control widgets
   div(
     uiOutput('showAesCtrl'),
     source('./views/plot/aesCtrlsUI.R', local=TRUE)$value,

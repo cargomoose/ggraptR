@@ -23,9 +23,7 @@ clist <- function(arg_lst, need_quote=T) {
     collapse=', ')
 }
 
-generateCode <- function(p) {
-  state <- sys.frames()[[1]]
-  
+generateCode <- function(p, state) {
   if ('ggmatrix' %in% class(p)) {
     cols <- paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', ')
     mapping <- p$plots[[1]]$mapping

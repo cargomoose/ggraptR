@@ -42,18 +42,18 @@ buildPlot <- reactive({
     
     p <- p + if (coordFlip()) coord_flip()
     
-    ## plot labels 
+    # plot labels 
     p <- p + if (!is.null(plotTitle()) && plotTitle() != '') ggtitle(plotTitle())
     p <- p + if (!is.null(xLabel()) && xLabel() != '') xlab(xLabel())
     p <- p + if (!is.null(yLabel()) && yLabel() != '') ylab(yLabel())
     
-    ## plot themes
+    # plot themes
     if (!is.null(plotTheme())) {
       p <- p + do.call(plotTheme(), list())
       
       theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
       
-      state$theme_name <- theme_name
+      reactVals$plotState$theme_name <- theme_name
       isColorTypeDiscr <- colorType() == 'discrete' #colorType() bases on color()
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
         scale_color_name <- sprintf('scale_colour_%s', theme_name)
@@ -67,14 +67,15 @@ buildPlot <- reactive({
       }
     }
     
-    ## plot label styles
-    state$theme_attrs <- list(family = labelFontFamily(),
-                              face = labelFontFace(),
-                              color = labelFontColor(),
-                              size = labelFontSize(),
-                              hjust = hjust(),
-                              vjust = vjust())
-    p <- p + theme(text=do.call(element_text, state$theme_attrs))
+    # plot label styles
+    theme_attrs <- list(family = labelFontFamily(),
+                        face = labelFontFace(),
+                        color = labelFontColor(),
+                        size = labelFontSize(),
+                        hjust = hjust(),
+                        vjust = vjust())
+    reactVals$plotState$theme_attrs <- theme_attrs
+    p <- p + theme(text=do.call(element_text, theme_attrs))
   }
   
   flog.debug("plot::buildPlot() - End", name='all')
@@ -87,7 +88,7 @@ buildPlot <- reactive({
   
   # add plot history entry. It will show at Log tab
   if (!is.null(p)) {
-    logEntry <- generateCode(p)
+    logEntry <- generateCode(p, isolate(reactVals$plotState))
     curLog <- isolate(reactVals$log)
     isFirstEntry <- is.null(curLog)
     

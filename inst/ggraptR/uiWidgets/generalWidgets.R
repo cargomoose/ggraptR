@@ -1,17 +1,18 @@
-## dataset drop-down options 
+# dataset drop-down options 
 output$datasetCtrl <- renderUI({
   isolate({
-    stopifnot(state$initialDf %in% rawDatasetNames())
-    selectInput("dataset", "Dataset", choices=rawDatasetNames(), selected=state$initialDf)
+    initDf <- sys.frames()[[1]]$initialDf
+    stopifnot(!is.null(initDf) && initDf %in% rawDatasetNames())
+    selectInput("dataset", "Dataset", choices=rawDatasetNames(), initDf)
   })
 })
 
-## reactive  option
+# reactive  option
 output$reactiveCtrl <- renderUI({
   checkboxInput("reactive", label="Enable reactivity", value=TRUE)
 })
 
-## upon-manual-submit button
+# upon-manual-submit button
 output$submitCtrl <- renderUI({
   bsButton("submit", label="Submit", icon=icon("refresh"), type="action", block=TRUE)
 })

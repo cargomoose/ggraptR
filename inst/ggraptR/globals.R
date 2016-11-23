@@ -1,9 +1,3 @@
-# for global variables
-
-state <- sys.frames()[[1]]
-stopifnot(!is.null(state$initialDf))
-fileDefault <- state$fileDefault
-
 # plotTypes in inner lists are treated as allowed to plot together in plotTypeOpts()
 definedPlotInputs <- list(
   list(scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 
@@ -23,3 +17,6 @@ definedPlotInputs <- list(
           'pairsUpCont', 'pairsUpCombo', 'pairsUpDiscr',
           'pairsDiagCont', 'pairsDiagDiscr',
           'pairsLowCont', 'pairsLowCombo', 'pairsLowDiscr'))
+
+fileDefault <- list(width=10, height=10, DPI=100, widthMax=50,
+                    heightMax=50, DPIMax=500)

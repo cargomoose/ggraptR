@@ -1,4 +1,4 @@
-## reactive variable for custom (uploadable) dataset file info
+# reactive variable for custom (uploadable) dataset file info
 customDatasetFileInfo <- reactive({
   # input$file will be NULL initially. After the user selects
   # and uploads a file, it will be a data frame with 'name',
@@ -8,7 +8,7 @@ customDatasetFileInfo <- reactive({
   input$file
 })
 
-## reactive variable for custom (uploaded) dataset
+# reactive variable for custom (uploaded) dataset
 customDataset <- reactive({
   fileInfo <- customDatasetFileInfo()
   if (is.null(fileInfo) || is.null(input$header) || is.null(input$sep) 
@@ -18,26 +18,26 @@ customDataset <- reactive({
            sep = input$sep, quote = input$quote)
 })
 
-## reactive variable for custom dataset name
+# reactive variable for custom dataset name
 customDatasetName <- reactive({
   customDatasetFileInfo()$name
 })
 
-## reactive variable for raw dataset names
+# reactive variable for raw dataset names
 rawDatasetNames <- reactive({
   c("diamonds", "mtcars", "rock", "iris", "esoph",
     customDatasetName(),
     getLoadedDataFrameNames())
 })
 
-## reactive variable for raw dataset
+# reactive variable for raw dataset
 rawDataset <- reactive({
-  ## from dataset selection drop-down
+  # from dataset selection drop-down
   if (is.null(input$dataset)) return()
   
-  state$dataset_name <- input$dataset
+  reactVals$plotState$dataset_name <- input$dataset
   
-  ## if no custom dataset was uploaded, then set one of the preloaded datasets as raw
+  # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
   if (is.null(input$file)) {
     get(input$dataset)
   } else { # if custom dataset was uploaded
@@ -45,31 +45,31 @@ rawDataset <- reactive({
     if (input$dataset == customDatasetName()) {
       customDataset()      
     } else {
-      ## if custom dataset was not selected, then set one of the preloaded datasets as raw
+      # if custom dataset was not selected, then set one of the preloaded datasets as raw
       get(input$dataset)
     }
   }
 })
 
-## manually aggregated dataset
+# manually aggregated dataset
 manAggDataset <- reactive({
-  ## if all fields for manual aggregation are filled in
+  # if all fields for manual aggregation are filled in
   if (!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)) {
-    ## return manually aggregated dataset
+    # return manually aggregated dataset
     aggregate(rawDataset(), input$aggBy, input$aggTarget, input$aggMeth)
   } else {  # return raw dataset  
     rawDataset()
   }
 })
 
-## raw or aggregated dataset
+# raw or aggregated dataset
 dataset <- reactive({
   #if (is.null(input$rawVsManAgg)) return()
   if (is.null(input$rawVsManAgg)) {
     return(rawDataset())
   }
 
-  ## raw dataset
+  # raw dataset
   if (input$rawVsManAgg == 'raw') {
     rawDataset()
   } else if (input$rawVsManAgg == 'manAgg') {  # aggregated dataset
@@ -78,16 +78,16 @@ dataset <- reactive({
 })
 
 
-## reactive for base semi-automatic aggregate-by fields 
-## (that are NOT in the "additional aggregate-by" fields)
+# reactive for base semi-automatic aggregate-by fields 
+# (that are NOT in the "additional aggregate-by" fields)
 plotSemiAutoAggByBase <- reactive({
   aggBy <- c(input$x, input$color, input$size, input$shape, input$fill, input$facetRow, 
              input$facetCol, input$facetWrap)
   cleanPlotAggBy(input$x, input$y, aggBy)
 })
 
-## reactive for semi-automatic aggregate by
-## base + additional aggregate-by fields
+# reactive for semi-automatic aggregate by
+# base + additional aggregate-by fields
 plotSemiAutoAggBy <- reactive({
   if (is.null(dataset())) return()
   aggBy <- c(plotSemiAutoAggByBase(), plotAddAggBy())
@@ -95,11 +95,11 @@ plotSemiAutoAggBy <- reactive({
   aggBy[aggBy %in% colnames(dataset())]
 })
 
-## reactive for semi-automatic aggregated dataset
+# reactive for semi-automatic aggregated dataset
 semiAutoAggDF <- reactive({
   if (is.null(semiAutoAggOn()) || is.null(dataset())) return()
   
-  ## if plot aggregation is specified (e.g. sum, mean, max, min)  
+  # if plot aggregation is specified (e.g. sum, mean, max, min)  
   if (semiAutoAggOn()) {
     if (is.null(plotSemiAutoAggBy())) {
       return()
@@ -116,14 +116,14 @@ semiAutoAggDF <- reactive({
   } 
 })
 
-## reactive variable for final dataset
+# reactive variable for final dataset
 aggDf <- reactive({
   if (is.null(dataset())) return()
   if (is.null(semiAutoAggOn())) {
     return(dataset())
   }
   
-  ## semi-automatic aggregation (if enabled)
+  # semi-automatic aggregation (if enabled)
   if (semiAutoAggOn()) {
     semiAutoAggDF()
   } else{  # natural dataset (raw or manually aggregated dataset)
@@ -132,13 +132,13 @@ aggDf <- reactive({
 })
 
 
-## reactive dataset used for plotting 
-## (filtered version of aggDf(), using xlim and ylim)
+# reactive dataset used for plotting 
+# (filtered version of aggDf(), using xlim and ylim)
 aggLimDf <- reactive({
   dataset <- aggDf()
   if (is.null(dataset)) return()
   
-  ## subset with xlim filter (if applicable)
+  # subset with xlim filter (if applicable)
   if (!is.null(xlim())) {
     x <- input$x
     if (is.null(x) || is.null(xType())) {
@@ -149,11 +149,11 @@ aggLimDf <- reactive({
     } else if (xType() == 'discrete') {
       dataset <- dataset[dataset[[x]] %in% xlim(), ]
     }
-    state$lim_range$x$val <- xlim()
-    state$lim_range$x$type <- xType()
+    reactVals$plotState$lim_range$x$val <- xlim()
+    reactVals$plotState$lim_range$x$type <- xType()
   }
   
-  ## subset with ylim filter (if applicable)
+  # subset with ylim filter (if applicable)
   if (!is.null(ylim())) {
     flog.debug("dataset::aggLimDf() - !is.null(ylim())", name='all')
     if ('y' %in% plotInputs()) {
@@ -167,8 +167,8 @@ aggLimDf <- reactive({
         dataset <- dataset[dataset[[y]] %in% ylim(), ]
       }
     }
-    state$lim_range$y$val <- ylim()
-    state$lim_range$y$type <- yType()
+    reactVals$plotState$lim_range$y$val <- ylim()
+    reactVals$plotState$lim_range$y$type <- yType()
   }
   dataset
 })

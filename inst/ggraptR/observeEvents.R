@@ -32,13 +32,14 @@ observe({
 
 # trigger update for plopType options
 observe({
-  plotTypeRelations <- getStructListNames(definedPlotInputs)
+  allDefTypes <- unlist(getStructListNames(definedPlotInputs))
   if (is.null(plotTypes()) || 
       (length(plotTypes()) == 1 && 
        # prevents trigger on reducing of the number of plots from 2 to 1
-       length(isolate(plotTypeOpts())) == length(unlist(plotTypeRelations)))) {
+       # means plotTypes options have not been shown yet
+       length(plotTypesOpts()) == length(allDefTypes))) {
     # Sys.time() instead of random number generation
-    isolate(reactVals$updatePlotTypeOpts <- Sys.time())
+    reactVals$updatePlotTypeOpts <- Sys.time()
   }
 })
 
@@ -79,7 +80,7 @@ observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
   }
 })
 
-## disable plot title, x and y label text fields when reactivity is enabled
+# disable plot title, x and y label text fields when reactivity is enabled
 # observeEvent(c(input$plotTitle, input$xLabel, input$yLabel), {
 #   if (input$showTheme) {
 #     if (checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel'))) {

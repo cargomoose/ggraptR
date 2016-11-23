@@ -24,7 +24,7 @@ numericVars <- reactive({
   setdiff(colnames(dataset()), categoricalVars())
 })
 
-## variables with less than or equal to N unique values
+# variables with less than or equal to N unique values
 varsUniqValsCntLOEN <- reactive({
   dataset <- dataset()
   if (!is.null(dataset)) {
@@ -78,7 +78,7 @@ yRange <- reactive({
 })
 
 
-## conditional: facet widgets are loaded
+# conditional: facet widgets are loaded
 facetWidgetsLoaded <- reactive({
   for (widget in c('facetCol', 'facetRow', 'facetWrap','facetScale')) {
     if (is.null(input[[widget]])) return(FALSE)
@@ -86,26 +86,26 @@ facetWidgetsLoaded <- reactive({
   TRUE
 })
 
-## conditional: no facet was selected
+# conditional: no facet was selected
 isFacetSelected <- reactive({
   if (!facetWidgetsLoaded()) return(F)
   facetFam <- c(facetCol(), facetRow(), facetWrap())
   !(all('None' == facetFam) || all('' == facetFam) || all('.' == facetFam))
 })
 
-## conditional: facet grid was selected
+# conditional: facet grid was selected
 facetGridSelected <- reactive({
   facetWidgetsLoaded() && (facetCol() != '.' || facetRow() != '.')
 })
 
-## conditional: facet wrap was selected
+# conditional: facet wrap was selected
 facetWrapSelected <- reactive({
   facetWidgetsLoaded() && facetWrap() != '.'
 })
 
 
 
-## reactive that returns a value "discrete" or "continuous"
+# reactive that returns a value "discrete" or "continuous"
 xType <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset) && !is.null(x())) {
@@ -114,7 +114,7 @@ xType <- reactive({
 })
 
 
-## reactive that returns a value "discrete" or "continuous"
+# reactive that returns a value "discrete" or "continuous"
 yType <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset) && 'y' %in% plotInputs() && !is.null(y())) {
@@ -122,7 +122,7 @@ yType <- reactive({
   }
 })
 
-## reactive that returns a value "discrete" or "continuous"
+# reactive that returns a value "discrete" or "continuous"
 colorType <- reactive({
   dataset <- aggDf()
   if (!is.null(dataset) && !is.null(color())) {
@@ -130,9 +130,7 @@ colorType <- reactive({
   } else 'none'
 })
 
-## conditional reactive: semi-automatic aggregation is on
+# conditional reactive: semi-automatic aggregation is on
 semiAutoAggOn <- reactive({
   !is.null(plotAggMeth()) && tolower(plotAggMeth()) != 'none'
 })
-
-reactVals <- reactiveValues(log=NULL, readyToDraw=F)

@@ -13,17 +13,31 @@ output$itersToDrawCtrl <- renderUI({
 })
 
 output$plotTypesCtrl <- renderUI({
-  if (displayPlotTypesCond()) {
-    opts <- plotTypeOpts()  # the second trigger
+  if (displayPlotTypesCond()) {  # !is.null(dataset()) trigger
+    normalOpts <- plotTypesOpts()  # the second trigger
+    pTypes <- isolate(plotTypes())
     isUpdatedDataset <- isolate(!is.null(x()) && !x() %in% names(dataset()))
-    if (isUpdatedDataset) {
-      opts <- if (is.null(plotTypes())) list('Histogram' = 'histogram')
+    isInit <- isolate(all(sapply(c(x(), y(), columns()), is.null)))
+    initialPlot <- if (isInit) {
+      sys.frames()[[1]]$initialPlot %>% tolower() %>% gsub('(plot)| ', '', .)
     }
-    val <- if (isUpdatedDataset) {
+    
+    opts <- if (isInit) {
+      getPlotTypeOpts(initialPlot)
+    } else if (isUpdatedDataset) {
+      if (is.null(pTypes)) list('Histogram' = 'histogram')  # may return NULL
+    } else {
+      normalOpts
+    }
+    
+    val <- if (isInit) {
+      initialPlot
+    } else if (isUpdatedDataset) {
       if (!is.null(opts)) opts[[1]]
     } else {
-      isolate(input$plotTypes)
+      pTypes
     }
+    
     selectInput("plotTypes", "Plot type", opts, val, multiple = T)
   }
 })
@@ -92,7 +106,7 @@ output$shapeCtrl <- renderUI({
   }
 })
 
-## position (stack vs. dodge) control options
+# position (stack vs. dodge) control options
 output$positionCtrl <- renderUI({
   if (displayPositionCond()) {
     isolate(selectInput('position', 'Position', c('stack', 'dodge', 'fill'), position()))
@@ -126,7 +140,7 @@ output$alphaCtrl <- renderUI({
   }
 })
 
-## size magnifier
+# size magnifier
 output$sizeMagCtrl <- renderUI({
   if (displaySizeMagCond()) {
     sliderInput("sizeMag", label="Size Magnifier",
@@ -134,7 +148,7 @@ output$sizeMagCtrl <- renderUI({
   }
 })
 
-## histogram bins options
+# histogram bins options
 output$nBinsCtrl <- renderUI({
   if (displayBinsCond()) {
     isolate(sliderInput('nBins', label = "Number of bins", min=5, max=100, 
@@ -142,7 +156,7 @@ output$nBinsCtrl <- renderUI({
   }
 })
 
-## density plot color options
+# density plot color options
 output$densBlackLineCtrl <- renderUI({
   if (displayDensBlackLineCond()) {
     isolate(checkboxInput('densBlackLine', 'Draw black outline', 
@@ -224,7 +238,7 @@ output$pairsDiagDiscrCtrl <- renderUI({
 
 
 
-## row-wise facet options
+# row-wise facet options
 output$facetRowCtrl <- renderUI({
   if (displayFacetCond()) {
     isolate(selectInput('facetRow', 'Facet Row', 
@@ -232,7 +246,7 @@ output$facetRowCtrl <- renderUI({
   }
 })
 
-## column-wise facet options
+# column-wise facet options
 output$facetColCtrl <- renderUI({
   if (displayFacetCond()) {
     isolate(selectInput('facetCol', 'Facet Column', 
@@ -373,7 +387,7 @@ output$plotAddAggByCtrl <- renderUI({
   }
 })
 
-## dataset type options (raw vs. manually aggregated)
+# dataset type options (raw vs. manually aggregated)
 output$rawVsManAggCtrl <- renderUI({
   if (displayAggCond()) {
     isolate(selectInput("rawVsManAgg", "Dataset Type",
@@ -382,7 +396,7 @@ output$rawVsManAggCtrl <- renderUI({
   }
 })
 
-## aggregation method options (for plot view only)
+# aggregation method options (for plot view only)
 output$plotAggMethCtrl <- renderUI({
   if (displayAggCond()) {
     isolate(selectInput('plotAggMeth', 'Aggregation Method', 

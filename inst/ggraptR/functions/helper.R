@@ -1,7 +1,7 @@
-## note: the functions below will find year (YYYY), month (YYYY-MM), 
-## and date (YYYY-MM-DD) between 1800-01-01 and 2099-12-31
+# note: the functions below will find year (YYYY), month (YYYY-MM), 
+# and date (YYYY-MM-DD) between 1800-01-01 and 2099-12-31
 
-## this functions determines the name of the year column (in YYYY format)
+# this functions determines the name of the year column (in YYYY format)
 getYearColumnName <- function(df) {
   firstRow <- df[1, ]
   yearPtrn <- '^(18|19|20)[0-9]{2}$'
@@ -15,7 +15,7 @@ getYearColumnName <- function(df) {
   yearCol
 }
 
-## determines the name of the month column (in YYYY-MM format)
+# determines the name of the month column (in YYYY-MM format)
 getMonthColumnName <- function(df) {
   firstRow <- df[1, ]
   yearMonthPtrn <- '^(18|19|20)[0-9]{2}[- /.](0[1-9]|1[012])$'
@@ -29,7 +29,7 @@ getMonthColumnName <- function(df) {
   yearMonthCol
 }
 
-## determines the name of the day column (in YYYY-MM-DD format)
+# determines the name of the day column (in YYYY-MM-DD format)
 getDateColumnName <- function(df) {
   firstRow <- as.character(df[1, ])
   datePtrn <- '^(18|19|20)[0-9]{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$'
@@ -43,10 +43,10 @@ getDateColumnName <- function(df) {
   dateCol
 }
 
-## takes two numeric ranges and returns TRUE if the two ranges overlap;
-## it is used to ensure that numeric xlim range has been updated for new dataset and 
+# takes two numeric ranges and returns TRUE if the two ranges overlap;
+# it is used to ensure that numeric xlim range has been updated for new dataset and 
 # x variables
-## when plot type is set to histogram (to prevent an error message)
+# when plot type is set to histogram (to prevent an error message)
 checkTwoRangesOverlap <- function(range1, range2) {
   lowerRange1 <- range1[1]
   upperRange1 <- range1[2]
@@ -56,31 +56,7 @@ checkTwoRangesOverlap <- function(range1, range2) {
 }
 
 
-## grabs the names of factor variables
-getIsFactorVarNames <- function(df) {
-  colnames(df)[sapply(df, is.factor)]
-}
-
-## grabs the names of numeric variables
-getIsNumericVarNames <- function(df) {
-  colnames(df)[sapply(df, is.numeric)]
-}
-
-## grabs the names variables of whose number of unique values does not exceed 
-## a specified threshold (LOE: less than or equal to)
-getVarNamesUniqValsCntLOEN <- function(df, n=6) {
-  colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
-}
-
-convertNoneToNULL <- function(var) {
-  if (!is.null(var) && tolower(var) != 'none' && nchar(var)) var  # implicit else NULL
-}
-
-asFactor <- function(var) {
-  if (!is.null(var)) paste0('as.factor(', var, ')')
-}
-
-## gets all variable names of data frame objects that are loaded into memory
+# gets all variable names of data frame objects that are loaded into memory
 getLoadedDataFrameNames <- function(env=.GlobalEnv) {
   objNames <- ls(env)
   dfNames <- c()
@@ -93,13 +69,13 @@ getLoadedDataFrameNames <- function(env=.GlobalEnv) {
   dfNames
 }
 
-## function for cleaning (removing duplicates or "None" values, etc.)
+# function for cleaning (removing duplicates or "None" values, etc.)
 cleanPlotAggBy <- function(x, y, aggBy) {
   aggBy <- c(x, aggBy)
   aggBy <- unique(aggBy)
   nonAggBy <- c('None', 'none', '.')
   
-  ## remove nonAggBy from aggBy
+  # remove nonAggBy from aggBy
   aggBy <- setdiff(aggBy, nonAggBy)
   
   if (x != y)
@@ -108,7 +84,7 @@ cleanPlotAggBy <- function(x, y, aggBy) {
   aggBy
 }
 
-## ensures correct plot inputs for an updated dataset
+# ensures correct plot inputs for an updated dataset
 ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
@@ -128,19 +104,19 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
   plotInputsList
 }
 
-## modifies and ensures proper variable name
-## for semi-automatic aggregation dataset column names
+# modifies and ensures proper variable name
+# for semi-automatic aggregation dataset column names
 ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   if (anyNull(colnames, var, aggMeth, semiAutoAggOn)) return()
   if (tolower(var) %in% c('none', '.')) return(var)
   
-  ## only if original variable name is not found in dataset's column names
+  # only if original variable name is not found in dataset's column names
   if (!(var %in% colnames)) {
-    ## if semi-automatic aggregation is turned on
+    # if semi-automatic aggregation is turned on
     if (semiAutoAggOn) {
       return(if (aggMeth=='count') 'count' else paste0(var, '_', aggMeth))
     }
-  } else {  ## if original variable name is found in dataset's column names
+  } else {  # if original variable name is found in dataset's column names
     varAgg <- paste0(var, '_', aggMeth)
     if (varAgg %in% colnames) {
       return(varAgg)
@@ -149,29 +125,8 @@ ensureProperVarName <- function(colnames, var, aggMeth, semiAutoAggOn) {
   var
 }
 
-needCatX <- function(plotTypes) {
-  any(c('violin', 'box', 'bar') %in% plotTypes)
-}
 
-## override GGally:::print.ggmatrix to prevent messages about binwdth
-print.ggmatrix <- function(x, newpage = is.null(vp), vp = NULL, ...) {
-  suppressMessages(GGally:::print.ggmatrix(x, newpage, vp, list(...)))
-}
-
-
-notNulls <- function(...) {  # effective lazy implementation
-  for (el in list(...)) if (is.null(el)) return(F)
-  TRUE
-}
-
-anyNull <- function(...) {
-  !notNulls(...)
-}
-
-na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
-
-trimList <- function(...) na_omit(list(...))
-
+# functions for plotType options
 # makes structured list like one in globals.R simple flat list with vectors like elements
 flattenList <- function(lst) {
   res <- list()
@@ -204,6 +159,70 @@ getStructListNames <- function(lst) {
   res
 }
 
+getPlotTypeOpts <- function(selectedOpts) {
+  plotTypeRelations <- getStructListNames(definedPlotInputs)
+  opts <- unlist(plotTypeRelations[if (is.null(selectedOpts)) T else 
+    sapply(plotTypeRelations, function(el) selectedOpts %in% el)])
+  names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
+  opts
+}
+
+
+needCatX <- function(plotTypes) {
+  any(c('violin', 'box', 'bar') %in% plotTypes)
+}
+
+# override GGally:::print.ggmatrix to prevent messages about binwdth
+print.ggmatrix <- function(x, newpage = is.null(vp), vp = NULL, ...) {
+  suppressMessages(GGally:::print.ggmatrix(x, newpage, vp, list(...)))
+}
+
+sourceAllInDir <- function(folder, local=F, except=NULL) {
+  for (fl in dir(folder)) {
+    if (!fl %in% except) {
+      # 'envir' to set up environment - server() call - which contains 'output' variable
+      do.call(source, list(paste(folder, fl, sep = '/'), local), envir = sys.frame(-1))
+    }
+  }
+}
+
+
+# common functions
+getIsFactorVarNames <- function(df) {
+  colnames(df)[sapply(df, is.factor)]
+}
+
+getIsNumericVarNames <- function(df) {
+  colnames(df)[sapply(df, is.numeric)]
+}
+
+# grabs the names variables of whose number of unique values does not exceed 
+# a specified threshold (LOE: less than or equal to)
+getVarNamesUniqValsCntLOEN <- function(df, n=6) {
+  colnames(df)[sapply(df, function(x) length(unique(x)) <= n)]
+}
+
+convertNoneToNULL <- function(var) {
+  if (!is.null(var) && tolower(var) != 'none' && nchar(var)) var  # otherwise NULL
+}
+
+asFactor <- function(var) {
+  if (!is.null(var)) paste0('as.factor(', var, ')')
+}
+
+notNulls <- function(...) {  # effective lazy implementation
+  for (el in list(...)) if (is.null(el)) return(F)
+  TRUE
+}
+
+anyNull <- function(...) {
+  !notNulls(...)
+}
+
+na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
+
+trimList <- function(...) na_omit(list(...))
+
 # 'foo' -> 'Foo'
 capitalize <- function(x) {
   paste0(toupper(substr(x, 1, 1)), substr(x, 2, nchar(x)))
@@ -217,29 +236,3 @@ getFirstNonNull <- function(...) {
   for (el in list(...)) if (!is.null(el)) return(el)
   stop()
 }
-
-
-## takes a dataset, variable name, and variable's limit (e.g. x and xlim)
-## and returns TRUE if that they are compatible;
-## for e.g. if x is a continuous variable, then xlim should be a numeric range;
-## for e.g. if y is a factor or character variable, then ylim should be a vector 
-# of discrete values;
-## MODIFY THIS FUNCTION FOR CASES WHEN VARIABLE IS LOGICAL!!!
-# checkVarAndLimCompatible <- function(dataset, var, lim) {
-#   varType <- class(dataset[[var]])
-#   limType <- class(lim)
-#   compatCond <- FALSE
-#   
-#   if (any(varType %in% 'numeric')) {
-#     if (limType=='numeric') {
-#       compatCond <- TRUE
-#     }
-#   } else if (any(varType %in% c('factor', 'character'))) {
-#     if (limType=='character') {
-#       compatCond <- TRUE
-#     }
-#   }
-#   
-#   return(compatCond)
-# }
-

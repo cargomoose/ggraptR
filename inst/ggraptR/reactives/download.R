@@ -1,4 +1,4 @@
-## CSV download handler
+# CSV download handler
 output$dlCSV <- downloadHandler(
   filename = function() { 
     ts <- gsub(' |-|:', '', as.character(Sys.time()))
@@ -50,6 +50,6 @@ output$dlPlot <- downloadHandler(
   }
 )
 
-## register the final dataset to be used upon AJAX call from UI
+# register the final dataset to be used upon AJAX call from UI
 action <- reactive({DT::dataTableAjax(session, aggDf())})
 

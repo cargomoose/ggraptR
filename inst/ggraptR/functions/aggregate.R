@@ -1,4 +1,4 @@
-## this function renames column names of aggregate df
+# this function renames column names of aggregate df
 renameAggColNames <- function(df, aggBy, aggTarget, aggMeth) {
   cntInAggMeth <- 'count' %in% aggMeth
   aggMeth <- setdiff(aggMeth, 'count')
@@ -19,42 +19,42 @@ renameAggColNames <- function(df, aggBy, aggTarget, aggMeth) {
   return(df)
 }
 
-## this function aggregates raw data using functions from dplyr
+# this function aggregates raw data using functions from dplyr
 aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
-  ## aggBy can contain duplicates when x and facet variables are the same
+  # aggBy can contain duplicates when x and facet variables are the same
   aggBy <- unique(aggBy)
   
-  ## filter non-na entries by target and select valuable variables
+  # filter non-na entries by target and select valuable variables
   df <- df[apply(df, 1, function(x) all(!is.na(x))), c(aggBy, aggTarget)]
 
-  ## conditional to perform count later
+  # conditional to perform count later
   cntInAggMeth <- 'count' %in% aggMeth
   
-  ## conditional to perform median later
+  # conditional to perform median later
   medInAggMeth <- 'median' %in% aggMeth
 
-  ## select non-problematic aggregation methods
+  # select non-problematic aggregation methods
   aggMeth <- setdiff(aggMeth, c('count', 'median'))
 
-  ## convert character vector to list of symbols
+  # convert character vector to list of symbols
   dots <- lapply(aggBy, as.symbol)
 
-  ## group data
+  # group data
   grp <- group_by_(df, .dots=dots)
 
   agg <- NULL
   if (length(aggMeth) != 0) {
-    ## perform non-problematic aggregation by column
+    # perform non-problematic aggregation by column
     agg <- summarise_each(grp, aggMeth)
     
-    ## convert to data frame
+    # convert to data frame
     agg <- as.data.frame(agg)
     
-    ## rename column names
+    # rename column names
     agg <- renameAggColNames(agg, aggBy, aggTarget, aggMeth)
   }
 
-  ## attach aggregate counts if requested
+  # attach aggregate counts if requested
   if (cntInAggMeth) {
     cnt <- summarise(grp, count=n())
     if (is.null(agg))
@@ -63,7 +63,7 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
       agg$count <- cnt$count
   }
 
-  ## perform median aggregation by column
+  # perform median aggregation by column
   if (medInAggMeth) {
     # https://github.com/hadley/dplyr/issues/1824
     medAgg <- summarise_each(grp, funs('median'))
@@ -76,20 +76,19 @@ aggregate <- function(df, aggBy, aggTarget, aggMeth, nRndDeci=2) {
       agg <- merge(agg, medAgg, by=aggBy)
   }
 
-  ## find numeric columns and round
+  # find numeric columns and round
   numericVars <- getIsNumericVarNames(agg)
 
   for (numericVar in numericVars) {
     agg[[numericVar]] <- round(agg[[numericVar]], nRndDeci)
   }
   
-  ## return
   agg
 }
 
-## this function calculates share percentage (or relative frequency)
+# this function calculates share percentage (or relative frequency)
 calcShare <- function(df, shareOf, shareTarget, nRndDeci=2, displayPerc=TRUE) {
-  ## calculate share if necessary
+  # calculate share if necessary
   if (is.null(df) | is.null(shareOf) | is.null(shareTarget)) {return(df)}
   
   colnames <- colnames(df)
