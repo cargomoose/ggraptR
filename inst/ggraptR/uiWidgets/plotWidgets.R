@@ -56,10 +56,10 @@ output$xCtrl <- renderUI({
 output$yCtrl <- renderUI({
   if (displayYCond()) {
     isolate({
-      isInit <- is.null(y())
+      isDiamondsInit <- input$dataset == 'diamonds' && is.null(y())
       vars <- setdiff(numericVars(), if (displayXCond()) x())
       selectInput('y', paste0('Y (numeric', if (!length(vars)) '. Absent', ')'), vars,
-                  if (isInit && input$dataset == 'diamonds') 'price' else y())
+                  if (isDiamondsInit) 'price' else y())
     })
   }
 })
@@ -77,9 +77,11 @@ output$columnsCtrl <- renderUI({
 output$colorCtrl <- renderUI({
   if (displayColorCond()) {
     isolate({
-      opts <- c('None', if (all('scatter' == plotTypes())) 
-        names(dataset()) else categoricalVars())
-      selectInput('color', 'Color', opts, color())
+      isScatter <- all('scatter' == plotTypes())
+      isDiamondsInit <- isScatter && input$dataset == 'diamonds' && is.null(y())
+      opts <- c('None', if (isScatter) names(dataset()) else categoricalVars())
+      
+      selectInput('color', 'Color', opts, if (isDiamondsInit) 'color' else color())
     })
   }
 })
