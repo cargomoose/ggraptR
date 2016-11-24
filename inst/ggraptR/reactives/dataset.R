@@ -35,7 +35,7 @@ rawDataset <- reactive({
   # from dataset selection drop-down
   if (is.null(input$dataset)) return()
   
-  reactVals$plotState$dataset_name <- input$dataset
+  isolate(reactVals$plotState$dataset_name <- input$dataset)
   
   # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
   if (is.null(input$file)) {
@@ -149,8 +149,10 @@ aggLimDf <- reactive({
     } else if (xType() == 'discrete') {
       dataset <- dataset[dataset[[x]] %in% xlim(), ]
     }
-    reactVals$plotState$lim_range$x$val <- xlim()
-    reactVals$plotState$lim_range$x$type <- xType()
+    isolate({
+      reactVals$plotState$lim_range$x$val <- xlim()
+      reactVals$plotState$lim_range$x$type <- xType()
+    })
   }
   
   # subset with ylim filter (if applicable)
@@ -167,8 +169,10 @@ aggLimDf <- reactive({
         dataset <- dataset[dataset[[y]] %in% ylim(), ]
       }
     }
-    reactVals$plotState$lim_range$y$val <- ylim()
-    reactVals$plotState$lim_range$y$type <- yType()
+    isolate({
+      reactVals$plotState$lim_range$y$val <- ylim()
+      reactVals$plotState$lim_range$y$type <- yType()
+    })
   }
   dataset
 })

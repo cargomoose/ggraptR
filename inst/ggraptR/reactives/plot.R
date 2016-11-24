@@ -30,6 +30,9 @@ buildPlot <- reactive({
   
   p <- do.call.pasted('plot', if (isPairsPlot) 'Pairs' else 'Ggplot', 
                       args=list(df, getPlotInputVals(separatePlotInputs(), df)))
+  if (!is.null(p$pairsAes)) {
+    isolate(reactVals$plotState$pairs <- p$pairsAes)
+  }
   
   if (!isPairsPlot) {
     if (isFacetSelected()) {
@@ -53,7 +56,7 @@ buildPlot <- reactive({
       
       theme_name <- rev(unlist(str_split(plotTheme(), '_')))[1]
       
-      reactVals$plotState$theme_name <- theme_name
+      isolate(reactVals$plotState$theme_name <- theme_name)
       isColorTypeDiscr <- colorType() == 'discrete' #colorType() bases on color()
       if (!theme_name %in% c('grey', 'bw', 'economist')) {
         scale_color_name <- sprintf('scale_colour_%s', theme_name)
@@ -74,7 +77,7 @@ buildPlot <- reactive({
                         size = labelFontSize(),
                         hjust = hjust(),
                         vjust = vjust())
-    reactVals$plotState$theme_attrs <- theme_attrs
+    isolate(reactVals$plotState$theme_attrs <- theme_attrs)
     p <- p + theme(text=do.call(element_text, theme_attrs))
   }
   
@@ -86,7 +89,7 @@ buildPlot <- reactive({
   flog.debug("time.taken", name='all')
   flog.debug(time.taken , name='all')
   
-  # add plot history entry. It will show at Log tab
+  # add plot history entry. It will be shown at Log tab
   if (!is.null(p)) {
     logEntry <- generateCode(p, isolate(reactVals$plotState))
     curLog <- isolate(reactVals$log)

@@ -69,14 +69,17 @@ plotPairs <- function(dataset, inpVals) {
          lower=list(continuous=ls$pairsLowCont, combo=ls$pairsLowCombo, 
                     discrete=ls$pairsLowDiscr)))
   
+  reactValPairsAes <- list()
   for(i in 1:length(ggpairs_pars)) {
     par <- ggpairs_pars[[i]]
     par_name <- names(ggpairs_pars)[[i]]
     if (par_name %in% c('upper', 'diag', 'lower') && length(unlist(par))) {
-      reactVals$plotState$pairs[[par_name]] <- par[!sapply(par, is.null)]
+      reactValPairsAes[[par_name]] <- par[!sapply(par, is.null)]
     }
   }
   
   # print.ggmatrix() is overrided in helper.R
-  do.call(ggpairs, ggpairs_pars)
+  p <- do.call(ggpairs, ggpairs_pars)
+  p$pairsAes <- reactValPairsAes
+  p
 }
