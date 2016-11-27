@@ -21,6 +21,6 @@ ggraptR <- function(initialDf="diamonds",
   # this variable will be used in generalWidgets.R with 'sys.frames()[[1]]'
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
-
-  shiny::runApp(appDir, display.mode = "normal")
+  
+  shiny::runApp(appDir, display.mode = "normal", port=6012)
 }
