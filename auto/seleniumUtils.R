@@ -4,8 +4,8 @@ library(data.table)
 
 startServer <- function(dir = NULL, args = NULL, javaargs = NULL, log = TRUE,  ...) {
   library(XML)
-  system('taskkill /f /im java.exe')
-  system('taskkill /f /im phantomjs.exe')
+  suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
+  suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
   selDIR <-  ifelse(is.null(dir), file.path(find.package("RSelenium"), "bin"), dir)
   selFILE <- file.path(selDIR, "selenium-server-standalone.jar")
   if (!file.exists(selFILE)) {
@@ -73,7 +73,7 @@ startServer <- function(dir = NULL, args = NULL, javaargs = NULL, log = TRUE,  .
     selPID <- as.integer(sPids[idx])
   }
   
-  system('chcp 65001')  # for windows non-english encoding
+  system('chcp 65001', show.output.on.console = F)  # for windows non-english encoding
   system('tasklist /fi "imagename eq java.exe"')
   # system('taskkill /f /pid 4668')
   
@@ -88,6 +88,7 @@ getDriver <- function(port=6012) {
       list(phantomjs.binary.path = paste0(getwd(), "/auto/resources/phantomjs.exe")))
   capture.output(driver$open(), file='NUL')
   driver$navigate(sprintf("http://127.0.0.1:%s/", port))
+  driver$setWindowSize(1920, 1080)
   stopifnot(driver$getTitle()[[1]] == 'ggraptR')
   driver
 }
@@ -107,22 +108,27 @@ assert <- function (expr, msg) {
   if (!expr) stop(msg, call. = FALSE)
 }
 
-getEls <- function(source, query, how='xpath', directChildren=F) {
+getEls <- function(source, query, directChildren=F) {
   if (length(query) > 1) query <- paste0(query, collapse='')
+  #grepl('#|\\.\\w|>',query)
+  how <- if (grepl('/|@|\\.\\W', query)) 'xpath' else  'css selector'
   res <- if (class(source) == 'remoteDriver') {
     source$findElements(how, query)
   } else if (class(source) == 'webElement') {
-    stopifnot(!grepl('^[\\./]', query))  # not starts with . nor /
-    source$findChildElements(how, paste0('./', if (!directChildren) '/', query))
+    if (how == 'xpath') {
+      stopifnot(!grepl('^[\\./]', query))  # starts with neither . nor /
+      query <- paste0('./', if (!directChildren) '/', query)
+    }
+    source$findChildElements(how, query)
   } else {
     stop()
   }
-  if (!length(res)) warning('>> empty')
+  # if (!length(res)) warning('>> empty')
   res
 }
 
-getEl <- function(source, query, how='xpath', directChildren=F) {
-  res <- getEls(source, query, how, directChildren)
+getEl <- function(source, query, directChildren=F) {
+  res <- getEls(source, query, directChildren)
   if (length(res) > 1) {
     print(html(res))
     stop(sprintf('\nElements found: %s', length(res)))
@@ -150,14 +156,36 @@ text <- function(el) {
   }
 }
 
+attr <- function(el, attrName) {
+  if (!class(el) == 'webElement') stop()
+  res <- el$getElementAttribute(attrName)
+  if (length(res) == 1) res[[1]] else res
+}
+
 click <- function(el) {
   stopifnot(class(el) == 'webElement')
   el$clickElement()
 }
 
-# 
-# print (remDr$executeScript("return document.readyState;")[[1]])
-# while (remDr$executeScript("return document.readyState;")[[1]]!= "complete"
-# && totalwait<10) {
-#   Sys.sleep(timeout)
-# }
+waitFor <- function(target, source=driver, timeout=10) {
+  nChecks <- 2 * timeout
+  durCheck <- timeout / nChecks
+  targetFun <- if (is.function(target)) target else 
+    if (is.character(target)) function() getEls(source, target) else
+      if (is.call(target)) function() eval(target) else
+        stop(sprintf('Not implemented for target class [%s]', class(target)))
+  for (i in 1:nChecks) {
+    res <- suppressWarnings(targetFun())
+    if (is.list(res) && length(res)) {
+      return(if (length(res) > 1) res else res[[1]])
+    } else if (is.logical(res) && res) {
+      return(res)
+    }
+    Sys.sleep(durCheck)
+  }
+  browser()
+  stop('Could not wait')
+}
+
+# driver$screenshot(file = paste0(tempfile(), '.png'))
+
