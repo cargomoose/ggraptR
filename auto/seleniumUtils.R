@@ -1,3 +1,4 @@
+rm(list=ls())
 library(RSelenium)
 library(dplyr)
 library(data.table)
@@ -93,7 +94,7 @@ getDriver <- function(port=6012) {
   driver
 }
 
-makePageVisible <- function(driver) {
+openPageInBrowser <- function(driver) {
   tmpFileName <- paste0(tempfile(), '.html')
   write(driver$getPageSource()[[1]], file = tmpFileName)
   browseURL(tmpFileName)
@@ -102,10 +103,6 @@ makePageVisible <- function(driver) {
 stopExternals <- function(driver, selServer) {
   driver$close()
   selServer$stop()
-}
-
-assert <- function (expr, msg) {
-  if (!expr) stop(msg, call. = FALSE)
 }
 
 getEls <- function(source, query, directChildren=F) {
@@ -136,11 +133,8 @@ getEl <- function(source, query, directChildren=F) {
   if (length(res)) res[[1]]
 }
 
-byClass <- function(className, tag='*') {
-  sprintf('%s[contains(concat(" ",normalize-space(@class)," "), " %s ")]', tag,className)
-}
-
 html <- function(el) {
+  stopifnot(!is.null(el))
   if (is.list(el)) {
     unlist(sapply(el, function(x) x$getElementAttribute('outerHTML'))) 
   } else {
@@ -149,6 +143,7 @@ html <- function(el) {
 }
 
 text <- function(el) {
+  stopifnot(!is.null(el))
   if (is.list(el)) {
     unlist(sapply(el, function(x) x$getElementAttribute('outerText'))) 
   } else {
@@ -157,7 +152,7 @@ text <- function(el) {
 }
 
 attr <- function(el, attrName) {
-  if (!class(el) == 'webElement') stop()
+  if (!class(el) == 'webElement') stop('Wrong input class: ', class(el))
   res <- el$getElementAttribute(attrName)
   if (length(res) == 1) res[[1]] else res
 }
@@ -171,19 +166,28 @@ waitFor <- function(target, source=driver, timeout=10) {
   nChecks <- 2 * timeout
   durCheck <- timeout / nChecks
   targetFun <- if (is.function(target)) target else 
-    if (is.character(target)) function() getEls(source, target) else
+    if (is.character(target)) function() sapply(target, function(x) getEls(source, x)) else
       if (is.call(target)) function() eval(target) else
         stop(sprintf('Not implemented for target class [%s]', class(target)))
   for (i in 1:nChecks) {
     res <- suppressWarnings(targetFun())
-    if (is.list(res) && length(res)) {
-      return(if (length(res) > 1) res else res[[1]])
+    if (is.list(res)) {
+      if (length(target) == 1) {
+        if (length(res)) {
+          return(if (length(res) > 1) res else res[[1]])
+        }
+      } else {
+        if (length(Filter(length, res)) == 1) {
+          res <- Filter(length, res)[[1]]
+          return(if (length(res) > 1) res else res[[1]])
+        }
+      }
     } else if (is.logical(res) && res) {
       return(res)
     }
     Sys.sleep(durCheck)
   }
-  browser()
+  driver$screenshot(T)
   stop('Could not wait')
 }
 
