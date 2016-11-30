@@ -1,8 +1,4 @@
-rm(list=ls())
-library(RSelenium)
-library(dplyr)
-library(data.table)
-
+# from find.package('RSelenium')/examples/serverUtils/*.R
 startServer <- function(dir = NULL, args = NULL, javaargs = NULL, log = TRUE,  ...) {
   library(XML)
   suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
@@ -87,10 +83,10 @@ getDriver <- function(port=6012) {
   driver <- remoteDriver(
     browserName = "phantomjs", extraCapabilities = 
       list(phantomjs.binary.path = paste0(getwd(), "/auto/resources/phantomjs.exe")))
-  capture.output(driver$open(), file='NUL')
+  driver$open(silent = T)  # == capture.output(driver$open(), file='NUL')
   driver$navigate(sprintf("http://127.0.0.1:%s/", port))
   driver$setWindowSize(1920, 1080)
-  stopifnot(driver$getTitle()[[1]] == 'ggraptR')
+  # stopifnot(driver$getTitle()[[1]] == 'ggraptR')
   driver
 }
 
@@ -174,12 +170,12 @@ waitFor <- function(target, source=driver, timeout=10) {
     if (is.list(res)) {
       if (length(target) == 1) {
         if (length(res)) {
-          return(if (length(res) > 1) res else res[[1]])
+          return(invisible(if (length(res) > 1) res else res[[1]]))
         }
       } else {
         if (length(Filter(length, res)) == 1) {
           res <- Filter(length, res)[[1]]
-          return(if (length(res) > 1) res else res[[1]])
+          return(invisible(if (length(res) > 1) res else res[[1]]))
         }
       }
     } else if (is.logical(res) && res) {
@@ -190,6 +186,3 @@ waitFor <- function(target, source=driver, timeout=10) {
   driver$screenshot(T)
   stop('Could not wait')
 }
-
-# driver$screenshot(file = paste0(tempfile(), '.png'))
-
