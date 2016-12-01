@@ -8,20 +8,37 @@ waitPlotReady <- function() {
             '#plot.shiny-output-error')) %>% invisible  # normal plot or an error
 }
 
-fillOptions <- function(driver, id) {
+getOptions <- function(driver, id) {
   # shiny 'select' inputs does not have their options from start. Load on click
-  stopifnot(attr(getEl(driver, c('#', id)), 'data-shinyjs-resettable-type') == "Select")
+  idEl <- getEl(driver, c('#', id))
+  if (attr(idEl, 'data-shinyjs-resettable-type') != "Select") {
+    stop('Wrong id for select element: ', id)
+  }
+  
   selCtrlEl <- getEl(driver, c('select#', id, ' + div'))
+  # if (!is.null(attr(idEl, 'multiple'))) {
   getEl(selCtrlEl, '.selectize-input') %>% click()
-  waitFor('.option', selCtrlEl)
+  res <- waitFor('.option:not(.selected)', selCtrlEl)
+  if (!is.list(res)) list(res) else res
 }
 
-test_shiny_correct <- function(driver, makeShot=T, waitPlot=T) {
+eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
+  getEl(driver, '#', selectId, ' + .selectize-control input')$
+    sendKeysToElement(as.list(rep(selKeys$backspace, howMany)))
+}
+
+getCurrentPlotNames <- function(driver) {
+  getEls(driver, '#plotTypes option') %>% text()
+}
+
+test_shiny_correct <- function(driver, plotNames, elId, makeShot=T, waitPlot=T) {
   if (waitPlot) waitPlotReady()
   if (makeShot) {
     driver$screenshot(display = T)
     driver$screenshot(
-      file = sprintf('%s/auto/report/%s.png', getwd(), round(as.numeric(Sys.time())*1e3)))
+      file = sprintf('%s/auto/report/%s-%s-%s.png', getwd(), 
+                     paste(plotNames, collapse='+'), toString(elId),
+                     round(as.numeric(Sys.time())*1e3)))
   }
   !length(getEls(driver, '.shiny-output-error'))
 }
