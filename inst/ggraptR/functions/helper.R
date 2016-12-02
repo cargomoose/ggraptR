@@ -161,8 +161,10 @@ getStructListNames <- function(lst) {
 
 getPlotTypeOpts <- function(selectedOpts) {
   plotTypeRelations <- getStructListNames(definedPlotInputs)
-  opts <- unlist(plotTypeRelations[if (is.null(selectedOpts)) T else 
-    sapply(plotTypeRelations, function(el) selectedOpts %in% el)])
+  opts <- unlist(plotTypeRelations[
+    if (is.null(selectedOpts)) T else {
+      sapply(plotTypeRelations, function(el) unlist(selectedOpts)[1] %in% el)
+    }])
   names(opts) <- sapply(opts, function(x) capitalize(x) %>% gsub('(\\d)', ' \\1', .))
   opts
 }
