@@ -37,8 +37,8 @@ displayColorCond <- reactive({
   aesReady() && 'color' %in% isolate(plotInputs())
 })
 
-displayTreatAsFactorCond <- reactive({# aesReady() is inside color()
-  'treatColorAsFactor' %in% plotInputs() && 
+displayTreatAsFactorCond <- reactive({
+  'treatColorAsFactor' %in% plotInputs() && #aesReady() &&
     !is.null(color()) && color() %in% isolate(numericVars())
 })
 
