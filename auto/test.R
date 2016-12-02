@@ -13,7 +13,7 @@ test_that("Can connect to app", {
 
 usedPlotTypeNames <- c()
 repeat {
-  waitPlotReady()
+  waitForPlotReady()
   curUsedPlotTypeNames <- getCurrentPlotNames(driver)
   test_that(paste(curUsedPlotTypeNames, collapse=' + '), {
     expect_true(test_shiny_correct(driver, curUsedPlotTypeNames, NULL, waitPlot=F))

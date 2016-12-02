@@ -78,22 +78,15 @@ getEl <- function(source, query, directChildren=F) {
 }
 
 attr <- function(el, attrName) {
+  if (!length(el)) return(el)
   if (class(if (is.list(el)) el[[1]] else el) != 'webElement') {
     stop('Wrong input class: ', class(el))
   }
   if (!is.list(el)) el <- list(el)
   
-  unlist(sapply(el, function(x) {
-    html <- x$getElementAttribute('outerHTML')[[1]]
-    if (attrName == 'outerHTML') return(html)
-    
+  unlist(lapply(el, function(x) {
     res <- x$getElementAttribute(attrName)
-    if (length(res) == 1) {
-      res <- res[[1]]
-      if (res != html) res
-    } else if (length(res) > 1) {
-      res
-    }
+    if (length(res) == 1) res[[1]] else if (length(res) > 1) res
   }))
 }
 
@@ -102,17 +95,33 @@ html <- function(el) attr(el, 'outerHTML')
 text <- function(el) attr(el, 'outerText')
 
 click <- function(el) {
-  stopifnot(class(el) == 'webElement')
+  if (class(el) != 'webElement') stop('Input element class: ', class(el))
   el$clickElement()
 }
 
-waitFor <- function(target, source=driver, timeout=10) {
+filterElByAttr <- function(els, attrKey, attrVal) {
+  stopifnot(is.list(els))
+  res <- Filter(function(x) attr(x, attrKey) == attrVal, els)
+  stopifnot(length(res) == 1)
+  res[[1]]
+}
+
+
+waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
   nChecks <- 2 * timeout
   oneWaitDur <- timeout / nChecks
-  targetFun <- if (is.function(target)) target else 
-    if (is.character(target)) function() sapply(target, function(x) getEls(source, x)) else
-      if (is.call(target)) function() eval(target) else
-        stop(sprintf('Not implemented for target class [%s]', class(target)))
+  
+  targetFun <- 
+    if (is.function(target)) {
+      target 
+    } else if (is.character(target)) {
+      function() unlist(lapply(target, function(x) getEls(source, x)))
+    } else if (is.call(target)) {
+      function() eval.in.any.env(target)
+    } else {
+      stop(sprintf('Not implemented for target class [%s]', class(target)))
+    }
+  
   for (i in 1:nChecks) {
     res <- suppressWarnings(targetFun())
     if (is.list(res)) {
@@ -122,8 +131,7 @@ waitFor <- function(target, source=driver, timeout=10) {
         }
       } else {
         if (length(Filter(length, res)) == 1) {
-          res <- Filter(length, res)[[1]]
-          return(invisible(if (length(res) > 1) res else res[[1]]))
+          return(Filter(length, res)[[1]])
         }
       }
     } else if (is.logical(res) && res) {
@@ -131,6 +139,5 @@ waitFor <- function(target, source=driver, timeout=10) {
     }
     Sys.sleep(oneWaitDur)
   }
-  driver$screenshot(T)
-  stop('Could not wait')
+  if (errorIfNot) stop('Could not wait') else F
 }
