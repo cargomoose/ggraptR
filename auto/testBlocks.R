@@ -3,9 +3,11 @@ callNextPlot <- function(driver, usedPlotTypeNames, curUsedPlotTypeNames) {
   if (length(plotTypeGroupRestOpts)) {  # add another one plot to the current group
     plotTypeGroupRestOpts[[1]] %>% click()
   } else {  # erase current plots
-    eval.parent(substitute(  # changes list by ref
-      usedPlotTypeNames <- append(usedPlotTypeNames, curUsedPlotTypeNames)))
+    eval(substitute(  # changes a list by ref
+      usedPlotTypeNames <- append(usedPlotTypeNames, curUsedPlotTypeNames)), 
+      envir=.GlobalEnv)
     eraseMultiSelectOpts(driver, 'plotTypes', length(curUsedPlotTypeNames))
+    
     allOptions <- getOptions(driver, 'plotTypes')
     nextPlotType <- setdiff(allOptions %>% text(), usedPlotTypeNames)[1]
     
@@ -27,7 +29,7 @@ testPlotGroupInputs <- function(driver) {
     '> div[data-display-if="input.conditionedPanels == \\"plotTab\\""]',
     ' .shiny-bound-input.shinyjs-resettable')) %>% 
     attr('id')
-  # inputIds <- inputIds[c(1:2, (1:2)+(length(inputIds) - 2))] #
+  inputIds <- inputIds[c(1:2, (1:2)+(length(inputIds) - 2))] ####
   
   for (inpId in inputIds) {  
     input <- driver %>% getEl(c('#', inpId))

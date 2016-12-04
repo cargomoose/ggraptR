@@ -123,7 +123,10 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
     }
   
   for (i in 1:nChecks) {
-    res <- suppressWarnings(targetFun())
+    res <- suppressWarnings(targetFun())  # , silent = T)
+    # if (is.error(res)) browser()
+    # prevElHtml <- driver %>% getEl('#plotTypesCtrl .selectize-input') %>% html
+    
     if (is.list(res)) {
       if (length(target) == 1) {
         if (length(res)) {

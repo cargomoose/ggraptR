@@ -10,6 +10,13 @@ isNotFoundException <- function(e) {
     grepl('object .* not found', unlist(e[1]))
 }
 
+is.error <- function(obj) any(c('error', 'try-error') %in% class(obj))
+
+getErrorMessage <- function(err) {
+  stopifnot(is.error(err))
+  unlist(err[1])
+}
+
 eval.in.any.env <- function(targetExpr) {
   tryCatch(eval(targetExpr), error=function(e) {
     if (isNotFoundException(e)) {
@@ -18,14 +25,12 @@ eval.in.any.env <- function(targetExpr) {
         if (!isNotFoundException(res)) {
           # cat(which(ls(envir=sys.frame(3)) == sapply(
             # sys.frames(), function(en) ls(envir=en))), length(sys.frames()), '\n')
-          if (any(c('error', 'try-error') %in% class(res))) {
-            stop(unlist(res[1]))
-          }
+          if (is.error(res)) stop(getErrorMessage(res))
           return(res)
         }
       }
     }
-    stop(e$message)
+    stop(getErrorMessage(res))
   })
 }
 

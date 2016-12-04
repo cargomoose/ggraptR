@@ -42,8 +42,11 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     getOptions(driver, selectId)  # sets the focus to the select element
     eraseOpts(driver, selectId, 1)
   }
-  waitFor(quote(
-    is.null(getEl(driver, c('#', selectId, ' .selectize-input.has-items')))))
+  # waitFor(quote(
+    # is.null(getEl(driver, c('#', selectId, 'Ctrl .selectize-input.has-items')))))
+  # driver %>% getEl(sprintf('#%sCtrl .selectize-input', selectId)) %>% html %>% print
+  #  .input-active.dropdown-active
+  waitFor(sprintf('#%sCtrl .selectize-input:not(.focus)', selectId))
 }
 
 getCurrentPlotNames <- function(driver) {
