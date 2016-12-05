@@ -19,8 +19,10 @@ source('debug/debug.R', local=T)  # set debug logs
 source('functions/helper.R')
 sourceAllInDir('functions', except='helper.R')
 
+sessionVals <- reactiveValues(nRunnedSessions=0)  # server globals
+  
 shinyServer(function(input, output, session) {
-  reactVals <- reactiveValues(log=NULL, readyToDraw=F, plotState=list())  # like globals
+  reactVals <- reactiveValues(log=NULL, readyToDraw=F, plotState=list()) # session globals
   
   sourceAllInDir('reactives', local=T)  # reactive variables
   sourceAllInDir('uiWidgets', local=T)  # UI controls
@@ -30,4 +32,15 @@ shinyServer(function(input, output, session) {
       contentType = "image/png", alt = "ggraptR")}, deleteFile = FALSE)  
   
   source('observeEvents.R', local=TRUE)
+  
+  isolate(sessionVals$nRunnedSessions <- sessionVals$nRunnedSessions + 1)
+
+  session$onSessionEnded(function() {
+    isolate({
+      sessionVals$nRunnedSessions <- sessionVals$nRunnedSessions - 1
+      if (!sessionVals$nRunnedSessions) {
+        stopApp()
+      }
+    })
+  })
 })

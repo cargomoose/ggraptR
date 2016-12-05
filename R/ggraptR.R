@@ -18,7 +18,7 @@ ggraptR <- function(initialDf="diamonds",
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = F)
   }
   
-  # this variable will be used in generalWidgets.R with 'sys.frames()[[1]]'
+  # this variable will be used in generalWidgets.R with 'sys.frame(1)'
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
   
