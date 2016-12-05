@@ -23,7 +23,7 @@ startSelServer <- function() {
 }
 
 getDriver <- function(port=6012) {
-  phantomJsFile <- paste0(getwd(), "/auto/resources/phantomjs.exe")
+  phantomJsFile <- paste0(getProjWd(), "/auto/resources/phantomjs.exe")
   if (!file.exists(phantomJsFile)) {
     stop('Please download the latest version of phantomjs.exe from 
          http://phantomjs.org/download.html to /auto/resources/')
@@ -115,15 +115,15 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
     if (is.function(target)) {
       target 
     } else if (is.character(target)) {
-      function() unlist(lapply(target, function(x) getEls(source, x)))
+      function(source) unlist(lapply(target, function(x) getEls(source, x)))
     } else if (is.call(target)) {
-      function() eval.in.any.env(target)
+      function(source) eval.in.any.env(target)
     } else {
       stop(sprintf('Not implemented for target class [%s]', class(target)))
     }
   
   for (i in 1:nChecks) {
-    res <- suppressWarnings(targetFun())  # , silent = T)
+    res <- suppressWarnings(targetFun(source))  # , silent = T)
     # if (is.error(res)) browser()
     # prevElHtml <- driver %>% getEl('#plotTypesCtrl .selectize-input') %>% html
     
