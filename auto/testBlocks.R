@@ -29,7 +29,7 @@ testPlotGroupInputs <- function(driver) {
     '> div[data-display-if="input.conditionedPanels == \\"plotTab\\""]',
     ' .shiny-bound-input.shinyjs-resettable')) %>% 
     attr('id')
-  inputIds <- inputIds[c(1:2, (1:2)+(length(inputIds) - 2))] ####
+  # inputIds <- inputIds[c(1:2, (1:2)+(length(inputIds) - 2))] ####
   
   for (inpId in inputIds) {  
     input <- driver %>% getEl(c('#', inpId))
