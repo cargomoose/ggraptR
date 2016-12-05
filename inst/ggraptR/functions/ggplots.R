@@ -8,6 +8,7 @@ plotGgplot <- function(dataset, inpVals) {
   for (lsi in 1:length(inpVals)) {
     ls <- inpVals[[lsi]]
     pType <- names(inpVals)[lsi]
+    # if (pType == 'histogram') stop('histogram demo error message')  ####
     ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
     apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
                   densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
