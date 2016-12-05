@@ -35,18 +35,28 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     getEl(driver, c('#', selectId, ' + .selectize-control input'))$
     sendKeysToElement(as.list(rep(selKeys$backspace, n)))
   }
+  getItemsLength <- function(driver, selectId) {
+    getEls(driver, c('#', selectId, ' + .selectize-control .item')) %>% 
+      length()
+  }
   
+  nItemsBeforeErasing <- getItemsLength(driver, selectId)
+  isEraseAll <- nItemsBeforeErasing == howMany
   eraseOpts(driver, selectId, max(1, howMany - 1))
   if (howMany > 1) {
     waitForPlotReady()
     getOptions(driver, selectId)  # sets the focus to the select element
+    if (!isEraseAll) nItemsBeforeErasing <- getItemsLength(driver, selectId)
     eraseOpts(driver, selectId, 1)
   }
   # waitFor(quote(
     # is.null(getEl(driver, c('#', selectId, 'Ctrl .selectize-input.has-items')))))
   # driver %>% getEl(sprintf('#%sCtrl .selectize-input', selectId)) %>% html %>% print
   #  .input-active.dropdown-active
-  waitFor(sprintf('#%sCtrl .selectize-input:not(.focus)', selectId))
+  
+  
+  waitFor(if (isEraseAll) sprintf('#%sCtrl .selectize-input:not(.focus)', selectId) else
+    quote(nItemsBeforeErasing != getItemsLength(driver, selectId)))
 }
 
 getCurrentPlotNames <- function(driver) {

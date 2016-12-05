@@ -1,6 +1,6 @@
 verticalLayout(
   
-  conditionalPanel(condition = 'input.plotTypes == "pairs"',
+  conditionalPanel(condition = 'input.plotTypes == "pairs" && input.showAes',
     fluidRow(
       column(2, div()), 
       column(3, div(strong('Upper plots'))),
