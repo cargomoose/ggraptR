@@ -75,7 +75,10 @@ testCheckbox <- function(driver, inpId, plotNames) {
     query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
                     '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
     nWidBlockInps <- driver %>% getEls(query) %>% length
-    driver %>% getEl(c('#', inpId)) %>% click()
+    chkBoxEl <- driver %>% getEl(c('#', inpId))
+    if (!isVisible(chkBoxEl) && isShow) return()
+    
+    chkBoxEl %>% click()
     if (isShow) waitFor(quote(nWidBlockInps != length(driver %>% getEls(query))), driver)
     if (i == 1) {
       expect_true(has_shiny_correct_state(driver, plotNames, inpId, waitPlot = !isShow))

@@ -77,11 +77,13 @@ getEl <- function(source, query, directChildren=F) {
   if (length(res)) res[[1]]
 }
 
+stopIfNotWebElement <- function(obj) {
+  if (class(obj) != 'webElement') stop('Input element class: ', class(obj))
+}
+
 attr <- function(el, attrName) {
   if (!length(el)) return(el)
-  if (class(if (is.list(el)) el[[1]] else el) != 'webElement') {
-    stop('Wrong input class: ', class(el))
-  }
+  stopIfNotWebElement(if (is.list(el)) el[[1]] else el)
   if (!is.list(el)) el <- list(el)
   
   unlist(lapply(el, function(x) {
@@ -94,8 +96,14 @@ html <- function(el) attr(el, 'outerHTML')
 
 text <- function(el) attr(el, 'outerText')
 
+isVisible <- function(el) {
+  stopIfNotWebElement(el)
+  el$isElementDisplayed()[[1]]
+}
+
 click <- function(el) {
-  if (class(el) != 'webElement') stop('Input element class: ', class(el))
+  stopIfNotWebElement(el)
+  if (!isVisible(el)) stop('Input element is invisible: ', html(el))
   el$clickElement()
 }
 
