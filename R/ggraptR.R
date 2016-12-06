@@ -3,6 +3,7 @@
 #' @param initialDf initial dataframe to plot
 #' @param appDir sets up application directory
 #' @param initialPlot initial plot name from globals.R definedPlotInputs list
+#' @param port port for shiny::runApp(..port=)
 #' 
 #' @details See \url{http://github.com/cargomoose/raptR} for documentation and tutorials
 #'
@@ -13,7 +14,7 @@
 #' @export
 ggraptR <- function(initialDf="diamonds", 
                     appDir=system.file("ggraptR", package = "ggraptR"),
-                    initialPlot='scatter') {
+                    initialPlot='scatter', port=6012) {
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = F)
   }
@@ -22,5 +23,5 @@ ggraptR <- function(initialDf="diamonds",
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
   
-  shiny::runApp(appDir, display.mode = "normal", port=6012)
+  shiny::runApp(appDir, display.mode = "normal", port=port)
 }
