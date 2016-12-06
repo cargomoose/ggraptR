@@ -5,6 +5,10 @@ library(testthat)
 
 getProjWd <- function() gsub('(?<=ggraptR).*', '', getwd(), perl=T)
 
+source(paste0(getProjWd(), '/auto/seleniumUtils.R'))
+source(paste0(getProjWd(), '/auto/shinyTestUtils.R'))
+source(paste0(getProjWd(), '/auto/testBlocks.R'))
+
 unlink(paste0(getProjWd(), '/auto/report/*'))  # to clear 'report' folder content
 
 isNotFoundException <- function(e) {
@@ -42,12 +46,16 @@ eval.in.any.env <- function(targetExpr) {
   })
 }
 
-# eval.global <- function(targetExpr) {
-#   eval(targetExpr, envir=.GlobalEnv)
-# }
-
 pastePlus <- function(..., shorten=T) {
   paste(if (shorten) sapply(c(...), function(x) substr(gsub(' ', '', x), 1, 4))
         else c(...), 
         collapse='+')
+}
+
+getAllPlotNames <- function() {
+  source(paste0(getProjWd(), '/inst/ggraptR/globals.R'))
+  source(paste0(getProjWd(), '/inst/ggraptR/functions/helper.R'))
+  flattenList(definedPlotInputs) %>% names %>% 
+    sapply(capitalize) %>% 
+    sapply(function(x) gsub('(\\d)', ' \\1', x))
 }

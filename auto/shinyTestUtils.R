@@ -28,7 +28,7 @@ is.select.el <- function(driver, selId) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
-getOptions <- function(driver, id) {
+getSelectOptions <- function(driver, id) {
   # shiny 'select' inputs does not have their options from start. Load on click
   if (!is.select.el(driver, id)) stop('Wrong id for select element: ', id)
   
@@ -59,7 +59,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   eraseOpts(driver, selectId, max(1, howMany - 1))
   if (howMany > 1) {
     waitForPlotReady(driver)
-    getOptions(driver, selectId)  # sets the focus to the select element
+    getSelectOptions(driver, selectId)  # sets the focus to the select element
     if (!isEraseAll) nItemsBeforeErasing <- getItemsLength(driver, selectId)
     eraseOpts(driver, selectId, 1)
   }
