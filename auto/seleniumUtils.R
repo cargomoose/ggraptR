@@ -17,7 +17,7 @@ startSelServer <- function() {
     }
   }
   stop()
-  # system('chcp 65001', show.output.on.console = F)  # for windows non-english encoding
+  # system('chcp 65001')  # for windows non-english encoding
   # system('tasklist /fi "imagename eq java.exe"')
   # system('taskkill /f /pid 4668')
 }
