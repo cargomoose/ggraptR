@@ -34,12 +34,10 @@ observe({
 observe({
   allDefTypes <- unlist(getStructListNames(definedPlotInputs))
   if (is.null(plotTypes()) || 
+      # we what trigger on 0 plot types -> 1 and ignore 2 -> 1
       (length(plotTypes()) == 1 && 
-       # prevents trigger on reducing of the number of plots from 2 to 1
-       # means plotTypes options have not been shown yet
-       length(plotTypesOpts()) == length(allDefTypes))) {
-    # Sys.time() instead of random number generation
-    reactVals$updatePlotTypeOpts <- Sys.time()
+       isolate(length(plotTypesOpts())) == length(allDefTypes))) {
+    isolate(reactVals$plotTypeOptsTrigger <- Sys.time()) # Sys.time() as randomizer
   }
 })
 

@@ -3,7 +3,7 @@ plotTypes <- reactive({
 })
 
 plotTypesOpts <- reactive({
-  reactVals$updatePlotTypeOpts  # updates using an observer
+  reactVals$plotTypeOptsTrigger  # updates using an observer
   getPlotTypeOpts(isolate(plotTypes()))
 })
 

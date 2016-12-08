@@ -19,7 +19,7 @@ source('debug/debug.R', local=T)  # set debug logs
 source('functions/helper.R')
 sourceAllInDir('functions', except='helper.R')
 
-sessionVals <- reactiveValues(nRunnedSessions=0)  # server globals
+serverVals <- reactiveValues(nRunnedSessions=0)  # server globals
   
 shinyServer(function(input, output, session) {
   reactVals <- reactiveValues(log=NULL, readyToDraw=F, plotState=list()) # session globals
@@ -33,12 +33,12 @@ shinyServer(function(input, output, session) {
   
   source('observeEvents.R', local=TRUE)
   
-  isolate(sessionVals$nRunnedSessions <- sessionVals$nRunnedSessions + 1)
+  isolate(serverVals$nRunnedSessions <- serverVals$nRunnedSessions + 1)
 
   session$onSessionEnded(function() {
     isolate({
-      sessionVals$nRunnedSessions <- sessionVals$nRunnedSessions - 1
-      if (!sessionVals$nRunnedSessions) {
+      serverVals$nRunnedSessions <- serverVals$nRunnedSessions - 1
+      if (!serverVals$nRunnedSessions) {
         stopApp()
       }
     })

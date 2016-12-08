@@ -14,32 +14,29 @@ output$itersToDrawCtrl <- renderUI({
 
 output$plotTypesCtrl <- renderUI({
   if (displayPlotTypesCond()) {  # !is.null(dataset()) trigger
-    normalOpts <- plotTypesOpts()  # the second trigger
+    curGroupAllOpts <- plotTypesOpts()  # the second trigger
+    
     pTypes <- isolate(plotTypes())
-    isUpdatedDataset <- isolate(!is.null(x()) && !x() %in% names(dataset()))
     isInit <- isolate(all(sapply(c(x(), y(), columns()), is.null)))
-    initialPlot <- if (isInit) {
-      inp <- getInitialArg('initialPlot')
-      if (!is.null(inp)) inp %>% tolower() %>% gsub('(plot)| ', '', .) else NULL
-    }
     
-    opts <- if (isInit) {
-      getPlotTypeOpts(initialPlot)
-    } else if (isUpdatedDataset) {
-      if (is.null(pTypes)) list('Histogram' = 'histogram')  # may return NULL
+    if (isInit) {
+        inp <- getInitialArg('initialPlot')
+        initialPlot <- if (is.null(inp)) NULL else
+          inp %>% tolower() %>% gsub('(plot)| ', '', .)
     } else {
-      normalOpts
+      isDatasetChanged <- isolate(!is.null(x()) && !x() %in% names(dataset()))
     }
     
-    val <- if (isInit) {
-      initialPlot
-    } else if (isUpdatedDataset) {
-      if (!is.null(opts)) opts[[1]]
+    ls <- list()
+    ls[c('opts', 'val')] <- if (isInit) {
+      list(getPlotTypeOpts(initialPlot), initialPlot)
+    } else if (isDatasetChanged) {
+      if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')
     } else {
-      pTypes
+      list(curGroupAllOpts, pTypes)
     }
     
-    selectInput("plotTypes", "Plot type", opts, val, multiple = T)
+    selectInput("plotTypes", "Plot type", ls$opts, ls$val, multiple = T)
   }
 })
 
