@@ -19,7 +19,7 @@ output$plotTypesCtrl <- renderUI({
     isUpdatedDataset <- isolate(!is.null(x()) && !x() %in% names(dataset()))
     isInit <- isolate(all(sapply(c(x(), y(), columns()), is.null)))
     initialPlot <- if (isInit) {
-      inp <- sys.frame(1)$initialPlot
+      inp <- getInitialArg('initialPlot')
       if (!is.null(inp)) inp %>% tolower() %>% gsub('(plot)| ', '', .) else NULL
     }
     

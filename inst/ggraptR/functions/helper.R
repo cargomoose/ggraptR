@@ -238,3 +238,12 @@ getFirstNonNull <- function(...) {
   for (el in list(...)) if (!is.null(el)) return(el)
   stop()
 }
+
+getInitialArg <- function(argName) {
+  ggraptrFormals <- try(names(formals(ggraptR::ggraptR)), silent = T)
+  if (class(ggraptrFormals) == 'try-error') return(NULL)
+  
+  envIds <- which(sapply(0:length(sys.frames()), function(ienv) 
+    !length(setdiff(ggraptrFormals, ls(envir=sys.frame(ienv)))))) - 1
+  get(argName, envir=sys.frame(envIds[1]))
+}

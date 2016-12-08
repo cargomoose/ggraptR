@@ -1,8 +1,7 @@
 # dataset drop-down options 
 output$datasetCtrl <- renderUI({
   isolate({
-    initDf <- sys.frame(1)$initialDf
-    stopifnot(is.null(initDf) || initDf %in% rawDatasetNames())
+    initDf <- getInitialArg('initialDf')
     selectInput("dataset", "Dataset", choices=rawDatasetNames(), initDf)
   })
 })
