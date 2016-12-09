@@ -1,8 +1,12 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
-  driver$screenshot(
-    file = sprintf('%s/auto/report/%s_[%s=%s].png', getProjWd(), 
-                   pastePlus(plotNames), toString(elId), substr(toString(elVal), 1, 5)))
+  fileName <- sprintf('%s/auto/report/%s_[%s=%s].png', getProjWd(), 
+                      pastePlus(plotNames), toString(elId), substr(toString(elVal), 1, 5))
+  if (!is.character(fileName)) {
+    driver$screenshot(T)
+    browser()
+  }
+  driver$screenshot(file=fileName)
   !length(getEls(driver, '.shiny-output-error'))
 }
 
@@ -25,19 +29,23 @@ is.select.el <- function(driver, selId) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
-getSelectOptions <- function(driver, id) {
+getSelectOptions <- function(driver, id, withSelected=F) {
   # shiny 'select' inputs does not have their options from start. Load on click
   if (!is.select.el(driver, id)) stop('Wrong id for select element: ', id)
   
-  selCtrlEl <- getEl(driver, c('select#', id, ' + div'))
-  selEl <- getEl(selCtrlEl, '.selectize-input')
-  availOptsQuery <- '.option:not(.selected)'
+  selControlEl <- getEl(driver, c('select#', id, ' + div'))
+  selEl <- getEl(selControlEl, '.selectize-input')
   
   if (!grepl('\\binput-active\\b', attr(selEl, 'class'))) {
     selEl %>% click()  # makes available options visible
-    waitFor('.selectize-input.input-active', selCtrlEl)
+    waitFor('.selectize-input.input-active', selControlEl)
   }
-  selCtrlEl %>% getEls(availOptsQuery)
+  notSel <- selControlEl %>% getEls('.option:not(.selected)')
+  if (withSelected) {
+    c(notSel, selControlEl %>% getEls('.option.selected'))
+  } else {
+    notSel
+  }
 }
 
 eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {

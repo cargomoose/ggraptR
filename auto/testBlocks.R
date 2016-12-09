@@ -23,10 +23,12 @@ getPlotInputIds <- function(driver) {
 }
 
 isSelectCorrect <- function(driver, inpId, plotNames) {
-  optVals <- getSelectOptions(driver, inpId) %>% attr('data-value')
-  
+  withSelected <- grepl('^pairs', inpId)
+  optVals <- getSelectOptions(driver, inpId, withSelected) %>%
+    attr('data-value')
+    
   for (optVal in optVals) {
-    getSelectOptions(driver, inpId) %>% 
+    getSelectOptions(driver, inpId, withSelected) %>% 
       filterElByAttr('data-value', optVal) %>% 
       click()
     
@@ -63,7 +65,7 @@ isCheckboxCorrect <- function(driver, inpId, plotNames) {
                     '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
     nWidBlockInps <- driver %>% getEls(query) %>% length
     chkBoxEl <- getBox()
-    if (!isVisible(chkBoxEl) && isShow) return(T)
+    if (!isVisible(chkBoxEl) && isShow) return(T)  # pairs showXYRange is invisible
     
     chkBoxEl %>% click()
     if (isShow) {

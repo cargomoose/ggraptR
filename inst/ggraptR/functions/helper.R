@@ -245,5 +245,5 @@ getInitialArg <- function(argName) {
   
   envIds <- which(sapply(0:length(sys.frames()), function(ienv) 
     !length(setdiff(ggraptrFormals, ls(envir=sys.frame(ienv)))))) - 1
-  get(argName, envir=sys.frame(envIds[1]))
+  if (!length(envIds)) NULL else get(argName, envir=sys.frame(envIds[1]))
 }
