@@ -30,7 +30,7 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
       filterElByAttr('data-value', optVal) %>% 
       click()
     
-    if (!has_shiny_correct_state(driver, plotNames, inpId)) return(FALSE)
+    if (!has_shiny_correct_state(driver, plotNames, inpId, optVal)) return(FALSE)
     if (!is.null(driver %>% getEl(c('#', inpId)) %>% attr('multiple'))) {
       eraseMultiSelectOpts(driver, inpId)
       waitForPlotReady(driver)
@@ -43,32 +43,37 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   ctrlEl <- getEl(driver, c("#", inpId, "Ctrl"))
   leftPos <- getEl(ctrlEl, ".irs-line-mid")$getElementLocation()$x
   rightPos <- getEl(ctrlEl, ".irs-line-right")$getElementLocation()$x
+  initPos <- (ctrlEl %>% getEl(".irs-slider"))$getElementLocation()$x
   
-  for (pos in c(rightPos, leftPos)) {
+  for (pos in c(leftPos, rightPos, initPos)) {
     dotEl <- ctrlEl %>% getEl(".irs-slider")
-    driver$mouseMoveToLocation(webElement = dotEl)
-    driver$buttondown()
-    driver$mouseMoveToLocation(x = pos - dotEl$getElementLocation()$x, y = -1L)
-    driver$buttonup()
-    
-    if (!has_shiny_correct_state(driver, plotNames, inpId)) return(FALSE)
+    moveSlider(driver, dotEl, pos)
+
+    val <- ctrlEl %>% getEl('.irs-single') %>% text()
+    if (!has_shiny_correct_state(driver, plotNames, inpId, val)) return(F)
   }
   TRUE
 }
 
 isCheckboxCorrect <- function(driver, inpId, plotNames) {
   isShow <- grepl('^show', inpId)
+  getBox <- function() driver %>% getEl(c('#', inpId))
   for (i in 1:(1+isShow)) {
     query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
                     '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
     nWidBlockInps <- driver %>% getEls(query) %>% length
-    chkBoxEl <- driver %>% getEl(c('#', inpId))
+    chkBoxEl <- getBox()
     if (!isVisible(chkBoxEl) && isShow) return(T)
     
     chkBoxEl %>% click()
-    if (isShow) waitFor(quote(nWidBlockInps != length(driver %>% getEls(query))), driver)
+    if (isShow) {
+      waitFor(quote(nWidBlockInps != length(driver %>% getEls(query))), driver)
+    } else {
+      waitForPlotReady(driver)
+    }
     if (i == 1) {
-      res <- has_shiny_correct_state(driver, plotNames, inpId, waitPlot = !isShow)
+      res <- has_shiny_correct_state(driver, plotNames, inpId,
+                                     unlist(getBox()$isElementSelected()), waitPlot=F)
       if (!res) return(FALSE)
     }
   }

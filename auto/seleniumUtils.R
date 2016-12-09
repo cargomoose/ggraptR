@@ -114,6 +114,12 @@ filterElByAttr <- function(els, attrKey, attrVal) {
   res[[1]]
 }
 
+moveSlider <- function(driver, dotEl, pos) {
+  driver$mouseMoveToLocation(webElement = dotEl)
+  driver$buttondown()
+  driver$mouseMoveToLocation(x = pos - dotEl$getElementLocation()$x, y = -1L)
+  driver$buttonup()
+}
 
 waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
   nChecks <- 2 * timeout

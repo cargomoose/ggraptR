@@ -1,11 +1,8 @@
-has_shiny_correct_state <- function(driver, plotNames, elId, makeShot=T, waitPlot=T) {
+has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
-  if (makeShot) {
-    driver$screenshot(
-      file = sprintf('%s/auto/report/%s-%s-%s.png', getProjWd(), 
-                     pastePlus(plotNames), toString(elId),
-                     round(as.numeric(Sys.time())*1e3)))
-  }
+  driver$screenshot(
+    file = sprintf('%s/auto/report/%s_[%s=%s].png', getProjWd(), 
+                   pastePlus(plotNames), toString(elId), substr(toString(elVal), 1, 5)))
   !length(getEls(driver, '.shiny-output-error'))
 }
 
