@@ -32,13 +32,17 @@ observe({
 
 # trigger update for plopType options
 observe({
-  allDefTypes <- unlist(getStructListNames(definedPlotInputs))
-  if (is.null(plotTypes()) || 
-      # we what trigger on 0 plot types -> 1 and ignore 2 -> 1
-      (length(plotTypes()) == 1 && 
-       isolate(length(plotTypesOpts())) == length(allDefTypes))) {
-    isolate(reactVals$plotTypeOptsTrigger <- Sys.time()) # Sys.time() as randomizer
-  }
+  pTypes <- plotTypes()
+  isolate({
+    if (is.null(dataset())) return()
+    allDefTypes <- unlist(getStructListNames(definedPlotInputs))
+    needOneGroupOpts <- length(pTypes) == 1 && 
+      length(plotTypesOpts()) == length(allDefTypes)
+    
+    if (is.null(pTypes) || needOneGroupOpts) {
+      reactVals$plotTypeOptsTrigger <- Sys.time()  # Sys.time() for trigger
+    }
+  })
 })
 
 # view plot from import tab

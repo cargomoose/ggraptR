@@ -14,7 +14,7 @@
 #' @export
 ggraptR <- function(initialDf="diamonds", 
                     appDir=system.file("ggraptR", package = "ggraptR"),
-                    initialPlot='scatter', port=6012) {
+                    initialPlot=NULL, port=6012) {
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = F)
   }
