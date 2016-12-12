@@ -29,11 +29,11 @@ is.select.el <- function(driver, selId) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
-getSelectOptions <- function(driver, id, withSelected=F) {
+getSelectOptions <- function(driver, selId, withSelected=F) {
   # shiny 'select' inputs does not have their options from start. Load on click
-  if (!is.select.el(driver, id)) stop('Wrong id for select element: ', id)
+  if (!is.select.el(driver, selId)) stop('Wrong id for select element: ', selId)
   
-  selControlEl <- getEl(driver, c('select#', id, ' + div'))
+  selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
   
   if (!grepl('\\binput-active\\b', attr(selEl, 'class'))) {
