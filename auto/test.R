@@ -7,7 +7,7 @@ stopifnot(grepl('/auto$',  getwd()))  # for 'R -e "shiny::runApp'
 source(paste0(getwd(), '/testInit.R'))
 
 shortTestMode <- F
-port <- 6012
+port <- 5050
 print(paste0('port: ', port, ', fullTestingMode: ', !shortTestMode))
 
 system(sprintf(
@@ -29,8 +29,9 @@ datasetEls %>% filterElByAttr('data-value', 'esoph') %>% click()
 allPlotNames <- getAllPlotNames()
 if (!is.logical(waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
                         timeout=5, errorIfNot = F))) {
-  waitFor(quote(
-    length(allPlotNames) == length(driver %>% getSelectOptions('plotTypes'))), driver)
+  stopifnot(waitFor(quote(try(
+    length(allPlotNames) == length(driver %>% getSelectOptions('plotTypes')),
+    silent=T)), driver))
 }
 getSelectOptions(driver, 'plotTypes')[[1]] %>% click()
 
