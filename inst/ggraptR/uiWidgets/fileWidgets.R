@@ -55,7 +55,7 @@ output$dlBtnPlot <- renderUI({
 # })
 
 output$exportPlotCtl <- renderUI({
-  shinyBS::bsButton("exportPlot", label="Export Plot", type="action", icon=icon("download"))
+  bsButton("exportPlot", label="Export Plot", type="action", icon=icon("download"))
 })
 
 output$fileTypeCtl <- renderUI({

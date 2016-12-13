@@ -1,7 +1,8 @@
+library(shinyBS)
+library(shinyjs)
+
 shinyUI(bootstrapPage(
-  
   headerPanel(windowTitle="ggraptR", title=div()),
-  
   tags$head(tags$style(
     type="text/css",
     "#rappy img {max-width: 100%;}",
@@ -14,7 +15,7 @@ shinyUI(bootstrapPage(
       imageOutput("rappy", height = "100%"),
       div(
           # use shinyjs to disable/enable buttons w/ JS
-          shinyjs::useShinyjs(),
+          useShinyjs(),
           uiOutput('resetable_input'),
           actionButton("reset_input", "Reset inputs", width = "100%"),
           br(), br(),

@@ -1,6 +1,6 @@
 # display plot or table
 observeEvent(input$reactive, {
-  shinyBS::updateButton(session, "submit", disabled = input$reactive)
+  updateButton(session, "submit", disabled = input$reactive)
   
   if (input$reactive) {
     output$plot <- renderPlot({  # display plot reactively
@@ -57,7 +57,7 @@ observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
   for (id in names(input)) {
-    shinyjs::reset(id)
+    reset(id)
   }
   Sys.sleep(0.5)
   updateCheckboxInput(session, "reactive", value = TRUE)
