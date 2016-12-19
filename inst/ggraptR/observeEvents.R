@@ -11,7 +11,7 @@ observeEvent(input$reactive, {
     })
   } else {
     output$plot <- renderPlot({  # display plot upon submit
-      input$submit
+      c(input$submit, reactVals$readyToDraw)  # dependencies
       isolate(buildPlot())
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table upon submit
