@@ -23,10 +23,10 @@ startSelServer <- function() {
 }
 
 getDriver <- function(port=6012) {
-  phantomJsFile <- paste0(getProjWd(), "/auto/resources/phantomjs.exe")
+  phantomJsFile <- paste0(getProjWd(), "/test/auto/resources/phantomjs.exe")
   if (!file.exists(phantomJsFile)) {
     stop('Please download the latest version of phantomjs.exe from 
-         http://phantomjs.org/download.html to /auto/resources/')
+         http://phantomjs.org/download.html to /test/auto/resources/')
   }
   
   driver <- remoteDriver(

@@ -5,11 +5,11 @@ library(testthat)
 
 getProjWd <- function() gsub('(?<=ggraptR).*', '', getwd(), perl=T)
 
-source(paste0(getProjWd(), '/auto/seleniumUtils.R'))
-source(paste0(getProjWd(), '/auto/shinyTestUtils.R'))
-source(paste0(getProjWd(), '/auto/testBlocks.R'))
+source(paste0(getProjWd(), '/test/auto/seleniumUtils.R'))
+source(paste0(getProjWd(), '/test/auto/shinyUtils.R'))
+source(paste0(getProjWd(), '/test/auto/ggraptrUtils.R'))
 
-unlink(paste0(getProjWd(), '/auto/report/*'))  # to clear 'report' folder content
+unlink(paste0(getProjWd(), '/test/auto/report/*'))  # to clear 'report' folder content
 
 isNotFoundException <- function(e) {
   any(c('error', 'try-error') %in% class(e)) && 

@@ -17,5 +17,5 @@ inst/doc
 # for test files like 1.csv, 1.png, etc
 1.*
 *.log
-auto/resources
-auto/report
+test/auto/resources
+test/auto/report

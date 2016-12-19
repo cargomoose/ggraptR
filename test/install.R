@@ -1,6 +1,6 @@
 rm(list=ls())
 invisible(suppressWarnings(lapply(paste('package:',names(sessionInfo()$otherPkgs),sep=""),
-                                  detach,character.only=TRUE,unload=TRUE)))
+                                  detach, character.only=TRUE, unload=TRUE)))
 .rs.restartR()  # to release dll files in devtools packages
 #### wait and run separately
 

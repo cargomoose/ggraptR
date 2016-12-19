@@ -1,6 +1,6 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
-  fileName <- sprintf('%s/auto/report/%s_[%s=%s].png', getProjWd(), 
+  fileName <- sprintf('%s/test/auto/report/%s_[%s=%s].png', getProjWd(), 
                       pastePlus(plotNames), toString(elId), substr(toString(elVal), 1, 5))
   if (!is.character(fileName)) {
     driver$screenshot(T)
@@ -72,8 +72,4 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   waitFor(if (isEraseAll) sprintf('#%sCtrl .selectize-input:not(.focus)', selectId) else
             quote(nItemsBeforeErasing != getItemsLength(driver, selectId)), 
           source=driver)
-}
-
-getCurrentPlotNames <- function(driver) {
-  getEls(driver, '#plotTypes option') %>% text()
 }

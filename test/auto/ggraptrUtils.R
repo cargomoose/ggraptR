@@ -22,6 +22,10 @@ getPlotInputIds <- function(driver) {
     head(inputIds, 2) else inputIds[sample(length(inputIds))]
 }
 
+getCurrentPlotNames <- function(driver) {
+  getEls(driver, '#plotTypes option') %>% text()
+}
+
 isSelectCorrect <- function(driver, inpId, plotNames) {
   withSelected <- grepl('^pairs', inpId)
   optVals <- getSelectOptions(driver, inpId, withSelected) %>%
