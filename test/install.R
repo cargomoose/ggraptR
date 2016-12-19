@@ -2,6 +2,7 @@ rm(list=ls())
 invisible(suppressWarnings(lapply(paste('package:',names(sessionInfo()$otherPkgs),sep=""),
                                   detach,character.only=TRUE,unload=TRUE)))
 .rs.restartR()  # to release dll files in devtools packages
+#### wait and run separately
 
 origUserLibPath <- .libPaths()[1]
 userLibRoot <- dirname(origUserLibPath)
@@ -27,13 +28,12 @@ stopifnot({
 })
 
 devtools::install_github('cargomoose/ggraptR')
-install.packages('backports')  # 1.0.4
-install.packages('knitr')  # 1.15.1
-install.packages('colourpicker')  # 0.3
-install.packages('gdtools')  # 0.1.3
-install.packages('RColorBrewer')  # 1.1.2
 library(ggraptR)
-
 ggraptR()
-# remove test folder
+#### close manually
+
+
+.rs.restartR()  # releases dlls
+unlink(testDir, T, T)
 .libPaths(origUserLibPath)
+print(.libPaths())
