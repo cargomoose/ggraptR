@@ -5,12 +5,16 @@
 \title{Launch ggraptR in the default browser}
 \usage{
 ggraptR(initialDf = "diamonds", appDir = system.file("ggraptR", package =
-  "ggraptR"))
+  "ggraptR"), initialPlot = NULL, port = 6012)
 }
 \arguments{
 \item{initialDf}{initial dataframe to plot}
 
 \item{appDir}{sets up application directory}
+
+\item{initialPlot}{initial plot name from globals.R definedPlotInputs list}
+
+\item{port}{port for shiny::runApp(..port=)}
 }
 \description{
 Launch ggraptR in the default browser
