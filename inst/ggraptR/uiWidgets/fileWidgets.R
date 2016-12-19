@@ -7,7 +7,7 @@ output$fileInputSelectCtrl <- renderUI({
               'text/tab-separated-values',
               'text/plain',
               '.csv',
-              '.tsv'))  
+              '.tsv'))
 })
 
 # file input header control
