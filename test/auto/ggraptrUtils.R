@@ -18,8 +18,8 @@ getPlotInputIds <- function(driver) {
     ' .shiny-bound-input.shinyjs-resettable')) %>% 
     attr('id')
   
-  if (get.anywhere('shortTestMode')) 
-    head(inputIds, 2) else inputIds[sample(length(inputIds))]
+  # if (get.anywhere('shortTestMode')) 
+  #   head(inputIds, 2) else inputIds[sample(length(inputIds))]
 }
 
 getCurrentPlotNames <- function(driver) {

@@ -1,19 +1,12 @@
-# Make sure 'ggraptrDevMode' is FALSE to run tests in the full mode
-# Run this script as 'testthat::test_file(paste0(getwd(), '/test/auto/test.R'))'
+# Run this script as 'testthat::test_file(paste0(getwd(), '/test/auto/main.R'))'
 # You can monitor the progress by the names of the screenshots in test/auto/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
-stopifnot(grepl('/test/auto$',  getwd()))  # for 'R -e "shiny::runApp'
-source(paste0(getwd(), '/funs.R'))
-
-shortTestMode <- F
-port <- 5050
-print(paste0('port: ', port, ', fullTestingMode: ', !shortTestMode))
+source('funs.R')
 
 # starts ggraptR app, selenium server and phantomjs driver
-system(sprintf(
-  'R -e "shiny::runApp(\'../../inst/ggraptR\', port=%s, launch.browser=TRUE)"', 
-  port), wait=F)
+system(sprintf('R -e "shiny::runApp(\'%s\', port=%s, launch.browser=FALSE)"',
+  paste0(getProjWd(), '/inst/ggraptR'), 5050), wait=F)  # R -e "ggraptR::ggraptR(port=%s)
 selServer <- startSelServer()
 driver <- getDriver(port)
 stopifnot(driver$getTitle()[[1]] == 'ggraptR')
@@ -39,7 +32,8 @@ if (!is.logical(waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
 getSelectOptions(driver, 'plotTypes')[[1]] %>% click()
 
 
-usedPlotNames <- if (shortTestMode) setdiff(allPlotNames, 'Pairs') else c()
+usedPlotNames <- if (exists('shortTestMode' && shortTestMode))
+  setdiff(allPlotNames, 'Pairs') else c()
 isLastIter <- F
 while (!isLastIter) {
   waitForPlotReady(driver)
