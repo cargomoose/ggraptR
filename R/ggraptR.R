@@ -1,27 +1,40 @@
 #' Launch ggraptR in the default browser
 #'
 #' @param initialDf initial dataframe to plot
-#' @param appDir sets up application directory
-#' @param initialPlot initial plot name from globals.R definedPlotInputs list
-#' @param port port for shiny::runApp(..port=)
+#' @param ... extra arguments. shiny::runApp arguments or initialPlot if needed
 #' 
 #' @details See \url{http://github.com/cargomoose/raptR} for documentation and tutorials
 #'
 #' @examples
 #' if (interactive()) {
-#'   ggraptR('mtcars', 'inst/ggraptR')
+#'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
 #' @export
-ggraptR <- function(initialDf="diamonds", 
-                    appDir=system.file("ggraptR", package = "ggraptR"),
-                    initialPlot=NULL, port=6012) {
-  if (appDir == "") {
+ggraptR <- function(initialDf="diamonds", ...) {
+  shinyArgs <- list(...)
+  
+  if ('initialPlot' %in% names(shinyArgs)) {
+    initialPlot <- shinyArgs$initialPlot
+    shinyArgs$initialPlot <- NULL
+  }
+  defaultShinyArgs <- list(
+    appDir=system.file("ggraptR", package = "ggraptR"),
+    display.mode='normal', port=6012, launch.browser=T)
+  
+  for (defName in names(defaultShinyArgs)) {
+    if (is.null(shinyArgs[[defName]])) {
+      shinyArgs[[defName]] <- defaultShinyArgs[[defName]]
+    }
+  }
+  
+  if (shinyArgs$appDir == "") {
     stop("Could not find example directory. Try re-installing `mypackage`.", call. = F)
   }
+  if ('' %in% names(shinyArgs)) stop('all extra arguments must be named')
   
   # this variable will be used in generalWidgets.R with 'sys.frame(1)'
   initialDf <- if (typeof(initialDf) == "character")
     initialDf else list(deparse(substitute(initialDf)))
   
-  shiny::runApp(appDir, display.mode = "normal", port=port)
+  do.call(shiny::runApp, args=shinyArgs)
 }
