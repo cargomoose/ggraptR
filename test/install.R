@@ -1,39 +1,70 @@
-rm(list=ls())
+#### clean ####
+.libPaths(Sys.getenv('R_LIBS_USER'))
 invisible(suppressWarnings(lapply(paste('package:',names(sessionInfo()$otherPkgs),sep=""),
                                   detach, character.only=TRUE, unload=TRUE)))
-.rs.restartR()  # to release dll files in devtools packages
-#### wait and run separately
+rm(list=ls())
+suppressPackageStartupMessages({
+  library(devtools)
+  library(stringi)
+  library(RSelenium)
+  library(testthat)
+  library(curl)  # contains the only dll that is hard to unload
+  library(digest)
+  library(httr)
+})
 
-origUserLibPath <- .libPaths()[1]
-userLibRoot <- dirname(origUserLibPath)
+#### paths ####
+userLibRoot <- dirname(.libPaths()[1])
 testDir <- paste0(userLibRoot, '/test')
-devtoolsPack <- paste0(userLibRoot, '/devtoolsPack')
+predefPack <- paste0(userLibRoot, '/predefPack')
 
+#### prepare folders, workspace and libraries ####
 if (file.exists(testDir)) {
   unlink(testDir, T, T)
+  if (file.exists(testDir)) {
+    Sys.sleep(2)
+    unlink(testDir, T, T)
+  }
+  if (file.exists(testDir)) stop('testDir still exists')
 }
 
 dir.create(testDir)
 .libPaths(testDir)
 
-if (file.exists(devtoolsPack)) {
-  invisible(file.copy(paste0(devtoolsPack, '/', dir(devtoolsPack)), testDir, recursive=T))
+if (file.exists(predefPack)) {
+  invisible(file.copy(paste0(predefPack, '/', dir(predefPack)), testDir, recursive=T))
 } else {
-  install.packages('devtools')
+  browser()
+  install.packages(c('devtools', 'testthat', 'RSelenium'))
 }
 
-stopifnot({
-  res <- try(library(ggraptR), silent=T)
-  class(res) == 'try-error' && grepl("package called ‘ggraptR’", res[1])
-})
+res <- try(library(ggraptR), silent=T)
+if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1]))) {
+  browser()
+  stop()
+}
 
-devtools::install_github('cargomoose/ggraptR')
+#### install ggraptR from git. Run it and check the initial plot ####
+suppressPackageStartupMessages(devtools::install_github('cargomoose/ggraptR'))
 library(ggraptR)
-ggraptR()
-#### close manually
+setwd('auto')
+source('checkInitPlot.R')
+setwd('..')
+
+system(sprintf('taskkill /f /pid %s', selenRpid), show.output.on.console = F)
+closeAllConnections()  # for pipe connection
+suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
+suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
 
 
-.rs.restartR()  # releases dlls
+#### restore and clean ####
+for (pkg in paste('package:',names(sessionInfo()$otherPkgs),sep=""))
+  suppressWarnings(detach(pkg, character.only=TRUE, unload=TRUE))
+# while (!is.null(pkgs <- names(sessionInfo()$loadedOnly)))
+#   for (pkg in pkgs) try(unloadNamespace(pkg), T)
+for (dll in sapply(getLoadedDLLs(), `[[`, 'path'))
+  if (startsWith(dll, testDir)) dyn.unload(dll)  # release dlls to unlink
+
 unlink(testDir, T, T)
-.libPaths(origUserLibPath)
-print(.libPaths())
+.libPaths(Sys.getenv('R_LIBS_USER'))
+closeAllConnections()

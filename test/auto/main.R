@@ -2,19 +2,7 @@
 # You can monitor the progress by the names of the screenshots in test/auto/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
-source('funs.R')
-
-# starts ggraptR app, selenium server and phantomjs driver
-system(sprintf('R -e "shiny::runApp(\'%s\', port=%s, launch.browser=FALSE)"',
-  paste0(getProjWd(), '/inst/ggraptR'), 5050), wait=F)  # R -e "ggraptR::ggraptR(port=%s)
-selServer <- startSelServer()
-driver <- getDriver(port)
-stopifnot(driver$getTitle()[[1]] == 'ggraptR')
-
-test_that("Initial diamonds plot is correct", {
-  waitForPlotReady(driver)
-  expect_true(has_shiny_correct_state(driver, 'diamonds', NULL, NULL, waitPlot=F))
-})
+source('checkInitPlot.R')
 
 # switches to light esoph dataset
 datasetEls <- driver %>% getSelectOptions('dataset')
@@ -32,7 +20,7 @@ if (!is.logical(waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
 getSelectOptions(driver, 'plotTypes')[[1]] %>% click()
 
 
-usedPlotNames <- if (exists('shortTestMode' && shortTestMode))
+usedPlotNames <- if (exists('shortTestMode') && shortTestMode)
   setdiff(allPlotNames, 'Pairs') else c()
 isLastIter <- F
 while (!isLastIter) {

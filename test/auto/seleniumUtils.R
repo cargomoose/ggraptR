@@ -47,6 +47,7 @@ openPageInBrowser <- function(driver) {
 stopExternals <- function(driver, selServer) {
   driver$close()
   selServer$stop()
+  closeAllConnections()
 }
 
 getEls <- function(source, query, directChildren=F) {
