@@ -1,5 +1,5 @@
 # reactive variable for custom (uploadable) dataset file info
-customDatasetFileInfo <- reactive({
+uploadedDfFileInfo <- reactive({
   # input$file will be NULL initially. After the user selects
   # and uploads a file, it will be a data frame with 'name',
   # 'size', 'type', and 'datapath' columns. The 'datapath'
@@ -9,8 +9,8 @@ customDatasetFileInfo <- reactive({
 })
 
 # reactive variable for custom (uploaded) dataset
-customDataset <- reactive({
-  fileInfo <- customDatasetFileInfo()
+uploadedDf <- reactive({
+  fileInfo <- uploadedDfFileInfo()
   if (is.null(fileInfo) || is.null(input$header) || is.null(input$sep) 
       || is.null(input$quote)) return()
   
@@ -19,15 +19,14 @@ customDataset <- reactive({
 })
 
 # reactive variable for custom dataset name
-customDatasetName <- reactive({
-  customDatasetFileInfo()$name
+uploadedDfName <- reactive({
+  uploadedDfFileInfo()$name
 })
 
 # reactive variable for raw dataset names
 rawDatasetNames <- reactive({
-  c("diamonds", "mtcars", "rock", "iris", "esoph",
-    customDatasetName(),
-    getLoadedDataFrameNames())
+  unique(c("diamonds", "mtcars", "rock", "iris", "esoph",
+           uploadedDfName(), getPreloadedEnvDfNames()))
 })
 
 # reactive variable for raw dataset
@@ -42,8 +41,8 @@ rawDataset <- reactive({
     get(input$dataset)
   } else { # if custom dataset was uploaded
     # if custom dataset was selected, then set it as raw dataset
-    if (input$dataset == customDatasetName()) {
-      customDataset()      
+    if (input$dataset == uploadedDfName()) {
+      uploadedDf()      
     } else {
       # if custom dataset was not selected, then set one of the preloaded datasets as raw
       get(input$dataset)

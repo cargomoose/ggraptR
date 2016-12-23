@@ -34,7 +34,8 @@ ggraptR <- function(initialDf="diamonds", ...) {
   
   # this variable will be used in generalWidgets.R with 'sys.frame(1)'
   initialDf <- if (typeof(initialDf) == "character")
-    initialDf else list(deparse(substitute(initialDf)))
+    initialDf else deparse(substitute(initialDf))
+  if (!exists(initialDf)) stop('Initial dataset not found')
   
   do.call(shiny::runApp, args=shinyArgs)
 }
