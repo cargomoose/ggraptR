@@ -57,7 +57,7 @@ checkTwoRangesOverlap <- function(range1, range2) {
 
 
 # gets all variable names of data frame objects that are loaded into memory
-getLoadedDataFrameNames <- function(env=.GlobalEnv) {
+getPreloadedEnvDfNames <- function(env=.GlobalEnv) {
   objNames <- ls(env)
   dfNames <- c()
   for (objName in objNames) {
