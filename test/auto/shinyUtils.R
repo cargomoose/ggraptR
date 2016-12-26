@@ -10,19 +10,20 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) 
   !length(getEls(driver, '.shiny-output-error'))
 }
 
-waitForPlotReady <- function(driver) {
+waitForPlotReady <- function(driver, needOnlyBlank=F) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
   stopifnot(driver$getWindowSize()$height== 1080 && driver$getWindowSize()$width == 1920)
   emptyPic <- paste0(rep('A', 1e3),collapse='')
   
-  res <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
-                 source=driver, errorIfNot=F, timeout = 4)  # blank
-  if (!is.logical(res) || res) {
-    res <- waitFor(
+  isBlank <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
+                 source=driver, errorIfNot=F, timeout = 4)
+  if (!needOnlyBlank && (!is.logical(isBlank) || isBlank)) {
+    waitFor(
       c(sprintf('#plot img:not([src*="%s"])', emptyPic), '#plot.shiny-output-error'),
       source=driver)  # normal plot or an err
+  } else {
+    isBlank
   }
-  res
 }
 
 is.select.el <- function(driver, selId) {

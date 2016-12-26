@@ -7,7 +7,12 @@ runAppCmd <- sprintf("shiny::runApp(\'%s\', port=%s, launch.browser=F)",
 cmd <- sprintf('R -q -e "Sys.getpid()" -e "%s"', runAppCmd)
 cat('cmd:', cmd, '\n')
 # system(cmd, wait=F)
-closeAllConnections()
+
+if (exists('selenRpid')) {
+  closeAllConnections()
+  system(paste('taskkill /f /pid', selenRpid))
+}
+
 selenPipe <- pipe(cmd, open='r')
 selenRpid <- gsub('\\[1\\] ', '', readLines(selenPipe, 2)[2])
 
