@@ -33,8 +33,7 @@ ggraptR <- function(initialDf="diamonds", ...) {
   if ('' %in% names(shinyArgs)) stop('all extra arguments must be named')
   
   # this variable will be used in generalWidgets.R with 'sys.frame(1)'
-  initialDf <- if (typeof(initialDf) == "character")
-    initialDf else deparse(substitute(initialDf))
+  if (typeof(initialDf) != "character") initialDf <- deparse(substitute(initialDf))
   if (!exists(initialDf)) stop('Initial dataset not found')
   
   do.call(shiny::runApp, args=shinyArgs)
