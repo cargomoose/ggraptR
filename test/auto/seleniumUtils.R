@@ -78,8 +78,10 @@ getEl <- function(source, query, directChildren=F) {
   if (length(res)) res[[1]]
 }
 
+isWebElement <- function(obj) class(obj) == 'webElement'
+
 stopIfNotWebElement <- function(obj) {
-  if (class(obj) != 'webElement') stop('Input element class: ', class(obj))
+  if (!isWebElement(obj)) stop('Input element class: ', class(obj))
 }
 
 attr <- function(el, attrName) {
@@ -122,25 +124,25 @@ moveSlider <- function(driver, dotEl, pos) {
   driver$buttonup()
 }
 
-waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
+waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
   nChecks <- 2 * timeout
   oneWaitDur <- timeout / nChecks
   
   targetFun <- 
     if (is.function(target)) {
-      target 
+      target
     } else if (is.character(target)) {
       function(source) unlist(lapply(target, function(x) getEls(source, x)))
-    } else if (is.call(target)) {
+    } else if (is.call(target)) {  # if quoted expression
       function(source) eval.in.any.env(target)
     } else {
       stop(sprintf('Not implemented for target class [%s]', class(target)))
     }
   
   for (i in 1:nChecks) {
-    res <- suppressWarnings(targetFun(source))  # , silent = T)
-    # if (is.error(res)) browser()
-    # prevElHtml <- driver %>% getEl('#plotTypesCtrl .selectize-input') %>% html
+    res <- suppressMessages(tryCatch(
+      targetFun(source),
+      error=function(e) if (catchStale && isStaleException(e)) F else stop(e$message)))
     
     if (is.list(res)) {
       if (length(target) == 1) {
@@ -153,9 +155,10 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T) {
         }
       }
     } else if (is.logical(res) && res) {
-      return(res)
+      return(TRUE)
     }
     Sys.sleep(oneWaitDur)
   }
+  
   if (errorIfNot) stop('Could not wait') else F
 }

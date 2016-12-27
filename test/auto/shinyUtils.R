@@ -10,14 +10,14 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) 
   !length(getEls(driver, '.shiny-output-error'))
 }
 
-waitForPlotReady <- function(driver, needOnlyBlank=F) {
+waitForPlotReady <- function(driver) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
   stopifnot(driver$getWindowSize()$height== 1080 && driver$getWindowSize()$width == 1920)
   emptyPic <- paste0(rep('A', 1e3),collapse='')
   
   isBlank <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
                  source=driver, errorIfNot=F, timeout = 4)
-  if (!needOnlyBlank && (!is.logical(isBlank) || isBlank)) {
+  if (!is.logical(isBlank) || isBlank) {
     waitFor(
       c(sprintf('#plot img:not([src*="%s"])', emptyPic), '#plot.shiny-output-error'),
       source=driver)  # normal plot or an err
@@ -26,13 +26,13 @@ waitForPlotReady <- function(driver, needOnlyBlank=F) {
   }
 }
 
-is.select.el <- function(driver, selId) {
+isElSelected <- function(driver, selId) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
 getSelectOptions <- function(driver, selId, withSelected=F) {
-  # shiny 'select' inputs does not have their options from start. Load on click
-  if (!is.select.el(driver, selId)) stop('Wrong id for select element: ', selId)
+  # shiny 'select' inputs does not have their options at the beginning. Click to load
+  if (!isElSelected(driver, selId)) stop('Wrong id for select element: ', selId)
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
@@ -58,7 +58,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     length(getEls(driver, c('#', selectId, ' + .selectize-control .item')))
   }
   
-  if (!is.select.el(driver, selectId)) stop('Wrong id for select element: ', selectId)
+  if (!isElSelected(driver, selectId)) stop('Wrong id for select element: ', selectId)
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
   isEraseAll <- nItemsBeforeErasing == howMany

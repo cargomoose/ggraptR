@@ -12,9 +12,10 @@ source(paste0(getProjWd(), '/test/auto/ggraptrUtils.R'))
 unlink(paste0(getProjWd(), '/test/auto/report/*'))  # to clear 'report' folder content
 
 isNotFoundException <- function(e) {
-  any(c('error', 'try-error') %in% class(e)) && 
-    grepl('object .* not found', unlist(e[1]))
+  any(c('error', 'try-error') %in% class(e)) && grepl('object .* not found',unlist(e[1]))
 }
+
+isStaleException <- function(e) grepl('StaleElementReference', getErrorMessage(e))
 
 is.error <- function(obj) any(c('error', 'try-error') %in% class(obj))
 
