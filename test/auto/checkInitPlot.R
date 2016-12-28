@@ -26,5 +26,5 @@ if (driver$getTitle()[[1]] != 'ggraptR') {
 test_that("Initial diamonds plot is correct", {
   waitForPlotReady(driver)
   # driver$screenshot(T)
-  expect_true(has_shiny_correct_state(driver, 'diamonds', NULL, NULL, waitPlot=F))
+  expect_true(has_shiny_correct_state(driver, '^diamonds', NULL, NULL, waitPlot=F))
 })

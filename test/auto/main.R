@@ -4,12 +4,52 @@
 
 source('checkInitPlot.R')
 
+
+#### check reactive checkbox + submit button and reset button ####
+driver %>% getEl('#reactive') %>% click()
+submitBtn <- waitFor("#submit:not(disabled)", driver)
+
+# > treatColorAsFactor
+test_that('treatColorAsFactor hides correct', 
+          expect_true(is.null(driver %>% getEl('#treatColorAsFactor'))))
+caratColorOpt <- driver %>% getSelectOptions('color') %>% 
+  Filter(function(x) text(x) == 'carat', .)
+if (length(caratColorOpt) != 1) stop() else caratColorOpt[[1]] %>% click()
+test_that('treatColorAsFactor appears correct', 
+          expect_true(!is.null(waitFor('#treatColorAsFactor'))))
+driver %>% getEl('#treatColorAsFactor') %>% click()
+# <
+
+test_that('Unreactive submit waits correct', 
+          expect_false(waitForPlotReady(driver)))
+driver %>% getEl('#submit') %>% click()
+test_that('Unreactive submit works correct', 
+          expect_true(driver %>% has_shiny_correct_state(
+            pastePlus('^unreactive', 'colorFactors', shorten=F), NULL, NULL)))
+
+driver %>% getEl('#reactive') %>% click()  # turn reactive on
+test_that('Submit button grays correct', {
+  expect_true(!is.null(waitFor('#submit[disabled]')))
+  driver %>% getEl('#reactive') %>% click()  # turn reactive off to check Reset inputs
+  expect_true(!is.null(waitFor('#submit:not(disabled)')))
+})
+
+driver %>% getEl('#reset_input') %>% click()
+test_that('Reset works correct', {
+  expect_true(waitFor(quote(
+    text(driver %>% getEl('#color option[selected="selected"]')) == 'color')))
+  expect_true(waitFor(quote(is.null(driver %>% getEl('#treatColorAsFactor')))))
+  expect_true(!is.null(waitFor('#submit[disabled]')))
+  expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL))
+})
+
+
 #### check Export plot and Generate Plot Code
-foo <- function(driver) {
 invisible(apply(
   data.frame(modalBt=c('#exportPlot', '#generatePlotCode'),
              modalRoot=c('#modalExportOptions', '#modalCodeView'),
              dwnload=c('a#dlPlot', NA)), 1, 
+  
   function(row) {
     driver %>% getEl(row['modalBt']) %>% click()
     root <- waitFor(paste0(row['modalRoot'], '[style="display: block;"]'), driver)
@@ -31,12 +71,11 @@ invisible(apply(
     waitFor(paste0(row['modalRoot'], '[style="display: none;"]'), driver)
   }
 ))
-}
-foo(driver)
 
-#### switches to light esoph dataset ####
+#### switch to light esoph dataset ####
 datasetEls <- driver %>% getSelectOptions('dataset')
 datasetEls %>% filterElByAttr('data-value', 'esoph') %>% click()
+
 
 #### sophisticated wait for historgram plotType and then for null plotType ####
 allPlotNames <- getAllPlotNames()
@@ -50,6 +89,7 @@ if (isWebElement(waitRes)) {
     stop()
   }
 }
+
 
 #### pick esoph's Scatter ####
 getSelectOptions(driver, 'plotTypes')[[1]] %>% click()

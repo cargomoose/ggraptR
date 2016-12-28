@@ -75,7 +75,7 @@ getEl <- function(source, query, directChildren=F) {
     print(html(res))
     stop(sprintf('\nElements found: %s', length(res)))
   }
-  if (length(res)) res[[1]]
+  if (length(res) == 1) res[[1]]
 }
 
 isWebElement <- function(obj) class(obj) == 'webElement'

@@ -13,10 +13,10 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) 
 waitForPlotReady <- function(driver) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
   stopifnot(driver$getWindowSize()$height== 1080 && driver$getWindowSize()$width == 1920)
-  emptyPic <- paste0(rep('A', 1e3),collapse='')
+  emptyPic <- paste0(rep('A', 1e3), collapse='')
   
   isBlank <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
-                 source=driver, errorIfNot=F, timeout = 4)
+                     source=driver, errorIfNot=F, timeout = 4)
   if (!is.logical(isBlank) || isBlank) {
     waitFor(
       c(sprintf('#plot img:not([src*="%s"])', emptyPic), '#plot.shiny-output-error'),
@@ -26,13 +26,13 @@ waitForPlotReady <- function(driver) {
   }
 }
 
-isElSelected <- function(driver, selId) {
+isSelectEl <- function(driver, selId) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
 getSelectOptions <- function(driver, selId, withSelected=F) {
   # shiny 'select' inputs does not have their options at the beginning. Click to load
-  if (!isElSelected(driver, selId)) stop('Wrong id for select element: ', selId)
+  if (!isSelectEl(driver, selId)) stop('Wrong id for select element: ', selId)
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
@@ -58,7 +58,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     length(getEls(driver, c('#', selectId, ' + .selectize-control .item')))
   }
   
-  if (!isElSelected(driver, selectId)) stop('Wrong id for select element: ', selectId)
+  if (!isSelectEl(driver, selectId)) stop('Wrong id for select element: ', selectId)
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
   isEraseAll <- nItemsBeforeErasing == howMany
