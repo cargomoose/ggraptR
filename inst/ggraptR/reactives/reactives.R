@@ -1,7 +1,7 @@
 separatePlotInputs <- reactive({
   if (is.null(plotTypes())) return()
   inputs <- lapply(plotTypes(), function(pType) {
-    flattenList(definedPlotInputs)[[pType]]
+    flattenList(getDefinedPlotInputs())[[pType]]
   })
   names(inputs) <- plotTypes()
   inputs

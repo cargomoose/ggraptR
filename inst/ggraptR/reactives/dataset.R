@@ -25,8 +25,7 @@ uploadedDfName <- reactive({
 
 # reactive variable for raw dataset names
 rawDatasetNames <- reactive({
-  unique(c("diamonds", "mtcars", "rock", "iris", "esoph",
-           uploadedDfName(), getPreloadedEnvDfNames()))
+  unique(c(getDefaultPlots(), uploadedDfName(), getPreloadedEnvDfNames()))
 })
 
 # reactive variable for raw dataset

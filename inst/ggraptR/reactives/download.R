@@ -23,6 +23,7 @@ output$dlPlot <- downloadHandler(
     inputWidth <- input$fileWidth
     inputHeight <- input$fileHeight
     inputDPI <- input$fileDPI
+    fileDefault <- getFileDefault()
     
     if (inputWidth < 0 || inputWidth > fileDefault$widthMax 
         || !is.numeric(inputWidth)) {

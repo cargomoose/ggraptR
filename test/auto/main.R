@@ -9,7 +9,7 @@ source('checkInitPlot.R')
 driver %>% getEl('#reactive') %>% click()
 submitBtn <- waitFor("#submit:not(disabled)", driver)
 
-# > treatColorAsFactor
+# > embedded check for treatColorAsFactor
 test_that('treatColorAsFactor hides correct', 
           expect_true(is.null(driver %>% getEl('#treatColorAsFactor'))))
 caratColorOpt <- driver %>% getSelectOptions('color') %>% 
@@ -72,6 +72,7 @@ invisible(apply(
   }
 ))
 
+
 #### switch to light esoph dataset ####
 datasetEls <- driver %>% getSelectOptions('dataset')
 datasetEls %>% filterElByAttr('data-value', 'esoph') %>% click()
@@ -91,8 +92,10 @@ if (isWebElement(waitRes)) {
 }
 
 
-#### pick esoph's Scatter ####
-getSelectOptions(driver, 'plotTypes')[[1]] %>% click()
+#### scatter ####
+getSelectOptions(driver, 'plotTypes') %>% 
+  Filter(function(el) attr(el, 'data-value') == 'scatter', .) %>% `[[`(1) %>% 
+  click()
 
 
 #### test inputs ####

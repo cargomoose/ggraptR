@@ -35,7 +35,7 @@ observe({
   pTypes <- plotTypes()
   isolate({
     if (is.null(dataset())) return()
-    allDefTypes <- unlist(getStructListNames(definedPlotInputs))
+    allDefTypes <- unlist(getStructListNames(getDefinedPlotInputs()))
     needOneGroupOpts <- length(pTypes) == 1 && 
       length(plotTypesOpts()) == length(allDefTypes)
     

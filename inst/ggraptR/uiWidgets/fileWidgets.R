@@ -68,16 +68,16 @@ output$fileTypeCtl <- renderUI({
 
 output$fileHeightCtl <- renderUI({
   numericInput(inputId="fileHeight", label="Height (inches)", 
-               value=fileDefault$width, min=0, max=fileDefault$heightMax)
+               value=getFileDefault()$width, min=0, max=getFileDefault()$heightMax)
 })
 
 output$fileWidthCtl <- renderUI({
   numericInput(inputId="fileWidth", label="Width (inches)", 
-              value=fileDefault$height, min=0, 
-              max=fileDefault$widthMax)
+              value=getFileDefault()$height, min=0, 
+              max=getFileDefault()$widthMax)
 })
 
 output$fileDPICtl <- renderUI({
   numericInput(inputId="fileDPI", label="Dots Per Inch", 
-               value=fileDefault$DPI, min=0, max=fileDefault$DPIMax)
+               value=getFileDefault()$DPI, min=0, max=getFileDefault()$DPIMax)
 })

@@ -12,7 +12,7 @@ ggraptR(initialDf = "diamonds", appDir = system.file("ggraptR", package =
 
 \item{appDir}{sets up application directory}
 
-\item{initialPlot}{initial plot name from globals.R definedPlotInputs list}
+\item{initialPlot}{initial plot name from globals.R getDefinedPlotInputs() list}
 
 \item{port}{port for shiny::runApp(..port=)}
 }

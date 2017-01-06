@@ -160,7 +160,7 @@ getStructListNames <- function(lst) {
 }
 
 getPlotTypeOpts <- function(selectedOpts) {
-  plotTypeRelations <- getStructListNames(definedPlotInputs)
+  plotTypeRelations <- getStructListNames(getDefinedPlotInputs())
   opts <- unlist(plotTypeRelations[
     if (is.null(selectedOpts)) T else {
       sapply(plotTypeRelations, function(el) unlist(selectedOpts)[1] %in% el)

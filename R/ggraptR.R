@@ -2,7 +2,7 @@
 #'
 #' @param initialDf initial dataframe to plot
 #' @param appDir sets up application directory
-#' @param initialPlot initial plot name from globals.R definedPlotInputs list
+#' @param initialPlot initial plot name from globals.R getDefinedPlotInputs() list
 #' @param port port for shiny::runApp(..port=)
 #' 
 #' @details See \url{http://github.com/cargomoose/raptR} for documentation and tutorials
