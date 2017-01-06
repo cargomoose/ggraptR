@@ -1,7 +1,9 @@
-has_shiny_correct_state <- function(driver, plotNames, elId, elVal, waitPlot=T) {
+has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
+                                    shortShotName=T, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
   fileName <- sprintf('%s/test/auto/report/%s_[%s=%s].png', getProjWd(), 
-                      pastePlus(plotNames), toString(elId), substr(toString(elVal), 1, 5))
+                      pastePlus(plotNames, shorten=shortShotName), toString(elId), 
+                      substr(toString(elVal), 1, 5))
   if (!is.character(fileName)) {
     driver$screenshot(T)
     browser()

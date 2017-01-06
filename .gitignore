@@ -19,3 +19,5 @@ inst/doc
 *.log
 test/auto/resources
 test/auto/report
+test/auto/resources
+test/auto/data

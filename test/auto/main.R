@@ -2,7 +2,7 @@
 # You can monitor the progress by the names of the screenshots in test/auto/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
-source('checkInitPlot.R')
+source('script/checkInitPlot.R')
 
 
 #### check reactive checkbox + submit button and reset button ####
@@ -25,7 +25,8 @@ test_that('Unreactive submit waits correct',
 driver %>% getEl('#submit') %>% click()
 test_that('Unreactive submit works correct', 
           expect_true(driver %>% has_shiny_correct_state(
-            pastePlus('^unreactive', 'colorFactors', shorten=F), NULL, NULL)))
+            pastePlus('^unreactive', 'colorFactors', shorten=F), NULL, NULL, 
+            shortShotName=F)))
 
 driver %>% getEl('#reactive') %>% click()  # turn reactive on
 test_that('Submit button grays correct', {
@@ -40,7 +41,7 @@ test_that('Reset works correct', {
     text(driver %>% getEl('#color option[selected="selected"]')) == 'color')))
   expect_true(waitFor(quote(is.null(driver %>% getEl('#treatColorAsFactor')))))
   expect_true(!is.null(waitFor('#submit[disabled]')))
-  expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL))
+  expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL, shortShotName=F))
 })
 
 
@@ -78,7 +79,7 @@ datasetEls <- driver %>% getSelectOptions('dataset')
 datasetEls %>% filterElByAttr('data-value', 'esoph') %>% click()
 
 
-#### sophisticated wait for historgram plotType and then for null plotType ####
+#### sophisticated wait for histogram plotType and then for null plotType ####
 allPlotNames <- getAllPlotNames()
 waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
                    timeout=5, errorIfNot = F)
@@ -92,48 +93,11 @@ if (isWebElement(waitRes)) {
 }
 
 
-#### scatter ####
+#### scatter -> test inputs -> release resources ####
 getSelectOptions(driver, 'plotTypes') %>% 
   Filter(function(el) attr(el, 'data-value') == 'scatter', .) %>% `[[`(1) %>% 
   click()
 
-
-#### test inputs ####
-usedPlotNames <- if (exists('shortTestMode') && shortTestMode)
-  setdiff(allPlotNames, 'Pairs') else c()
-isLastIter <- F
-while (!isLastIter) {
-  waitForPlotReady(driver)
-  plotNames <- getCurrentPlotNames(driver)
-  
-  test_that(sprintf('[%s] [default_inputs] work correct', pastePlus(plotNames)), 
-            expect_true(has_shiny_correct_state(driver, plotNames,
-                                                NULL, NULL, waitPlot=F)))
-  
-  for (inpId in getPlotInputIds(driver)) {
-    inpType <- driver %>% getEl(c('#', inpId)) %>% attr('data-shinyjs-resettable-type')
-    if (is.null(inpType)) {
-      cat(pastePlus(plotNames), inpId, '[is hidden now, skipped]')
-      next
-    }
-    
-    test_that(sprintf('[%s] [%s] works correct', pastePlus(plotNames), inpId),
-              expect_true(do.call(paste0('is', inpType, 'Correct'), 
-                                  list(driver, inpId, plotNames))))
-  }
-  
-  isNextPlotAdded <- tryAddNextPlot(driver)
-  if (!isNextPlotAdded) {
-    usedPlotNames <- append(usedPlotNames, plotNames)
-    
-    nextPlotTypes <- setdiff(allPlotNames, usedPlotNames)
-    if (length(nextPlotTypes)) {
-      eraseMultiSelectOpts(driver, 'plotTypes', length(plotNames))
-      startNewPlotGroup(driver, sample(nextPlotTypes, size=1))
-    } else {
-      isLastIter <- T
-    }
-  }
-}
+source('script/checkInputs.R')
 
 stopExternals(driver, selServer)
