@@ -1,7 +1,7 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
                                     shortShotName=T, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
-  fileName <- sprintf('%s/test/auto/report/%s_[%s=%s].png', getProjWd(), 
+  fileName <- sprintf('%s/test/report/%s_[%s=%s].png', getProjWd(), 
                       pastePlus(plotNames, shorten=shortShotName), toString(elId), 
                       substr(toString(elVal), 1, 5))
   if (!is.character(fileName)) {
@@ -28,13 +28,13 @@ waitForPlotReady <- function(driver) {
   }
 }
 
-isSelectEl <- function(driver, selId) {
+isSelectEl <- function(selId, source=driver) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
 getSelectOptions <- function(driver, selId, withSelected=F) {
-  # shiny 'select' inputs does not have their options at the beginning. Click to load
-  if (!isSelectEl(driver, selId)) stop('Wrong id for select element: ', selId)
+  # shiny 'select' inputs do not have their options at the beginning. Click to load
+  stopifnot(isSelectEl(selId, source=driver))
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
@@ -60,7 +60,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     length(getEls(driver, c('#', selectId, ' + .selectize-control .item')))
   }
   
-  if (!isSelectEl(driver, selectId)) stop('Wrong id for select element: ', selectId)
+  stopifnot(isSelectEl(selectId, source=driver))
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
   isEraseAll <- nItemsBeforeErasing == howMany

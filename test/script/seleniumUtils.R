@@ -22,18 +22,18 @@ startSelServer <- function() {
   # system('taskkill /f /pid 4668')
 }
 
-getDriver <- function(port=6012) {
-  phantomJsFile <- paste0(getProjWd(), "/test/auto/resources/phantomjs.exe")
+getDriver <- function(url='http://127.0.0.1', port=6012) {
+  phantomJsFile <- paste0(getProjWd(), "/test/resources/phantomjs.exe")
   if (!file.exists(phantomJsFile)) {
     stop('Please download the latest version of phantomjs.exe from 
-         http://phantomjs.org/download.html to /test/auto/resources/')
+         http://phantomjs.org/download.html to /test/resources/')
   }
   
   driver <- remoteDriver(
     browserName = "phantomjs", extraCapabilities = 
       list(phantomjs.binary.path = phantomJsFile))
   driver$open(silent = T)  # == capture.output(driver$open(), file='NUL')
-  driver$navigate(sprintf("http://127.0.0.1:%s/", port))
+  driver$navigate(paste0(url, if (!is.null(port)) paste0(':', port)))
   driver$setWindowSize(1920, 1080)
   driver
 }

@@ -5,11 +5,11 @@ library(testthat)
 
 getProjWd <- function() gsub('(?<=ggraptR).*', '', getwd(), perl=T)
 
-source(paste0(getProjWd(), '/test/auto/script/seleniumUtils.R'))
-source(paste0(getProjWd(), '/test/auto/script/shinyUtils.R'))
-source(paste0(getProjWd(), '/test/auto/script/ggraptrUtils.R'))
+source(paste0(getProjWd(), '/test/script/seleniumUtils.R'))
+source(paste0(getProjWd(), '/test/script/shinyUtils.R'))
+source(paste0(getProjWd(), '/test/script/ggraptrUtils.R'))
 
-unlink(paste0(getProjWd(), '/test/auto/report/*'))  # to clear 'report' folder content
+unlink(paste0(getProjWd(), '/test/report/*'))  # to clear 'report' folder content
 
 isNotFoundException <- function(e) {
   any(c('error', 'try-error') %in% class(e)) && grepl('object .* not found',unlist(e[1]))

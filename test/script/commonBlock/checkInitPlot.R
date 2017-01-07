@@ -17,7 +17,7 @@ cat('cmd:', cmd, '\n')
 selPipe <- pipe(cmd, open='r')  # system(cmd, wait=F)
 selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
 selServer <- startSelServer()
-driver <- getDriver(port)
+driver <- getDriver(port=port)
 if (driver$getTitle()[[1]] != 'ggraptR') {
   browser()
   stop('Page title does not match')

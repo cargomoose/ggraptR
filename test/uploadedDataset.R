@@ -1,0 +1,25 @@
+# Run this script with 'testthat::test_file(paste0(getwd(), '/test/uploadDataset.R'))'
+
+source('script/commonBlock/checkInitPlot.R')
+
+
+#### go to import tab ####
+driver %>% getEl('a[data-value="importTab"]') %>% click()
+rootEl <- waitFor('#fileInputSelectCtrl', driver, timeout = 3)
+uplEl <- rootEl %>% getEl('input#file')
+
+
+#### upload custom dataset and go back to plot tab ####
+uplEl$setElementAttribute('style', '')  # RSelenium's requirement
+customDatasetFilepath <- 'data/charData.csv'
+uplEl$sendKeysToElement(list(customDatasetFilepath))
+waitFor(quote(
+  text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload complete'))
+driver %>% getEl('#viewPlot') %>% click()
+waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
+
+
+#### check inputs ####
+switchToDataset(driver, basename(customDatasetFilepath))
+source('script/commonBlock/checkInputs.R')
+stopExternals(driver, selServer)

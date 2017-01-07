@@ -1,7 +1,7 @@
 usedPlotNames <- if (exists('shortTestMode') && shortTestMode)
   setdiff(allPlotNames, 'Pairs') else c()
-isLastIter <- F
 
+isLastIter <- F
 while (!isLastIter) {
   waitForPlotReady(driver)
   plotNames <- getCurrentPlotNames(driver)

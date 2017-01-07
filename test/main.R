@@ -1,15 +1,15 @@
-# Run this script with 'testthat::test_file(paste0(getwd(), '/test/auto/main.R'))'
-# You can monitor the progress by the names of the screenshots in test/auto/report
+# Run this script with 'testthat::test_file(paste0(getwd(), '/test/main.R'))'
+# You can monitor the progress by the names of the screenshots in test/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
-source('script/checkInitPlot.R')
+source('script/commonBlock/checkInitPlot.R')
 
 
 #### check reactive checkbox + submit button and reset button ####
 driver %>% getEl('#reactive') %>% click()
 submitBtn <- waitFor("#submit:not(disabled)", driver)
 
-# > embedded check for treatColorAsFactor
+# > check for treatColorAsFactor
 test_that('treatColorAsFactor hides correct', 
           expect_true(is.null(driver %>% getEl('#treatColorAsFactor'))))
 caratColorOpt <- driver %>% getSelectOptions('color') %>% 
@@ -74,30 +74,7 @@ invisible(apply(
 ))
 
 
-#### switch to light esoph dataset ####
-datasetEls <- driver %>% getSelectOptions('dataset')
-datasetEls %>% filterElByAttr('data-value', 'esoph') %>% click()
-
-
-#### sophisticated wait for histogram plotType and then for null plotType ####
-allPlotNames <- getAllPlotNames()
-waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
-                   timeout=5, errorIfNot = F)
-if (isWebElement(waitRes)) {
-  if (!waitFor(quote(
-      length(allPlotNames) == length(driver %>% getSelectOptions('plotTypes'))), 
-      errorIfNot = F, catchStale=T)) {
-    browser()
-    stop()
-  }
-}
-
-
-#### scatter -> test inputs -> release resources ####
-getSelectOptions(driver, 'plotTypes') %>% 
-  Filter(function(el) attr(el, 'data-value') == 'scatter', .) %>% `[[`(1) %>% 
-  click()
-
-source('script/checkInputs.R')
-
+#### check inputs ####
+switchToDataset(driver, 'esoph')
+source('script/commonBlock/checkInputs.R')
 stopExternals(driver, selServer)

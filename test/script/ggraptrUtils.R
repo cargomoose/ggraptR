@@ -1,3 +1,29 @@
+switchToDataset <- function(driver, testedDataset, needWaitForPlotReady=F) {
+  driver %>% getSelectOptions('dataset') %>% 
+    filterElByAttr('data-value', testedDataset) %>% click()
+  waitAfterDatasetChanged(driver)
+  
+  driver %>% getSelectOptions('plotTypes') %>% 
+    filterElByAttr('data-value', 'scatter') %>% click()
+  
+  if (needWaitForPlotReady) waitForPlotReady(driver)
+}
+
+# sophisticated wait for histogram plotType and then for null plotType
+waitAfterDatasetChanged <- function(driver) {
+  allPlotNames <- getAllPlotNames()
+  waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
+                     timeout=5, errorIfNot = F)
+  if (isWebElement(waitRes)) {
+    if (!waitFor(quote(
+      length(allPlotNames) == length(driver %>% getSelectOptions('plotTypes'))), 
+      errorIfNot = F, catchStale=T)) {
+      browser()
+      stop()
+    }
+  }
+}
+  
 tryAddNextPlot <- function(driver) {
   plotTypeGroupRestOpts <- getSelectOptions(driver, 'plotTypes')
   canAdd <- length(plotTypeGroupRestOpts) > 0

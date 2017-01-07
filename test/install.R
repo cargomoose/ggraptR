@@ -47,9 +47,9 @@ if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1])))
 #### install ggraptR from git. Run it and check the initial plot ####
 suppressPackageStartupMessages(devtools::install_github('cargomoose/ggraptR'))
 library(ggraptR)
-setwd('auto')
-source('script/checkInitPlot.R')
-setwd('..')
+# setwd('auto')
+source('script/commonBlock/checkInitPlot.R')
+# setwd('..')
 
 system(sprintf('taskkill /f /pid %s', selenRpid), show.output.on.console = F)
 closeAllConnections()  # for pipe connection
