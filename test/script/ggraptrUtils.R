@@ -11,12 +11,11 @@ switchToDataset <- function(driver, testedDataset, needWaitForPlotReady=F) {
 
 # sophisticated wait for histogram plotType and then for null plotType
 waitAfterDatasetChanged <- function(driver) {
-  allPlotNames <- getAllPlotNames()
   waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
                      timeout=5, errorIfNot = F)
   if (isWebElement(waitRes)) {
     if (!waitFor(quote(
-      length(allPlotNames) == length(driver %>% getSelectOptions('plotTypes'))), 
+      length(getAllPlotNames()) == length(driver %>% getSelectOptions('plotTypes'))), 
       errorIfNot = F, catchStale=T)) {
       browser()
       stop()

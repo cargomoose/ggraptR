@@ -1,5 +1,5 @@
 usedPlotNames <- if (exists('shortTestMode') && shortTestMode)
-  setdiff(allPlotNames, 'Pairs') else c()
+  setdiff(getAllPlotNames(), 'Pairs') else c()
 
 isLastIter <- F
 while (!isLastIter) {
@@ -26,7 +26,7 @@ while (!isLastIter) {
   if (!isNextPlotAdded) {
     usedPlotNames <- append(usedPlotNames, plotNames)
     
-    nextPlotTypes <- setdiff(allPlotNames, usedPlotNames)
+    nextPlotTypes <- setdiff(getAllPlotNames(), usedPlotNames)
     if (length(nextPlotTypes)) {
       eraseMultiSelectOpts(driver, 'plotTypes', length(plotNames))
       startNewPlotGroup(driver, sample(nextPlotTypes, size=1))
