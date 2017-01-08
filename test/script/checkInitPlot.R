@@ -5,7 +5,7 @@ if (nrow(showConnections())) {
   if (nrow(showConnections())) stop('Can not close all connections')
 }
 
-source('script/funs.R')
+source('script/utils/funs.R')
 
 # R -e "ggraptR::ggraptR(port=%s)
 port <- 5050

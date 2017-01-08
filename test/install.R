@@ -48,7 +48,7 @@ if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1])))
 suppressPackageStartupMessages(devtools::install_github('cargomoose/ggraptR'))
 library(ggraptR)
 # setwd('auto')
-source('script/commonBlock/checkInitPlot.R')
+source('script/checkInitPlot.R')
 # setwd('..')
 
 system(sprintf('taskkill /f /pid %s', selenRpid), show.output.on.console = F)

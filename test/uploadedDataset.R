@@ -1,6 +1,6 @@
 # Run this script with 'testthat::test_file(paste0(getwd(), '/test/uploadDataset.R'))'
 
-source('script/commonBlock/checkInitPlot.R')
+source('script/checkInitPlot.R')
 
 
 #### go to import tab ####
@@ -21,5 +21,5 @@ waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
 
 #### check inputs ####
 switchToDataset(driver, basename(customDatasetFilepath))
-source('script/commonBlock/checkInputs.R')
+source('script/checkInputs.R')
 stopExternals(driver, selServer)

@@ -5,9 +5,9 @@ library(testthat)
 
 getProjWd <- function() gsub('(?<=ggraptR).*', '', getwd(), perl=T)
 
-source(paste0(getProjWd(), '/test/script/seleniumUtils.R'))
-source(paste0(getProjWd(), '/test/script/shinyUtils.R'))
-source(paste0(getProjWd(), '/test/script/ggraptrUtils.R'))
+source(paste0(getProjWd(), '/test/script/utils/seleniumUtils.R'))
+source(paste0(getProjWd(), '/test/script/utils/shinyUtils.R'))
+source(paste0(getProjWd(), '/test/script/utils/ggraptrUtils.R'))
 
 unlink(paste0(getProjWd(), '/test/report/*'))  # to clear 'report' folder content
 
@@ -43,7 +43,7 @@ eval.in.any.env <- function(targetExpr) {
         }
       }
     }
-    stop(getErrorMessage(res))
+    stop(getErrorMessage(e))
   })
 }
 

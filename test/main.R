@@ -2,7 +2,7 @@
 # You can monitor the progress by the names of the screenshots in test/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
-source('script/commonBlock/checkInitPlot.R')
+source('script/checkInitPlot.R')
 
 
 #### check reactive checkbox + submit button and reset button ####
@@ -76,5 +76,5 @@ invisible(apply(
 
 #### check inputs ####
 switchToDataset(driver, 'esoph')
-source('script/commonBlock/checkInputs.R')
+source('script/checkInputs.R')
 stopExternals(driver, selServer)

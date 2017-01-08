@@ -143,7 +143,7 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
     res <- suppressMessages(tryCatch(
       targetFun(source),
       error=function(e) if (catchStale && isStaleException(e)) F else {
-        print(e$message)
+        browser()
         stop(e$message)
       }))
     
