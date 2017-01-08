@@ -1,3 +1,6 @@
+skip_on_cran()
+context("Installation on a clean machine")
+
 #### clean ####
 .libPaths(Sys.getenv('R_LIBS_USER'))
 invisible(suppressWarnings(lapply(paste('package:',names(sessionInfo()$otherPkgs),sep=""),

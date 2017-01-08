@@ -1,4 +1,5 @@
-# Run this script with 'testthat::test_file(paste0(getwd(), '/test/uploadDataset.R'))'
+skip_on_cran()
+context("Uploaded dataset")
 
 source('script/checkInitPlot.R')
 

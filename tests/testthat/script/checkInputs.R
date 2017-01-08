@@ -13,13 +13,12 @@ while (!isLastIter) {
   for (inpId in getPlotInputIds(driver)) {
     inpType <- driver %>% getEl(c('#', inpId)) %>% attr('data-shinyjs-resettable-type')
     if (is.null(inpType)) {
-      cat(pastePlus(plotNames), inpId, '[is hidden now, skipped]')
-      next
+      skip(pastePlus(plotNames), inpId, '[is hidden now]')
+    } else {
+      test_that(sprintf('[%s] [%s] works correct', pastePlus(plotNames), inpId),
+                expect_true(do.call(paste0('is', inpType, 'Correct'), 
+                                    list(driver, inpId, plotNames))))
     }
-    
-    test_that(sprintf('[%s] [%s] works correct', pastePlus(plotNames), inpId),
-              expect_true(do.call(paste0('is', inpType, 'Correct'), 
-                                  list(driver, inpId, plotNames))))
   }
   
   isNextPlotAdded <- tryAddNextPlot(driver)

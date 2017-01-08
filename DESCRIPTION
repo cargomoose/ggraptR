@@ -3,7 +3,7 @@ Type: Package
 Title: Allows Interactive Visualization of Data Through a Web Browser GUI
 Version: 0.2
 Date: 2016-11-14
-Authors@R: 
+Authors@R:
     c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),
              email="eugene@presciient.com"),
 	     person("Julius", "Neggo", role="ctb", comment="Lead Developer"),
@@ -17,7 +17,8 @@ Description: Intended for both technical and non-technical users to create
     code.
 License: GPL (>= 2)
 Suggests:
-    knitr
+    knitr,
+    testthat
 Depends:
     R (>= 3.3.0),
     ggplot2 (>= 2.2.0),

@@ -14,10 +14,7 @@ vignettes/*.R
 inst/doc
 *.Rproj
 /inst/ggraptR/rsconnect
-# for test files like 1.csv, 1.png, etc
-1.*
 *.log
-test/resources
-test/report
-test/resources
-test/data
+tests/testthat/resources
+tests/testthat/report
+tests/testthat/data

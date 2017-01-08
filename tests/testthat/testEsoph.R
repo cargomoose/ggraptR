@@ -2,6 +2,8 @@
 # You can monitor the progress by the names of the screenshots in test/report
 # issues and new features https://github.com/cargomoose/ggraptR/issues/61
 
+skip_on_cran()
+context("Default dataset")
 source('script/checkInitPlot.R')
 
 
