@@ -240,11 +240,14 @@ getFirstNonNull <- function(...) {
 }
 
 getInitialArg <- function(argName) {
-  # next line contains a workaround for rsconnect::deployApp('inst/ggraptR')
+  # a workaround for rsconnect::deployApp('inst/ggraptR')
   ggraptrFormals <- try(names(formals(eval(parse(text="ggraptR::ggraptR")))), silent = T)
   if (class(ggraptrFormals) == 'try-error') return(NULL)
+  ggraptrFormals <- setdiff(ggraptrFormals, '...')
   
-  envIds <- which(sapply(0:length(sys.frames()), function(ienv) 
-    !length(setdiff(ggraptrFormals, ls(envir=sys.frame(ienv)))))) - 1
-  if (!length(envIds)) NULL else get(argName, envir=sys.frame(envIds[1]))
+  envIds <- which(
+    sapply(0:length(sys.frames()), function(ienv) 
+      !length(setdiff(ggraptrFormals, ls(envir=sys.frame(ienv)))))) - 1
+  
+  tryCatch(get(argName, envir=sys.frame(envIds[1])), error=function(e){})
 }
