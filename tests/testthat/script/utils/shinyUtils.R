@@ -1,7 +1,7 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
                                     shortShotName=T, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
-  fileName <- sprintf('%s/test/report/%s_[%s=%s].png', getProjWd(), 
+  fileName <- sprintf('report/%s_[%s=%s].png', 
                       pastePlus(plotNames, shorten=shortShotName), toString(elId), 
                       substr(toString(elVal), 1, 5))
   if (!is.character(fileName)) {
@@ -14,7 +14,9 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
 
 waitForPlotReady <- function(driver) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
-  stopifnot(driver$getWindowSize()$height== 1080 && driver$getWindowSize()$width == 1920)
+  if (driver$getWindowSize()$height != 1080 || driver$getWindowSize()$width != 1920) {
+    stopExternals('Wrong driver screen resolution')
+  }
   emptyPic <- paste0(rep('A', 1e3), collapse='')
   
   isBlank <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
@@ -34,7 +36,7 @@ isSelectEl <- function(selId, source=driver) {
 
 getSelectOptions <- function(driver, selId, withSelected=F) {
   # shiny 'select' inputs do not have their options at the beginning. Click to load
-  stopifnot(isSelectEl(selId, source=driver))
+  if (!isSelectEl(selId, source=driver)) stopExternals('!isSelectEl in getSelectOptions')
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
@@ -60,7 +62,9 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
     length(getEls(driver, c('#', selectId, ' + .selectize-control .item')))
   }
   
-  stopifnot(isSelectEl(selectId, source=driver))
+  if (!isSelectEl(selectId, source=driver)) {
+    stopExternals('!isSelectEl in eraseMultiSelectOpts')
+  }
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
   isEraseAll <- nItemsBeforeErasing == howMany

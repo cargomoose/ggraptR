@@ -15,6 +15,5 @@ inst/doc
 *.Rproj
 /inst/ggraptR/rsconnect
 *.log
-tests/testthat/resources
 tests/testthat/report
 tests/testthat/data

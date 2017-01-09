@@ -18,7 +18,8 @@ Description: Intended for both technical and non-technical users to create
 License: GPL (>= 2)
 Suggests:
     knitr,
-    testthat
+    testthat,
+    RSelenium (>= 1.6.2)
 Depends:
     R (>= 3.3.0),
     ggplot2 (>= 2.2.0),

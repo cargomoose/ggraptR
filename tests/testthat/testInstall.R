@@ -1,4 +1,3 @@
-skip_on_cran()
 context("Installation on a clean machine")
 
 #### clean ####

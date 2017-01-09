@@ -19,8 +19,9 @@ selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
 selServer <- startSelServer()
 driver <- getDriver(port=port)
 if (driver$getTitle()[[1]] != 'ggraptR') {
+  print(selPid)
   browser()
-  stop('Page title does not match')
+  stopExternals('Page title does not match')
 }
 
 test_that("Initial diamonds plot is correct", {

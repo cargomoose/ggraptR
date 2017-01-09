@@ -1,6 +1,5 @@
-skip_on_cran()
+# You can monitor the progress by screenshot names in report/ folder
 context("Uploaded dataset")
-
 source('script/checkInitPlot.R')
 
 
@@ -23,4 +22,4 @@ waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
 #### check inputs ####
 switchToDataset(driver, basename(customDatasetFilepath))
 source('script/checkInputs.R')
-stopExternals(driver, selServer)
+stopExternals()

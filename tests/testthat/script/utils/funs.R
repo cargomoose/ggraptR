@@ -3,13 +3,11 @@ library(RSelenium)
 library(dplyr)
 library(testthat)
 
-getProjWd <- function() gsub('(?<=ggraptR).*', '', getwd(), perl=T)
+source('script/utils/seleniumUtils.R')
+source('script/utils/shinyUtils.R')
+source('script/utils/ggraptrUtils.R')
 
-source(paste0(getProjWd(), '/test/script/utils/seleniumUtils.R'))
-source(paste0(getProjWd(), '/test/script/utils/shinyUtils.R'))
-source(paste0(getProjWd(), '/test/script/utils/ggraptrUtils.R'))
-
-unlink(paste0(getProjWd(), '/test/report/*'))  # to clear 'report' folder content
+unlink('report/*')  # to clear 'report' folder content
 
 isNotFoundException <- function(e) {
   any(c('error', 'try-error') %in% class(e)) && grepl('object .* not found',unlist(e[1]))
@@ -54,8 +52,8 @@ pastePlus <- function(..., shorten=T) {
 }
 
 getAllPlotNames <- function() {
-  source(paste0(getProjWd(), '/inst/ggraptR/globals.R'))
-  source(paste0(getProjWd(), '/inst/ggraptR/functions/helper.R'))
+  source('../../inst/ggraptR/globals.R')
+  source('../../inst/ggraptR/functions/helper.R')
   flattenList(getDefinedPlotInputs()) %>% names %>% 
     sapply(capitalize) %>% 
     sapply(function(x) gsub('(\\d)', ' \\1', x))

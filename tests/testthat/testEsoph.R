@@ -1,8 +1,4 @@
-# Run this script with 'testthat::test_file(paste0(getwd(), '/test/main.R'))'
-# You can monitor the progress by the names of the screenshots in test/report
-# issues and new features https://github.com/cargomoose/ggraptR/issues/61
-
-skip_on_cran()
+# You can monitor the progress by screenshot names in report/ folder
 context("Default dataset")
 source('script/checkInitPlot.R')
 
@@ -16,7 +12,7 @@ test_that('treatColorAsFactor hides correct',
           expect_true(is.null(driver %>% getEl('#treatColorAsFactor'))))
 caratColorOpt <- driver %>% getSelectOptions('color') %>% 
   Filter(function(x) text(x) == 'carat', .)
-if (length(caratColorOpt) != 1) stop() else caratColorOpt[[1]] %>% click()
+if (length(caratColorOpt) != 1) stopExternals() else caratColorOpt[[1]] %>% click()
 test_that('treatColorAsFactor appears correct', 
           expect_true(!is.null(waitFor('#treatColorAsFactor'))))
 driver %>% getEl('#treatColorAsFactor') %>% click()
@@ -78,5 +74,5 @@ invisible(apply(
 
 #### check inputs ####
 switchToDataset(driver, 'esoph')
-source('script/checkInputs.R')
-stopExternals(driver, selServer)
+# source('script/checkInputs.R')
+stopExternals()

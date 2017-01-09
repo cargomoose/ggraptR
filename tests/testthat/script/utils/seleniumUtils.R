@@ -23,17 +23,17 @@ startSelServer <- function() {
 }
 
 getDriver <- function(url='http://127.0.0.1', port=6012) {
-  phantomJsFile <- paste0(getProjWd(), "/test/resources/phantomjs.exe")
+  phantomJsFile <- paste0(find.package('RSelenium'), '/bin/phantomjs.exe')
   if (!file.exists(phantomJsFile)) {
     stop('Please download the latest version of phantomjs.exe from 
-         http://phantomjs.org/download.html to /test/resources/')
+          http://phantomjs.org/download.html to [', dirname(phantomJsFile), ']')
   }
   
   driver <- remoteDriver(
     browserName = "phantomjs", extraCapabilities = 
       list(phantomjs.binary.path = phantomJsFile))
   driver$open(silent = T)  # == capture.output(driver$open(), file='NUL')
-  driver$navigate(paste0(url, if (!is.null(port)) paste0(':', port)))
+  driver$navigate(paste0(url, if (!is.null(port)) paste0(':', port) else ''))
   driver$setWindowSize(1920, 1080)
   driver
 }
@@ -44,10 +44,11 @@ openPageInBrowser <- function(driver) {
   browseURL(tmpFileName)
 }
 
-stopExternals <- function(driver, selServer) {
-  driver$close()
-  selServer$stop()
+stopExternals <- function(msgForError=NULL) {
+  eval.in.any.env(quote(driver$close()))
+  eval.in.any.env(quote(selServer$stop()))
   closeAllConnections()
+  if (!is.null(msgForError)) stop(msgForError)
 }
 
 getEls <- function(source, query, directChildren=F) {
@@ -58,12 +59,12 @@ getEls <- function(source, query, directChildren=F) {
     source$findElements(how, query)
   } else if (class(source) == 'webElement') {
     if (how == 'xpath') {
-      stopifnot(!grepl('^[\\./]', query))  # starts with neither . nor /
+      if (grepl('^[\\./]', query)) stopExternals('Wrong query')  # starts with neither . nor /
       query <- paste0('./', if (!directChildren) '/', query)
     }
     source$findChildElements(how, query)
   } else {
-    stop()
+    stopExternals('Wrong class of "source"')
   }
   # if (!length(res)) warning('>> empty')
   res
@@ -73,7 +74,7 @@ getEl <- function(source, query, directChildren=F) {
   res <- getEls(source, query, directChildren)
   if (length(res) > 1) {
     print(html(res))
-    stop(sprintf('\nElements found: %s', length(res)))
+    stopExternals(sprintf('\nElements found: %s', length(res)))
   }
   if (length(res) == 1) res[[1]]
 }
@@ -81,7 +82,7 @@ getEl <- function(source, query, directChildren=F) {
 isWebElement <- function(obj) class(obj) == 'webElement'
 
 stopIfNotWebElement <- function(obj) {
-  if (!isWebElement(obj)) stop('Input element class: ', class(obj))
+  if (!isWebElement(obj)) stopExternals('Input element class: ', class(obj))
 }
 
 attr <- function(el, attrName) {
@@ -106,14 +107,17 @@ isVisible <- function(el) {
 
 click <- function(el) {
   stopIfNotWebElement(el)
-  if (!isVisible(el)) stop('Input element is invisible: ', html(el))
+  if (!isVisible(el)) {
+    browser()
+    stopExternals('Input element is invisible: ', html(el))
+  }
   el$clickElement()
 }
 
 filterElByAttr <- function(els, attrKey, attrVal) {
-  stopifnot(is.list(els))
+  if (!is.list(els)) stopExternals('Wrong "els" class')
   res <- Filter(function(x) attr(x, attrKey) == attrVal, els)
-  stopifnot(length(res) == 1)
+  if (length(res) != 1) stopExternals('')
   res[[1]]
 }
 
