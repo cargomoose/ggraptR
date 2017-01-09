@@ -21,9 +21,7 @@ ggraptR <- function(initialDf="diamonds",
   
   # this variable will be used in generalWidgets.R with 'sys.frame(1)'
   if (typeof(initialDf) != "character") initialDf <- deparse(substitute(initialDf))
-  if (!exists(initialDf)) {
-    if (initialDf == 'diamonds') library(ggplot2) else stop('Initial dataset not found')
-  }
+  if (!exists(initialDf)) stop('Initial dataset [', initialDf, '] not found')
   
   shiny::runApp(appDir, display.mode = "normal", port=port)
 }
