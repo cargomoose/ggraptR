@@ -1,11 +1,10 @@
-rm(list=ls())
-library(RSelenium)
-library(dplyr)
-library(testthat)
+suppressPackageStartupMessages(library(RSelenium))
+suppressPackageStartupMessages(library(dplyr))
 
 source('script/utils/seleniumUtils.R')
 source('script/utils/shinyUtils.R')
 source('script/utils/ggraptrUtils.R')
+
 
 unlink('report/*')  # to clear 'report' folder content
 
