@@ -11,12 +11,13 @@
 #' }
 #' @export
 ggraptR <- function(initialDf="diamonds", ...) {
-  shinyArgs <- list(...)
+  extraArgs <- list(...)
   
-  if ('initialPlot' %in% names(shinyArgs)) {
-    initialPlot <- shinyArgs$initialPlot
-    shinyArgs$initialPlot <- NULL
+  if ('initialPlot' %in% names(extraArgs)) {
+    initialPlot <- extraArgs$initialPlot
   }
+  shinyArgs <- extraArgs[names(extraArgs) != 'initialPlot']
+  
   defaultShinyArgs <- list(
     appDir=system.file("ggraptR", package = "ggraptR"),
     display.mode='normal', port=6012, launch.browser=T)
@@ -34,7 +35,10 @@ ggraptR <- function(initialDf="diamonds", ...) {
   
   # this variable will be used in generalWidgets.R with 'sys.frame(1)'
   if (typeof(initialDf) != "character") initialDf <- deparse(substitute(initialDf))
-  if (!exists(initialDf)) stop('Initial dataset [', initialDf, '] not found')
+  if (!exists(initialDf)) {  # fail-fast
+    stop('Initial dataset [', initialDf, '] not found. ',
+         'Perhaps you are using ggraptR::ggraptR without library(ggraptR) first.')
+  }
   
   do.call(shiny::runApp, args=shinyArgs)
 }
