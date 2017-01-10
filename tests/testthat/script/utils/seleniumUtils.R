@@ -44,17 +44,25 @@ openPageInBrowser <- function(driver) {
   browseURL(tmpFileName)
 }
 
+killExternalRprocessAnywhere <- function(silent=T) {
+  try(eval.in.any.env(quote(
+    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F)))), 
+    silent = silent)
+}
+
 stopExternals <- function(msgForError=NULL) {
   eval.in.any.env(quote(driver$close()))
   eval.in.any.env(quote(selServer$stop()))
+  killExternalRprocessAnywhere()
   closeAllConnections()
-  if (!is.null(msgForError)) stop(msgForError)
+  if (nrow(showConnections())) stop('Can not close all connections')
+  if (!is.null(msgForError)) stop(msgForError, '\n')
 }
 
 getEls <- function(source, query, directChildren=F) {
   if (length(query) > 1) query <- paste0(query, collapse='')
   #grepl('#|\\.\\w|>',query)
-  how <- if (grepl('/|@|\\.\\W', query)) 'xpath' else  'css selector'
+  how <- if (grepl('/|@|\\.\\W', query)) 'xpath' else 'css selector'
   res <- if (class(source) == 'remoteDriver') {
     source$findElements(how, query)
   } else if (class(source) == 'webElement') {

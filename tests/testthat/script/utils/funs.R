@@ -57,3 +57,7 @@ getAllPlotNames <- function() {
     sapply(capitalize) %>% 
     sapply(function(x) gsub('(\\d)', ' \\1', x))
 }
+
+generate_r_cmd <- function(...) {
+  paste('R -q', paste(paste0('-e "', unlist(list(...)), '"'), collapse = ' '), '2>&1')
+}

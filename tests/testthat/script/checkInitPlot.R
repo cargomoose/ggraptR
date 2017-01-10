@@ -1,25 +1,24 @@
-if (nrow(showConnections())) {
-  if (!exists('selPid')) stop('selPid must exist')
-  system(paste('taskkill /f /pid', selPid), show.output.on.console = F)
-  closeAllConnections()
-  if (nrow(showConnections())) stop('Can not close all connections')
-}
-
 source('script/utils/funs.R')
+killExternalRprocessAnywhere()  # if the last run was finished with an error
 
-# R -e "ggraptR::ggraptR(port=%s)
+
 port <- 5050
-runAppCmd <- sprintf("shiny::runApp(\'%s\', port=%s, launch.browser=F)", 
-                     system.file("ggraptR", package = "ggraptR"), port)
-cmd <- sprintf('R -q -e "Sys.getpid()" -e "%s"', runAppCmd)
-# cat('ggraptR cmd:', cmd, '\n')
+cmds <- c('Sys.getpid()',
+          'suppressPackageStartupMessages(library(ggraptR))',
+  sprintf('suppressPackageStartupMessages(ggraptR(port=%s, launch.browser=F))', port))
 
-selPipe <- pipe(cmd, open='r')  # system(cmd, wait=F)
+# pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
+selPipe <- pipe(generate_r_cmd(cmds), open='r')  # system(cmd, wait=F)
 selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
+
 selServer <- startSelServer()
 driver <- getDriver(port=port)
+
 if (driver$getTitle()[[1]] != 'ggraptR') {
-  stopExternals('Page title does not match')
+  # If hangs before the next message [>5 sec] close the process manually
+  cat('\nTrying to check the reason why [driver$getTitle()[[1]] != "ggraptR"]', fill=T)
+  errMsg <- head(suppressWarnings(system(generate_r_cmd(cmds), intern=T)), -2)
+  stopExternals(paste(c('Page title does not match. Reason:', errMsg), collapse='\n'))
 }
 
 test_that("Initial diamonds plot is correct", {
