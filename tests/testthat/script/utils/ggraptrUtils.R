@@ -18,7 +18,7 @@ waitAfterDatasetChanged <- function(driver) {
       length(getAllPlotNames()) == length(driver %>% getSelectOptions('plotTypes'))), 
       errorIfNot = F, catchStale=T)) {
       browser()
-      stopExternals('waitAfterDatasetChanged failed')
+      stop_externals('waitAfterDatasetChanged failed')
     }
   }
 }

@@ -44,19 +44,67 @@ openPageInBrowser <- function(driver) {
   browseURL(tmpFileName)
 }
 
+as_string <- function(x) {
+  lst <- Map(function(el) if (is.null(el)) 'NULL' else el, 
+             if (is.list(x)) x else list(x))  # list(x) prevents coertions
+  
+  1:length(lst) %>% 
+    vapply(function(i) {
+      keys <- names(lst)
+      val <- if (is.character(lst[[i]])) sprintf("'%s'", lst[[i]]) else lst[[i]]
+      if (is.null(keys) || keys[i] == '') val else paste(keys[i], val, sep='=')
+    }, FUN.VALUE='') %>% 
+    paste(collapse=', ')
+}
+  
+run_external_ggraptR <- function(...) {
+  ggraptrArgsLst <- Filter(function(el) !is.null(el), 
+                           if (length(list(...)) == 0 || # when '...' is not passed
+                               !is.list(...)) list(...) else list(...)[[1]])
+  if (!'port' %in% names(ggraptrArgsLst)) ggraptrArgsLst$port <- 5050
+  ggraptrArgsLst$launch.browser <- F
+  lst <- ggraptrArgsLst
+  ggArgsStr <- as_string(lst)
+  
+  cmds <- c('Sys.getpid()',
+            'suppressPackageStartupMessages(library(ggraptR))',
+            sprintf('suppressPackageStartupMessages(ggraptR(%s))', ggArgsStr))
+  
+  # pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
+  selPipe <- pipe(generate_r_cmd(cmds), open='r')  # system(cmd, wait=F)
+  selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
+  
+  selServer <- startSelServer()
+  driver <- getDriver(port=ggraptrArgsLst$port)
+  
+  if (driver$getTitle()[[1]] != 'ggraptR') {
+    # if hangs before the next message [>5 sec] close the process manually
+    cat('\nTrying to check the reason why [driver$getTitle()[[1]] != "ggraptR"]', fill=T)
+    errMsg <- head(suppressWarnings(system(generate_r_cmd(cmds), intern=T)), -2)
+    release_externals()
+    stop('>> ', errMsg)
+  }
+  
+  list(driver=driver, selServer=selServer, selPid=selPid)
+}
+
 killExternalRprocessAnywhere <- function(silent=T) {
   try(eval.in.any.env(quote(
     suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F)))), 
     silent = silent)
 }
 
-stopExternals <- function(msgForError=NULL) {
+release_externals <- function(driver=NULL, selServer=NULL) {
   eval.in.any.env(quote(driver$close()))
   eval.in.any.env(quote(selServer$stop()))
   killExternalRprocessAnywhere()
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
-  if (!is.null(msgForError)) stop(msgForError, '\n')
+}
+
+stop_externals <- function(msgForError=NULL) {
+  release_externals()
+  stop(if (is.null(msgForError)) '' else msgForError, '\n')
 }
 
 getEls <- function(source, query, directChildren=F) {
@@ -67,12 +115,12 @@ getEls <- function(source, query, directChildren=F) {
     source$findElements(how, query)
   } else if (class(source) == 'webElement') {
     if (how == 'xpath') {
-      if (grepl('^[\\./]', query)) stopExternals('Wrong query')  # starts with neither . nor /
+      if (grepl('^[\\./]', query)) stop_externals('Wrong query')  # starts with neither . nor /
       query <- paste0('./', if (!directChildren) '/', query)
     }
     source$findChildElements(how, query)
   } else {
-    stopExternals('Wrong class of "source"')
+    stop_externals('Wrong class of "source"')
   }
   # if (!length(res)) warning('>> empty')
   res
@@ -82,7 +130,7 @@ getEl <- function(source, query, directChildren=F) {
   res <- getEls(source, query, directChildren)
   if (length(res) > 1) {
     print(html(res))
-    stopExternals(sprintf('\nElements found: %s', length(res)))
+    stop_externals(sprintf('\nElements found: %s', length(res)))
   }
   if (length(res) == 1) res[[1]]
 }
@@ -90,7 +138,7 @@ getEl <- function(source, query, directChildren=F) {
 isWebElement <- function(obj) class(obj) == 'webElement'
 
 stopIfNotWebElement <- function(obj) {
-  if (!isWebElement(obj)) stopExternals('Input element class: ', class(obj))
+  if (!isWebElement(obj)) stop_externals('Input element class: ', class(obj))
 }
 
 attr <- function(el, attrName) {
@@ -117,15 +165,15 @@ click <- function(el) {
   stopIfNotWebElement(el)
   if (!isVisible(el)) {
     browser()
-    stopExternals('Input element is invisible: ', html(el))
+    stop_externals('Input element is invisible: ', html(el))
   }
   el$clickElement()
 }
 
 filterElByAttr <- function(els, attrKey, attrVal) {
-  if (!is.list(els)) stopExternals('Wrong "els" class')
+  if (!is.list(els)) stop_externals('Wrong "els" class')
   res <- Filter(function(x) attr(x, attrKey) == attrVal, els)
-  if (length(res) != 1) stopExternals('')
+  if (length(res) != 1) stop_externals()
   res[[1]]
 }
 

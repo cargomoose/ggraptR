@@ -12,7 +12,7 @@
 #' @export
 ggraptR <- function(initialDf="diamonds", ...) {
   extraArgs <- list(...)
-  
+
   if ('initialPlot' %in% names(extraArgs)) {
     initialPlot <- extraArgs$initialPlot
   }
@@ -21,7 +21,6 @@ ggraptR <- function(initialDf="diamonds", ...) {
   defaultShinyArgs <- list(
     appDir=system.file("ggraptR", package = "ggraptR"),
     display.mode='normal', port=6012, launch.browser=T)
-  
   for (defName in names(defaultShinyArgs)) {
     if (is.null(shinyArgs[[defName]])) {
       shinyArgs[[defName]] <- defaultShinyArgs[[defName]]

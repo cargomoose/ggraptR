@@ -15,7 +15,7 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
 waitForPlotReady <- function(driver) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
   if (driver$getWindowSize()$height != 1080 || driver$getWindowSize()$width != 1920) {
-    stopExternals('Wrong driver screen resolution')
+    stop_externals('Wrong driver screen resolution')
   }
   emptyPic <- paste0(rep('A', 1e3), collapse='')
   
@@ -36,7 +36,7 @@ isSelectEl <- function(selId, source=driver) {
 
 getSelectOptions <- function(driver, selId, withSelected=F) {
   # shiny 'select' inputs do not have their options at the beginning. Click to load
-  if (!isSelectEl(selId, source=driver)) stopExternals('!isSelectEl in getSelectOptions')
+  if (!isSelectEl(selId, source=driver)) stop_externals('!isSelectEl in getSelectOptions')
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
@@ -63,7 +63,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   }
   
   if (!isSelectEl(selectId, source=driver)) {
-    stopExternals('!isSelectEl in eraseMultiSelectOpts')
+    stop_externals('!isSelectEl in eraseMultiSelectOpts')
   }
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)

@@ -22,4 +22,4 @@ waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
 #### check inputs ####
 switchToDataset(driver, basename(customDatasetFilepath))
 source('script/checkInputs.R')
-stopExternals()
+release_externals()

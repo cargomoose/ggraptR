@@ -12,7 +12,8 @@ test_that('treatColorAsFactor hides correct',
           expect_true(is.null(driver %>% getEl('#treatColorAsFactor'))))
 caratColorOpt <- driver %>% getSelectOptions('color') %>% 
   Filter(function(x) text(x) == 'carat', .)
-if (length(caratColorOpt) != 1) stopExternals() else caratColorOpt[[1]] %>% click()
+if (length(caratColorOpt) != 1) 
+  stop_externals('Impossible') else caratColorOpt[[1]] %>% click()
 test_that('treatColorAsFactor appears correct', 
           expect_true(!is.null(waitFor('#treatColorAsFactor'))))
 driver %>% getEl('#treatColorAsFactor') %>% click()
@@ -74,5 +75,5 @@ invisible(apply(
 
 #### check inputs ####
 switchToDataset(driver, 'esoph')
-# source('script/checkInputs.R')
-stopExternals()
+# source('script/checkInputs.R')  #################
+release_externals()
