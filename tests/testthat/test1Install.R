@@ -1,4 +1,4 @@
-context("Installation on a clean machine")
+context("Installation on clean machine")
 
 #### clean ####
 .libPaths(Sys.getenv('R_LIBS_USER'))
@@ -36,9 +36,18 @@ dir.create(testDir)
 if (file.exists(predefPack)) {
   invisible(file.copy(paste0(predefPack, '/', dir(predefPack)), testDir, recursive=T))
 } else {
-  browser()
-  install.packages(c('devtools', 'testthat', 'RSelenium'))
+  suppressPackageStartupMessages(install.packages(c('devtools', 'testthat')))
+  rselenium_path <- find.package('RSelenium', quiet = T)
+  if (nchar(rselenium_path)) {
+    invisible(file.copy(rselenium_path, testDir), recursive=T)
+    invisible(file.copy(rselenium_path, predefPack), recursive=T)
+  } else {
+    suppressPackageStartupMessages(install.packages('RSelenium'))
+    invisible(file.copy(paste0(testDir, '/RSelenium'), predefPack), recursive=T)
+  }
+  invisible(file.copy(testDir, paste0(predefPack, '/', dir(predefPack)), recursive=T))
 }
+
 
 res <- try(library(ggraptR), silent=T)
 if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1]))) {
@@ -47,16 +56,11 @@ if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1])))
 }
 
 #### install ggraptR from git. Run it and check the initial plot ####
-suppressPackageStartupMessages(devtools::install_github('cargomoose/ggraptR'))
-library(ggraptR)
-# setwd('auto')
+install(dirname(dirname(getwd())))
+browser()
+suppressPackageStartupMessages(library(ggraptR))
 source('script/checkInitPlot.R')
-# setwd('..')
-
-system(sprintf('taskkill /f /pid %s', selenRpid), show.output.on.console = F)
-closeAllConnections()  # for pipe connection
-suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
-suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
+release_externals()
 
 
 #### restore and clean ####

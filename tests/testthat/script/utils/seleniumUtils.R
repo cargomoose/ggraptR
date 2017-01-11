@@ -89,14 +89,15 @@ run_external_ggraptR <- function(...) {
 }
 
 killExternalRprocessAnywhere <- function(silent=T) {
-  try(eval.in.any.env(quote(
-    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F)))), 
+  try(eval.in.any.env(quote({
+    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
+    rm(selPid)})), 
     silent = silent)
 }
 
-release_externals <- function(driver=NULL, selServer=NULL) {
-  eval.in.any.env(quote(driver$close()))
-  eval.in.any.env(quote(selServer$stop()))
+release_externals <- function() {
+  eval.in.any.env(quote({driver$close(); rm(driver)}))
+  eval.in.any.env(quote({selServer$stop(); rm(selServer)}))
   killExternalRprocessAnywhere()
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
