@@ -1,4 +1,8 @@
+# this test can spoil loaded httr and RSelenium packages so it was renamed and testthat
+# does not see it anymore. Use '.rs.restartR()' after test to repair broken packages
+# Run this test using 'testthat::test_file('tests/testthat/checkInstallation.R')'
 context("Installation on clean machine")
+
 
 #### clean ####
 .libPaths(Sys.getenv('R_LIBS_USER'))
@@ -33,10 +37,15 @@ if (file.exists(testDir)) {
       for (i in length(dlls)) {
         library.dynam.unload(names(dlls)[i], dirname(dirname(dirname(dlls[i]))))
       }
+      # getLoadedDLLs() %>% sapply(`[[`, 'path') %>% 
+      #   Filter(function(dll) grepl('/test/', dll) ,.) %>% sapply(dyn.unload)
     }, envir=.GlobalEnv)
     unlink(testDir, T, T)
   }
-  if (file.exists(testDir)) stop('testDir still exists')
+  if (file.exists(testDir)) {
+    stop('Could not uninstall testDir. ',
+         'Restart R session (possibly with ".rs.restartR()") to release previous dlls')
+  }
 }
 
 dir.create(testDir)
