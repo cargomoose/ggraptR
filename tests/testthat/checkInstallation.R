@@ -10,21 +10,30 @@ suppressPackageStartupMessages({
   library(stringi)
   library(RSelenium)
   library(testthat)
-  library(curl)  # contains the only dll that is hard to unload
+  library(curl) 
   library(digest)
   library(httr)
 })
+initialLoadedPkgs <- names(sessionInfo()$loadedOnly)
+
 
 #### paths ####
 userLibRoot <- dirname(.libPaths()[1])
 testDir <- paste0(userLibRoot, '/test')
 predefPack <- paste0(userLibRoot, '/predefPack')
 
+
 #### prepare folders, workspace and libraries ####
 if (file.exists(testDir)) {
   unlink(testDir, T, T)
   if (file.exists(testDir)) {
-    Sys.sleep(2)
+    evalq({
+      dlls <- getLoadedDLLs() %>% sapply(`[[`, 'path') %>% 
+        Filter(function(dll) grepl('/test/', dll) ,.)  # for jsonlite.dll
+      for (i in length(dlls)) {
+        library.dynam.unload(names(dlls)[i], dirname(dirname(dirname(dlls[i]))))
+      }
+    }, envir=.GlobalEnv)
     unlink(testDir, T, T)
   }
   if (file.exists(testDir)) stop('testDir still exists')
@@ -55,22 +64,25 @@ if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1])))
   stop()
 }
 
+
 #### install ggraptR from git. Run it and check the initial plot ####
 install(dirname(dirname(getwd())))
-browser()
 suppressPackageStartupMessages(library(ggraptR))
 source('script/checkInitPlot.R')
 release_externals()
 
 
 #### restore and clean ####
-for (pkg in paste('package:',names(sessionInfo()$otherPkgs),sep=""))
+for (pkg in paste('package:', names(sessionInfo()$otherPkgs), sep=""))
   suppressWarnings(detach(pkg, character.only=TRUE, unload=TRUE))
-# while (!is.null(pkgs <- names(sessionInfo()$loadedOnly)))
-#   for (pkg in pkgs) try(unloadNamespace(pkg), T)
-for (dll in sapply(getLoadedDLLs(), `[[`, 'path'))
-  if (startsWith(dll, testDir)) dyn.unload(dll)  # release dlls to unlink
+
+for (i in 10:1) {
+  pkgs <- setdiff(names(sessionInfo()$loadedOnly), initialLoadedPkgs)
+  if (!length(pkgs)) break
+  for (pkg in pkgs) try(unloadNamespace(pkg), T)
+}
 
 unlink(testDir, T, T)
 .libPaths(Sys.getenv('R_LIBS_USER'))
 closeAllConnections()
+print('Success')

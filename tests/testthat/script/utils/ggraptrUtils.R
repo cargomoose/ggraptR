@@ -14,9 +14,9 @@ waitAfterDatasetChanged <- function(driver) {
   waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
                      timeout=5, errorIfNot = F)
   if (isWebElement(waitRes)) {
-    if (!waitFor(quote(
-      length(getAllPlotNames()) == length(driver %>% getSelectOptions('plotTypes'))), 
-      errorIfNot = F, catchStale=T)) {
+    if (!waitFor({
+          length(getAllPlotNames()) == length(driver %>% getSelectOptions('plotTypes')) 
+        }, errorIfNot = F, catchStale=T)) {
       browser()
       stop_externals('waitAfterDatasetChanged failed')
     }
@@ -98,7 +98,7 @@ isCheckboxCorrect <- function(driver, inpId, plotNames) {
     
     chkBoxEl %>% click()
     if (isShow) {
-      waitFor(quote(nWidBlockInps != length(driver %>% getEls(query))), driver)
+      waitFor({ nWidBlockInps != length(driver %>% getEls(query)) }, driver)
     } else {
       waitForPlotReady(driver)
     }

@@ -28,7 +28,7 @@ get.anywhere <- function(strObjName) {
 }
 
 eval.in.any.env <- function(targetExpr) {
-  tryCatch(eval(targetExpr), error=function(e) {
+  tryCatch(eval(substitute(targetExpr)), error=function(e) {
     if (isNotFoundException(e)) {
       for (env in sys.frames()) {
         res <- try(eval(targetExpr, envir = env), T)

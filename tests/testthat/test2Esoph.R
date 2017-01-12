@@ -36,9 +36,9 @@ test_that('Submit button grays correct', {
 
 driver %>% getEl('#reset_input') %>% click()
 test_that('Reset works correct', {
-  expect_true(waitFor(quote(
-    text(driver %>% getEl('#color option[selected="selected"]')) == 'color')))
-  expect_true(waitFor(quote(is.null(driver %>% getEl('#treatColorAsFactor')))))
+  expect_true(waitFor({
+    text(driver %>% getEl('#color option[selected="selected"]')) == 'color' }))
+  expect_true(waitFor({ is.null(driver %>% getEl('#treatColorAsFactor')) }))
   expect_true(!is.null(waitFor('#submit[disabled]')))
   expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL, shortShotName=F))
 })
@@ -58,7 +58,7 @@ invisible(apply(
       if (!is.na(row['dwnload'])) {
         expect_true(!is.null(waitFor('a#dlPlot', root)))
       } else {
-        waitFor(quote(text(root %>% getEl('#generateCode')) != ''))
+        waitFor({ text(root %>% getEl('#generateCode')) != '' })
         expect_true(text(root %>% getEl('#generateCode')) == gsub(
           '\\n *', '', 'ggplot(diamonds, aes(y=price, x=carat)) + 
           geom_point(aes(colour=color), stat=\"identity\", position=\"jitter\", 

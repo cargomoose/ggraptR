@@ -13,8 +13,7 @@ uplEl <- rootEl %>% getEl('input#file')
 uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 customDatasetFilepath <- 'data/charData.csv'
 uplEl$sendKeysToElement(list(customDatasetFilepath))
-waitFor(quote(
-  text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload complete'))
+waitFor({ text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload complete' })
 driver %>% getEl('#viewPlot') %>% click()
 waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
 

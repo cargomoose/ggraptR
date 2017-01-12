@@ -1,5 +1,4 @@
 # from find.package('RSelenium')/examples/serverUtils/*.R
-
 startSelServer <- function() {
   library(XML)
   suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
@@ -89,15 +88,15 @@ run_external_ggraptR <- function(...) {
 }
 
 killExternalRprocessAnywhere <- function(silent=T) {
-  try(eval.in.any.env(quote({
-    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
-    rm(selPid)})), 
-    silent = silent)
+  try(eval.in.any.env({
+        suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
+        suppressWarnings(rm(selPid)) 
+      }), silent = silent)
 }
 
 release_externals <- function() {
-  eval.in.any.env(quote({driver$close(); rm(driver)}))
-  eval.in.any.env(quote({selServer$stop(); rm(selServer)}))
+  eval.in.any.env({ driver$close(); suppressWarnings(rm(driver)) })
+  eval.in.any.env({ selServer$stop(); suppressWarnings(rm(selServer)) })
   killExternalRprocessAnywhere()
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
@@ -190,12 +189,12 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
   oneWaitDur <- timeout / nChecks
   
   targetFun <- 
-    if (is.function(target)) {
+    if (is.language(substitute(target))) {  # if quoted expression
+      function(source) eval.in.any.env(target)
+    } else if (is.function(target)) {
       target
     } else if (is.character(target)) {
       function(source) unlist(lapply(target, function(x) getEls(source, x)))
-    } else if (is.call(target)) {  # if quoted expression
-      function(source) eval.in.any.env(target)
     } else {
       stop(sprintf('Not implemented for target class [%s]', class(target)))
     }

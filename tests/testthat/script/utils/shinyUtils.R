@@ -77,6 +77,6 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   }
   
   waitFor(if (isEraseAll) sprintf('#%sCtrl .selectize-input:not(.focus)', selectId) else
-            quote(nItemsBeforeErasing != getItemsLength(driver, selectId)), 
+            { nItemsBeforeErasing != getItemsLength(driver, selectId) }, 
           source=driver)
 }
