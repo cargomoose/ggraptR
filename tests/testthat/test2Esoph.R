@@ -37,7 +37,8 @@ test_that('Submit button grays correct', {
 driver %>% getEl('#reset_input') %>% click()
 test_that('Reset works correct', {
   expect_true(waitFor({
-    text(driver %>% getEl('#color option[selected="selected"]')) == 'color' }))
+    text(driver %>% getEl('#color option[selected="selected"]')) == 'color' }, 
+    catchStale=T))
   expect_true(waitFor({ is.null(driver %>% getEl('#treatColorAsFactor')) }))
   expect_true(!is.null(waitFor('#submit[disabled]')))
   expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL, shortShotName=F))
@@ -75,5 +76,5 @@ invisible(apply(
 
 #### check inputs ####
 switchToDataset(driver, 'esoph')
-# source('script/checkInputs.R')  #################
+source('script/checkInputs.R')
 release_externals()

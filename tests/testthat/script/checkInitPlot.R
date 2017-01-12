@@ -1,6 +1,8 @@
 source('script/utils/funs.R')
 # killExternalRprocessAnywhere()  # if the last run was finished with an error
 
+unlink('report/*')  # to clear 'report' folder content
+
 list2env(run_external_ggraptR(), environment()) %>% invisible()
 
 test_that("Initial diamonds plot is correct", {

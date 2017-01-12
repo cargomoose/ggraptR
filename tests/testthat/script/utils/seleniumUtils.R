@@ -1,3 +1,52 @@
+# target - charater of css/xpath query, function returning T/F, expression like {a+2==5}
+# source - webDriver or webElement
+waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
+  nChecks <- 2 * timeout
+  oneWaitDur <- timeout / nChecks
+  
+  targetFun <- 
+    if (class(substitute(target)) == '{') {  # if quoted expression
+      cll <- as.call(substitute(target))
+      function(placeholder) eval.in.any.env(cll)
+    } else if (is.function(target)) {
+      target
+    } else if (is.character(target)) {
+      function(x) unlist(lapply(target, function(el) getEls(x, el)))
+    } else {
+      stop(sprintf('Not implemented for target class [%s]', class(target)))
+    }
+  
+  for (i in 1:nChecks) {
+    res <- suppressMessages(tryCatch(
+      targetFun(source),
+      error=function(e) if (catchStale && isStaleException(e)) F else {
+        browser()
+        stop(e$message)
+      }))
+    
+    if (is.list(res)) {
+      if (length(target) == 1) {
+        if (length(res)) {
+          return(invisible(if (length(res) > 1) res else res[[1]]))
+        }
+      } else {
+        if (length(Filter(length, res)) == 1) {
+          return(Filter(length, res)[[1]])
+        }
+      }
+    } else if (is.logical(res) && res) {
+      return(TRUE)
+    }
+    Sys.sleep(oneWaitDur)
+  }
+  
+  if (errorIfNot) {
+    browser()
+    stop('Could not wait')
+  } 
+  FALSE
+}
+
 # from find.package('RSelenium')/examples/serverUtils/*.R
 startSelServer <- function() {
   library(XML)
@@ -84,7 +133,7 @@ run_external_ggraptR <- function(...) {
     stop('>> ', errMsg)
   }
   
-  list(driver=driver, selServer=selServer, selPid=selPid)
+  list(driver=driver, selServer=selServer, selPipe=selPipe, selPid=selPid)
 }
 
 killExternalRprocessAnywhere <- function(silent=T) {
@@ -182,46 +231,4 @@ moveSlider <- function(driver, dotEl, pos) {
   driver$buttondown()
   driver$mouseMoveToLocation(x = pos - dotEl$getElementLocation()$x, y = -1L)
   driver$buttonup()
-}
-
-waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
-  nChecks <- 2 * timeout
-  oneWaitDur <- timeout / nChecks
-  
-  targetFun <- 
-    if (is.language(substitute(target))) {  # if quoted expression
-      function(source) eval.in.any.env(target)
-    } else if (is.function(target)) {
-      target
-    } else if (is.character(target)) {
-      function(source) unlist(lapply(target, function(x) getEls(source, x)))
-    } else {
-      stop(sprintf('Not implemented for target class [%s]', class(target)))
-    }
-  
-  for (i in 1:nChecks) {
-    res <- suppressMessages(tryCatch(
-      targetFun(source),
-      error=function(e) if (catchStale && isStaleException(e)) F else {
-        browser()
-        stop(e$message)
-      }))
-    
-    if (is.list(res)) {
-      if (length(target) == 1) {
-        if (length(res)) {
-          return(invisible(if (length(res) > 1) res else res[[1]]))
-        }
-      } else {
-        if (length(Filter(length, res)) == 1) {
-          return(Filter(length, res)[[1]])
-        }
-      }
-    } else if (is.logical(res) && res) {
-      return(TRUE)
-    }
-    Sys.sleep(oneWaitDur)
-  }
-  
-  if (errorIfNot) stop('Could not wait') else F
 }

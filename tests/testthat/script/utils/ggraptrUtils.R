@@ -61,7 +61,10 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
       filterElByAttr('data-value', optVal) %>% 
       click()
     
-    if (!has_shiny_correct_state(driver, plotNames, inpId, optVal)) return(FALSE)
+    if (!has_shiny_correct_state(driver, plotNames, inpId, optVal)) {
+      warning(sprintf('Error on [%s=%s]', inpId, optVal))
+      return(FALSE)
+    }
     if (!is.null(driver %>% getEl(c('#', inpId)) %>% attr('multiple'))) {
       eraseMultiSelectOpts(driver, inpId)
       waitForPlotReady(driver)
@@ -81,7 +84,10 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
     moveSlider(driver, dotEl, pos)
 
     val <- ctrlEl %>% getEl('.irs-single') %>% text()
-    if (!has_shiny_correct_state(driver, plotNames, inpId, val)) return(F)
+    if (!has_shiny_correct_state(driver, plotNames, inpId, val)) {
+      warning(sprintf('Error on [%s=%s]', inpId, val))
+      return(F)
+    }
   }
   TRUE
 }
