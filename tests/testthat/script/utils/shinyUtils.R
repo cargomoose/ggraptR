@@ -34,7 +34,7 @@ isSelectEl <- function(selId, source=driver) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
-getSelectOptions <- function(driver, selId, withSelected=F) {
+getSelectOptions <- function(driver, selId, withActivated=F) {
   # shiny 'select' inputs do not have their options at the beginning. Click to load
   if (!isSelectEl(selId, source=driver)) stop_externals('!isSelectEl in getSelectOptions')
   
@@ -46,7 +46,7 @@ getSelectOptions <- function(driver, selId, withSelected=F) {
     waitFor('.selectize-input.input-active', selControlEl)
   }
   notSel <- selControlEl %>% getEls('.option:not(.selected)')
-  if (withSelected) {
+  if (withActivated) {
     c(notSel, selControlEl %>% getEls('.option.selected'))
   } else {
     notSel
