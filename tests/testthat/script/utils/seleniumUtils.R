@@ -1,3 +1,5 @@
+EXTERN_LOG_NAME <- 'rcmd.log'
+
 # target - charater of css/xpath query, function returning T/F, expression like {a+2==5}
 # source - webDriver or webElement
 waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
@@ -6,8 +8,8 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
   
   targetFun <- 
     if (class(substitute(target)) == '{') {  # if quoted expression
-      cll <- as.call(substitute(target))
-      function(placeholder) eval.in.any.env(cll)
+      call_obj <- as.call(substitute(target))
+      function(placeholder) eval.in.any.env(call_obj)
     } else if (is.function(target)) {
       target
     } else if (is.character(target)) {
@@ -19,9 +21,13 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
   for (i in 1:nChecks) {
     res <- suppressMessages(tryCatch(
       targetFun(source),
-      error=function(e) if (catchStale && isStaleException(e)) F else {
-        browser()
-        stop(e$message)
+      error=function(e) {
+        if (is_unknown_exception(e) || (catchStale && isStaleException(e))) {
+          FALSE
+        } else {
+          browser()
+          stop(e$message)
+        }
       }))
     
     if (is.list(res)) {
@@ -119,34 +125,34 @@ run_external_ggraptR <- function(...) {
             sprintf('suppressPackageStartupMessages(ggraptR(%s))', ggArgsStr))
   
   # pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
-  selPipe <- pipe(generate_r_cmd(cmds), open='r')  # system(cmd, wait=F)
-  selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
-  
+  # selPipe <- pipe(generate_r_cmd(cmds), open='r')  # system(cmd, wait=F)
+  # selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
+  system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
   selServer <- startSelServer()
   driver <- getDriver(port=ggraptrArgsLst$port)
   
   if (driver$getTitle()[[1]] != 'ggraptR') {
     # if hangs before the next message [>5 sec] close the process manually
-    cat('\nTrying to check the reason why [driver$getTitle()[[1]] != "ggraptR"]', fill=T)
-    errMsg <- head(suppressWarnings(system(generate_r_cmd(cmds), intern=T)), -2)
-    release_externals()
-    stop('>> ', errMsg)
+    # cat('\nTrying to check the reason why [driver$getTitle()[[1]] != "ggraptR"]', fill=T)
+    # errMsg <- head(suppressWarnings(system(generate_r_cmd(cmds), intern=T)), -2)
+    errMsg <- readLines(EXTERN_LOG_NAME) %>% head(-1) %>% tail(-3) %>% paste(collapse='\n')
+    stop_externals(paste('>>', errMsg))
   }
   
-  list(driver=driver, selServer=selServer, selPipe=selPipe, selPid=selPid)
+  list(driver=driver, selServer=selServer)  # selPipe=selPipe, selPid=selPid
 }
 
-killExternalRprocessAnywhere <- function(silent=T) {
-  try(eval.in.any.env({
-        suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
-        suppressWarnings(rm(selPid)) 
-      }), silent = silent)
+killExternalRprocess <- function(silent=T) {
+  try({
+    selPid <- gsub('\\[1\\] ', '', readLines(EXTERN_LOG_NAME, 2)[2])
+    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
+  }, silent = silent)
 }
 
 release_externals <- function() {
   eval.in.any.env({ driver$close(); suppressWarnings(rm(driver)) })
   eval.in.any.env({ selServer$stop(); suppressWarnings(rm(selServer)) })
-  killExternalRprocessAnywhere()
+  killExternalRprocess()
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
 }

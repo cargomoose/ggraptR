@@ -28,11 +28,15 @@ getErrorMessage <- function(err) {
 }
 
 is_no_such_driver_exception <- function(e) {
-  is.error(e) && grepl('Summary: NoSuchDriver',unlist(e[1]))
+  is.error(e) && grepl('Summary: NoSuchDriver', unlist(e[1]))
+}
+
+is_unknown_exception <- function(e) {
+  is.error(e) && grepl('Summary: UnknownError', unlist(e[1]))
 }
 
 isNotFoundException <- function(e) {
-  is.error(e) && grepl('object .* not found',unlist(e[1]))
+  is.error(e) && grepl('object .* not found', unlist(e[1]))
 }
 
 isStaleException <- function(e) {
@@ -59,6 +63,7 @@ getAllPlotNames <- function() {
     sapply(function(x) gsub('(\\d)', ' \\1', x))
 }
 
-generate_r_cmd <- function(...) {
-  paste('R -q', paste(paste0('-e "', unlist(list(...)), '"'), collapse = ' '), '2>&1')
+generate_r_cmd <- function(cmds, out_file_name) {
+  sprintf('R -q %s >%s 2>&1', 
+          paste(paste0('-e "', cmds, '"'), collapse = ' '), out_file_name)
 }

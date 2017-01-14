@@ -1,5 +1,5 @@
 source('script/utils/funs.R')
-# killExternalRprocessAnywhere()  # if the last run was finished with an error
+# killExternalRprocess()  # if the last run was finished with an error
 
 unlink('report/*')  # to clear 'report' folder content
 

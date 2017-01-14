@@ -108,7 +108,7 @@ isCheckboxCorrect <- function(driver, inpId, plotNames) {
     
     chkBoxEl %>% click()
     if (isShow && inpId != 'showXYRange') {
-      waitFor({ nWidBlockInps != length(driver %>% getEls(query)) }, driver)
+      waitFor({ nWidBlockInps != length(driver %>% getEls(query)) })
     } else {
       waitForPlotReady(driver)
     }
