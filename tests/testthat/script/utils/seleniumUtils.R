@@ -56,8 +56,10 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
 # from find.package('RSelenium')/examples/serverUtils/*.R
 startSelServer <- function() {
   library(XML)
-  suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
-  suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
+  if (Sys.info()['sysname'] == 'Windows') {
+    suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
+    suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
+  }
   source(paste0(find.package('RSelenium'), '/examples/serverUtils/startServer.R'))
   
   for (i in 1:2) {
@@ -77,9 +79,10 @@ startSelServer <- function() {
 }
 
 getDriver <- function(url='http://127.0.0.1', port=6012) {
-  phantomJsFile <- paste0(find.package('RSelenium'), '/bin/phantomjs.exe')
+  phantomJsFile <- paste0(find.package('RSelenium'), '/bin/phantomjs',
+                          if (Sys.info()['sysname'] == 'Windows') '.exe' else '')
   if (!file.exists(phantomJsFile)) {
-    stop('Please download the latest version of phantomjs.exe from 
+    stop('Please download the latest version of phantomjs executable from 
           http://phantomjs.org/download.html to [', dirname(phantomJsFile), ']')
   }
   

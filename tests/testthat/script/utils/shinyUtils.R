@@ -1,6 +1,10 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
                                     shortShotName=T, waitPlot=T) {
   if (waitPlot) waitForPlotReady(driver)
+  if (!dir.exists('report')) {
+    dir.create('report')
+    cat('Created "report" directory at', getwd())
+  }
   fileName <- sprintf('report/%s_[%s=%s].png', 
                       pastePlus(plotNames, shorten=shortShotName), toString(elId), 
                       substr(toString(elVal), 1, 5))
