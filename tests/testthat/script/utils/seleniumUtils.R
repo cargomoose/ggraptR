@@ -57,9 +57,13 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
 # from find.package('RSelenium')/examples/serverUtils/*.R
 startSelServer <- function() {
   library(XML)
+  
   if (Sys.info()['sysname'] == 'Windows') {
     suppressWarnings(system('taskkill /f /im java.exe', show.output.on.console = F))
     suppressWarnings(system('taskkill /f /im phantomjs.exe', show.output.on.console = F))
+  } else if (Sys.info()['sysname'] == 'Darwin') {  
+    # system('killall -1 java > /dev/null 2>&1')  # generates "httr" problems
+    system('killall -1 phantomjs > /dev/null 2>&1')
   }
   source(paste0(find.package('RSelenium'), '/examples/serverUtils/startServer.R'))
   
@@ -134,39 +138,55 @@ run_external_ggraptR <- function(...) {
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
     cmds[3] <- sprintf(ggCmdLine, as_string(ggraptrArgsLst))
+    
     system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
+    while (length(suppressWarnings(readLines(EXTERN_LOG_NAME))) < 6) {
+      Sys.sleep(1)
+    }
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)
     
-    
     if (is.error(driver) || driver$getTitle()[[1]] != 'ggraptR') {
       errMsg <- suppressWarnings(readLines(EXTERN_LOG_NAME)) %>% 
         head(-1) %>% tail(-3) %>% paste(collapse='\n')
-    
-      if (!(grepl('in startServer.+handlerManager.createHttpuvApp', errMsg) &&
+      
+      if (is_error_of(driver, 'Couldnt connect.+ensure.+Selenium.+running') ||
+          (grepl('in startServer.+handlerManager.createHttpuvApp', errMsg) &&
           grepl('Failed to create server', errMsg))) {
-        break
+        Sys.sleep(2)
+        next
+      } else if (is.error(driver)) {
+        errMsg <- if (grepl('Undefined error in httr', getErrorMessage(driver))) {
+          sprintf('Known strange "httr" library error. Full error message: [%s].
+                  Try to restart R session.', getErrorMessage(driver))
+        } else {
+          browser()
+          getErrorMessage(driver)
+        }
+      } else {
+        browser()
       }
+
+      break
     } else {
-      if (exists('errMsg')) cat('\nRunned on port', ggraptrArgsLst$port, fill=T)
+      if (exists('errMsg')) cat('\nggraptR runned on port', ggraptrArgsLst$port, fill=T)
       return(list(driver=driver, selServer=selServer))
     }
   }
+
   stop_externals(paste('>>', errMsg))
 }
 
 killExternalRprocess <- function(silent=T) {
-  try({
-    selPid <- gsub('\\[1\\] ', '', readLines(EXTERN_LOG_NAME, 2)[2]) %>% as.numeric()
-    tools::pskill(selPid)
-  }, silent = silent)
+  selPid <- gsub('\\[1\\] ', '', readLines(EXTERN_LOG_NAME, 2)[2]) %>% as.numeric()
+  tools::pskill(selPid)
 }
 
 release_externals <- function() {
-  eval.in.any.env({ driver$close(); suppressWarnings(rm(driver)) })
-  eval.in.any.env({ selServer$stop(); suppressWarnings(rm(selServer)) })
-  killExternalRprocess()
+  try(eval.in.any.env({ driver$close(); suppressWarnings(rm(driver)) }), silent = T)
+  try(eval.in.any.env({ selServer$stop(); suppressWarnings(rm(selServer)) }), silent = T)
+  try(killExternalRprocess(), silent = T)
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
 }
