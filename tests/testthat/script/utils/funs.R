@@ -12,7 +12,8 @@ eval.in.any.env <- function(targetExpr) {
 
   for (env in sys.frames()) {
     res <- try(eval(targetExpr, envir = env), T)
-    if (!isNotFoundException(res) && !is_no_such_driver_exception(res)) {
+    if (!is_error_of(res, 'object .* not found') && 
+        !is_error_of(res, 'Summary: NoSuchDriver')) {
       if (is.error(res)) stop(getErrorMessage(res))
       return(res)
     }
@@ -27,20 +28,8 @@ getErrorMessage <- function(err) {
   unlist(err[1])
 }
 
-is_no_such_driver_exception <- function(e) {
-  is.error(e) && grepl('Summary: NoSuchDriver', unlist(e[1]))
-}
-
-is_unknown_exception <- function(e) {
-  is.error(e) && grepl('Summary: UnknownError', unlist(e[1]))
-}
-
-isNotFoundException <- function(e) {
-  is.error(e) && grepl('object .* not found', unlist(e[1]))
-}
-
-isStaleException <- function(e) {
-  is.error(e) && grepl('StaleElementReference', getErrorMessage(e))
+is_error_of <- function(e, msg) {
+  is.error(e) && grepl(msg, getErrorMessage(e))
 }
 
 get.anywhere <- function(strObjName) {
@@ -63,6 +52,7 @@ getAllPlotNames <- function() {
     sapply(function(x) gsub('(\\d)', ' \\1', x))
 }
 
+# pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
 generate_r_cmd <- function(cmds, out_file_name) {
   sprintf('R -q %s >%s 2>&1', 
           paste(paste0('-e "', cmds, '"'), collapse = ' '), out_file_name)

@@ -22,7 +22,8 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
     res <- suppressMessages(tryCatch(
       targetFun(source),
       error=function(e) {
-        if (is_unknown_exception(e) || (catchStale && isStaleException(e))) {
+        if (is_error_of(e, 'Summary: UnknownError') || 
+            (catchStale && is_error_of(e, 'StaleElementReference'))) {
           FALSE
         } else {
           browser()
@@ -115,34 +116,45 @@ as_string <- function(x) {
 }
   
 run_external_ggraptR <- function(...) {
+  suppressWarnings(try(rm(errMsg)))
   ggraptrArgsLst <- Filter(function(el) !is.null(el), 
                            if (length(list(...)) == 0 || # when '...' is not passed
                                !is.list(...)) list(...) else list(...)[[1]])
-  if (!'port' %in% names(ggraptrArgsLst)) ggraptrArgsLst$port <- 5050
-  ggraptrArgsLst$launch.browser <- F
-  lst <- ggraptrArgsLst
-  ggArgsStr <- as_string(lst)
-  
-  cmds <- c('Sys.getpid()',
-            'suppressPackageStartupMessages(library(ggraptR))',
-            sprintf('suppressPackageStartupMessages(ggraptR(%s))', ggArgsStr))
-  
-  # pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
-  # selPipe <- pipe(generate_r_cmd(cmds), open='r')  # system(cmd, wait=F)
-  # selPid <- gsub('\\[1\\] ', '', readLines(selPipe, 2)[2])
-  system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
-  selServer <- startSelServer()
-  driver <- getDriver(port=ggraptrArgsLst$port)
-  
-  if (driver$getTitle()[[1]] != 'ggraptR') {
-    # if hangs before the next message [>5 sec] close the process manually
-    # cat('\nTrying to check the reason why [driver$getTitle()[[1]] != "ggraptR"]', fill=T)
-    # errMsg <- head(suppressWarnings(system(generate_r_cmd(cmds), intern=T)), -2)
-    errMsg <- readLines(EXTERN_LOG_NAME) %>% head(-1) %>% tail(-3) %>% paste(collapse='\n')
-    stop_externals(paste('>>', errMsg))
+  iters_to_find_free_port <- if (!'port' %in% names(ggraptrArgsLst)) {
+    ggraptrArgsLst$port <- 5050
+    10
+  } else {
+    1
   }
+  ggraptrArgsLst$launch.browser <- F
   
-  list(driver=driver, selServer=selServer)  # selPipe=selPipe, selPid=selPid
+  ggCmdLine <- 'suppressPackageStartupMessages(ggraptR(%s))'
+  cmds <- c('Sys.getpid()',
+            'suppressPackageStartupMessages(library(ggraptR))')
+  
+  for (i in 1:iters_to_find_free_port) {
+    ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
+    cmds[3] <- sprintf(ggCmdLine, as_string(ggraptrArgsLst))
+    system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
+    
+    selServer <- startSelServer()
+    driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)
+    
+    
+    if (is.error(driver) || driver$getTitle()[[1]] != 'ggraptR') {
+      errMsg <- suppressWarnings(readLines(EXTERN_LOG_NAME)) %>% 
+        head(-1) %>% tail(-3) %>% paste(collapse='\n')
+    
+      if (!(grepl('in startServer.+handlerManager.createHttpuvApp', errMsg) &&
+          grepl('Failed to create server', errMsg))) {
+        break
+      }
+    } else {
+      if (exists('errMsg')) cat('\nRunned on port', ggraptrArgsLst$port, fill=T)
+      return(list(driver=driver, selServer=selServer))
+    }
+  }
+  stop_externals(paste('>>', errMsg))
 }
 
 killExternalRprocess <- function(silent=T) {
