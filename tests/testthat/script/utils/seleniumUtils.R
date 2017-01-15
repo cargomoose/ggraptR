@@ -76,7 +76,6 @@ startSelServer <- function() {
   stop()
   # system('chcp 65001')  # for windows non-english encoding
   # system('tasklist /fi "imagename eq java.exe"')
-  # system('taskkill /f /pid 4668')
 }
 
 getDriver <- function(url='http://127.0.0.1', port=6012) {
@@ -159,8 +158,8 @@ run_external_ggraptR <- function(...) {
 
 killExternalRprocess <- function(silent=T) {
   try({
-    selPid <- gsub('\\[1\\] ', '', readLines(EXTERN_LOG_NAME, 2)[2])
-    suppressWarnings(system(paste('taskkill /f /pid', selPid), show.output = F))
+    selPid <- gsub('\\[1\\] ', '', readLines(EXTERN_LOG_NAME, 2)[2]) %>% as.numeric()
+    tools::pskill(selPid)
   }, silent = silent)
 }
 
