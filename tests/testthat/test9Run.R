@@ -6,7 +6,7 @@ gg_arg_combinations <- list(
   'diamonds', 
   'esoph', 
   list(initialPlot='Line'),
-  list(port=5051, appDir=system.file("ggraptR", package = "ggraptR")))
+  list(appDir=system.file("ggraptR", package = "ggraptR")))  # removed a test of port arg
 
 for (args in gg_arg_combinations) {
   run_result <- F

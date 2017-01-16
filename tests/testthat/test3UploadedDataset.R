@@ -12,6 +12,10 @@ uplEl <- rootEl %>% getEl('input#file')
 #### upload custom dataset and go back to plot tab ####
 uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 customDatasetFilepath <- 'data/charData.csv'
+if (!file.exists(customDatasetFilepath)) {
+  dir.create(dirname(customDatasetFilepath))
+  write.csv(esoph[1:50, 2:ncol(esoph)], file = customDatasetFilepath)
+}
 uplEl$sendKeysToElement(list(customDatasetFilepath))
 waitFor({ text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload complete' })
 driver %>% getEl('#viewPlot') %>% click()

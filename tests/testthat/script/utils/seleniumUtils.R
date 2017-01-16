@@ -161,11 +161,8 @@ run_external_ggraptR <- function(...) {
           sprintf('Known strange "httr" library error. Full error message: [%s].
                   Try to restart R session.', getErrorMessage(driver))
         } else {
-          browser()
           getErrorMessage(driver)
         }
-      } else {
-        browser()
       }
 
       break
