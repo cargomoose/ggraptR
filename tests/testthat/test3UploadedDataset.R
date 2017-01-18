@@ -14,7 +14,7 @@ uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 customDatasetFilepath <- 'data/charData.csv'
 if (!file.exists(customDatasetFilepath)) {
   dir.create(dirname(customDatasetFilepath))
-  write.csv(esoph[1:50, 2:ncol(esoph)], file = customDatasetFilepath)
+  write.csv(esoph[1:50, 2:ncol(esoph)], file = customDatasetFilepath, row.names = F)
 }
 uplEl$sendKeysToElement(list(customDatasetFilepath))
 waitFor({ text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload complete' })
@@ -23,6 +23,6 @@ waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
 
 
 #### check inputs ####
-switchToDataset(driver, basename(customDatasetFilepath))
+tested_dataset <<- basename(customDatasetFilepath)
 source('script/checkInputs.R')
 release_externals()

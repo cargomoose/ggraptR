@@ -75,6 +75,6 @@ invisible(apply(
 
 
 #### check inputs ####
-switchToDataset(driver, 'esoph')
+tested_dataset <- 'esoph'
 source('script/checkInputs.R')
 release_externals()
