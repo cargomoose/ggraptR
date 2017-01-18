@@ -1,10 +1,11 @@
-switchToDataset <- function(driver, testedDataset, needWaitForPlotReady=F) {
+switchToDataset <- function(driver, testedDataset, init_plot = 'scatter',
+                            needWaitForPlotReady=F) {
   driver %>% getSelectOptions('dataset') %>% 
     filterElByAttr('data-value', testedDataset) %>% click()
   waitAfterDatasetChanged(driver)
   
   driver %>% getSelectOptions('plotTypes') %>% 
-    filterElByAttr('data-value', 'scatter') %>% click()
+    filterElByAttr('data-value', init_plot) %>% click()
   
   if (needWaitForPlotReady) waitForPlotReady(driver)
 }

@@ -1,5 +1,9 @@
-usedPlotNames <- if (exists('shortTestMode') && shortTestMode)
-  setdiff(getAllPlotNames(), 'Pairs') else c()
+short <- exists('short_test_mode') && short_test_mode
+switchToDataset(driver, tested_dataset, init_plot = if (short) 'pairs' else 'scatter')
+usedPlotNames <- if (!short) c() else {
+  cat('\nshort test mode on\n')
+  setdiff(getAllPlotNames(), 'Pairs')
+}
 
 isLastIter <- F
 while (!isLastIter) {
