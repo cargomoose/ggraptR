@@ -64,7 +64,7 @@ getPreloadedEnvDfNames <- function(env=.GlobalEnv) {
     obj <- get(objName)
     if (any(class(obj)=='data.frame')) {
       dfNames <- c(dfNames, objName)
-    } 
+    }
   }
   dfNames
 }

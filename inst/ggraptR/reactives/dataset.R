@@ -36,7 +36,7 @@ rawDataset <- reactive({
   isolate(reactVals$plotState$dataset_name <- input$dataset)
   
   # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
-  if (is.null(input$file)) {
+  df <- if (is.null(input$file)) {
     get(input$dataset)
   } else { # if custom dataset was uploaded
     # if custom dataset was selected, then set it as raw dataset
@@ -47,6 +47,8 @@ rawDataset <- reactive({
       get(input$dataset)
     }
   }
+  
+  data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
 })
 
 # manually aggregated dataset
