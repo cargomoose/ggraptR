@@ -1,6 +1,6 @@
-short <- exists('short_test_mode') && short_test_mode
-switchToDataset(driver, tested_dataset, init_plot = if (short) 'pairs' else 'scatter')
-usedPlotNames <- if (!short) c() else {
+switchToDataset(driver, test_settings$dataset, 
+                init_plot = if (test_settings$only_pairs) 'pairs' else 'scatter')
+usedPlotNames <- if (!test_settings$only_pairs) c() else {
   cat('\nshort test mode on\n')
   setdiff(getAllPlotNames(), 'Pairs')
 }
@@ -26,10 +26,10 @@ while (!isLastIter) {
     })
   }
   
+  usedPlotNames <- append(usedPlotNames, setdiff(plotNames, usedPlotNames))
   isNextPlotAdded <- tryAddNextPlot(driver)
+  
   if (!isNextPlotAdded) {
-    usedPlotNames <- append(usedPlotNames, plotNames)
-    
     nextPlotTypes <- setdiff(getAllPlotNames(), usedPlotNames)
     if (length(nextPlotTypes)) {
       eraseMultiSelectOpts(driver, 'plotTypes', length(plotNames))

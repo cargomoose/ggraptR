@@ -3,7 +3,7 @@ source('script/utils/funs.R')
 
 unlink('report/*')  # to clear 'report' folder content
 
-list2env(run_external_ggraptR(), environment()) %>% invisible()
+list2env(get_selenium_externals(), environment()) %>% invisible()
 
 test_that("Initial diamonds plot is correct", {
   waitForPlotReady(driver)

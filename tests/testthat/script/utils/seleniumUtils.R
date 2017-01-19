@@ -118,31 +118,44 @@ as_string <- function(x) {
     paste(collapse=', ')
 }
   
-run_external_ggraptR <- function(...) {
-  suppressWarnings(try(rm(errMsg)))
+run_external_ggraptR <- function(ggraptrArgsLst) {
+  stopifnot(is.list(ggraptrArgsLst))
+  ggraptrArgsLst$launch.browser <- F
+  cmds <- c('Sys.getpid()',
+            'suppressPackageStartupMessages(library(ggraptR))',
+            sprintf('suppressPackageStartupMessages(ggraptR(%s))', 
+                    as_string(ggraptrArgsLst)))
+  system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
+  # for (i in 3:1) {
+  #   tryCatch({
+  while (length(suppressWarnings(readLines(EXTERN_LOG_NAME))) < 6) {
+    Sys.sleep(1)
+  }
+  #     break
+  #   }, error = function(e) {
+  #     if (grepl('cannot open the connection', getErrorMessage(e))) {
+  #       EXTERN_LOG_NAME <- sub('\\d?\\.', paste0(2, '\\.'), EXTERN_LOG_NAME)
+  #       cat(sprintf('Trying to create another one log file: [%s]', EXTERN_LOG_NAME))
+  #     } else {
+  #       stop(getErrorMessage(e))
+  #     }
+  #   })
+  # }
+}
+
+get_selenium_externals <- function(...) {
   ggraptrArgsLst <- Filter(function(el) !is.null(el), 
                            if (length(list(...)) == 0 || # when '...' is not passed
                                !is.list(...)) list(...) else list(...)[[1]])
   iters_to_find_free_port <- if (!'port' %in% names(ggraptrArgsLst)) {
     ggraptrArgsLst$port <- 5050
-    10
-  } else {
-    1
-  }
-  ggraptrArgsLst$launch.browser <- F
-  
-  ggCmdLine <- 'suppressPackageStartupMessages(ggraptR(%s))'
-  cmds <- c('Sys.getpid()',
-            'suppressPackageStartupMessages(library(ggraptR))')
+    10 
+  } else 1
+  init_port <- ggraptrArgsLst$port
   
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
-    cmds[3] <- sprintf(ggCmdLine, as_string(ggraptrArgsLst))
-    
-    system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
-    while (length(suppressWarnings(readLines(EXTERN_LOG_NAME))) < 6) {
-      Sys.sleep(1)
-    }
+    run_external_ggraptR(ggraptrArgsLst)
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)
@@ -167,7 +180,9 @@ run_external_ggraptR <- function(...) {
 
       break
     } else {
-      if (exists('errMsg')) cat('\nggraptR runned on port', ggraptrArgsLst$port, fill=T)
+      if (init_port != ggraptrArgsLst$port) {
+        cat('\nggraptR runned on port', ggraptrArgsLst$port, fill=T)
+      }
       return(list(driver=driver, selServer=selServer))
     }
   }

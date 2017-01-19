@@ -1,0 +1,3 @@
+driver %>% getEl('#showFacet') %>% click()
+
+

@@ -25,9 +25,16 @@ waitAfterDatasetChanged <- function(driver) {
 }
   
 tryAddNextPlot <- function(driver) {
-  plotTypeGroupRestOpts <- getSelectOptions(driver, 'plotTypes')
-  canAdd <- length(plotTypeGroupRestOpts) > 0
-  if (canAdd) sample(plotTypeGroupRestOpts, size=1)[[1]] %>% click()
+  plot_types_id <- 'plotTypes'
+  plotTypeGroupRestOpts <- function() getSelectOptions(driver, plot_types_id)
+  canAdd <- length(plotTypeGroupRestOpts()) > 0
+  if (canAdd) {
+    cur_plots <- getCurrentPlotNames(driver)
+    if (length(cur_plots) == 2) {
+      eraseMultiSelectOpts(driver, plot_types_id, howMany = 2)
+    }
+    sample(plotTypeGroupRestOpts(), size=1)[[1]] %>% click()
+  }
   canAdd
 }
 
