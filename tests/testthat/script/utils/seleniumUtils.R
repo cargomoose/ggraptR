@@ -118,8 +118,8 @@ as_string <- function(x) {
     paste(collapse=', ')
 }
   
-run_external_ggraptR <- function(ggraptrArgsLst) {
-  stopifnot(is.list(ggraptrArgsLst))
+run_external_ggraptR <- function(...) {
+  ggraptrArgsLst <- list(...)
   ggraptrArgsLst$launch.browser <- F
   cmds <- c('Sys.getpid()',
             'suppressPackageStartupMessages(library(ggraptR))',
@@ -144,9 +144,7 @@ run_external_ggraptR <- function(ggraptrArgsLst) {
 }
 
 get_selenium_externals <- function(...) {
-  ggraptrArgsLst <- Filter(function(el) !is.null(el), 
-                           if (length(list(...)) == 0 || # when '...' is not passed
-                               !is.list(...)) list(...) else list(...)[[1]])
+  ggraptrArgsLst <- Filter(function(el) !is.null(el), list(...))
   iters_to_find_free_port <- if (!'port' %in% names(ggraptrArgsLst)) {
     ggraptrArgsLst$port <- 5050
     10 
@@ -155,7 +153,7 @@ get_selenium_externals <- function(...) {
   
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
-    run_external_ggraptR(ggraptrArgsLst)
+    do.call(run_external_ggraptR, ggraptrArgsLst)
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)
