@@ -29,7 +29,7 @@ tryAddNextPlot <- function(driver) {
   plotTypeGroupRestOpts <- function() getSelectOptions(driver, plot_types_id)
   canAdd <- length(plotTypeGroupRestOpts()) > 0
   if (canAdd) {
-    cur_plots <- getCurrentPlotNames(driver)
+    cur_plots <- get_current_plot_names(driver)
     if (length(cur_plots) == 2) {
       eraseMultiSelectOpts(driver, plot_types_id, howMany = 2)
     }
@@ -44,19 +44,28 @@ startNewPlotGroup <- function(driver, nextPlotType) {
     click()
 }
 
-getPlotInputIds <- function(driver) {
+get_plot_input_ids <- function(driver) {
   inputIds <- getEls(driver, c(
     'form', 
     '> div[data-display-if="input.conditionedPanels == \\"plotTab\\""]',
     ' .shiny-bound-input.shinyjs-resettable')) %>% 
     attr('id')
-  
-  # if (get.anywhere('shortTestMode')) 
-  #   head(inputIds, 2) else inputIds[sample(length(inputIds))]
 }
 
-getCurrentPlotNames <- function(driver) {
+get_current_plot_names <- function(driver) {
   getEls(driver, '#plotTypes option') %>% text()
+}
+
+check_input <- function(driver, inp_id, plot_names) {
+  inp_type <- driver %>% getEl(c('#', inp_id)) %>% attr('data-shinyjs-resettable-type')
+  test_that(sprintf('[%s] [%s] works correct', pastePlus(plot_names), inp_id), {
+    if (is.null(inp_type)) {
+      skip(pastePlus(plot_names, inp_id, '[is hidden now]', shorten = F))
+    } else {
+      expect_true(do.call(paste0('is', inp_type, 'Correct'), 
+                          list(driver, inp_id, plot_names)))
+    } 
+  })
 }
 
 isSelectCorrect <- function(driver, inpId, plotNames) {
@@ -104,18 +113,18 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   TRUE
 }
 
-isCheckboxCorrect <- function(driver, inpId, plotNames) {
-  isShow <- grepl('^show', inpId)
+isCheckboxCorrect <- function(driver, inpId, plotNames, block_expr=NULL) {
+  is_block <- grepl('^show', inpId)
   getBox <- function() driver %>% getEl(c('#', inpId))
-  for (i in 1:(1+isShow)) {
+  for (i in 1:(1+is_block)) {
     query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
                     '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
     nWidBlockInps <- driver %>% getEls(query) %>% length
     chkBoxEl <- getBox()
-    if (!isVisible(chkBoxEl) && isShow) return(T)  # pairs showXYRange is invisible
+    if (!isVisible(chkBoxEl) && is_block) return(T)  # pairs showXYRange is invisible
     
     chkBoxEl %>% click()
-    if (isShow && inpId != 'showXYRange') {
+    if (is_block && inpId != 'showXYRange') {
       waitFor({ nWidBlockInps != length(driver %>% getEls(query)) })
     } else {
       waitForPlotReady(driver)
@@ -124,6 +133,10 @@ isCheckboxCorrect <- function(driver, inpId, plotNames) {
       res <- has_shiny_correct_state(driver, plotNames, inpId,
                                      unlist(getBox()$isElementSelected()), waitPlot=F)
       if (!res) return(FALSE)
+      if (!is.null(substitute(block_expr))) {
+        stopifnot(is_block)
+        eval(substitute(block_expr))
+      }
     }
   }
   TRUE

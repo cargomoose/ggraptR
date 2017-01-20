@@ -120,7 +120,7 @@ as_string <- function(x) {
   
 run_external_ggraptR <- function(...) {
   ggraptrArgsLst <- list(...)
-  ggraptrArgsLst$launch.browser <- F
+  if (is.null(ggraptrArgsLst$launch.browser)) ggraptrArgsLst$launch.browser <- F
   cmds <- c('Sys.getpid()',
             'suppressPackageStartupMessages(library(ggraptR))',
             sprintf('suppressPackageStartupMessages(ggraptR(%s))', 
