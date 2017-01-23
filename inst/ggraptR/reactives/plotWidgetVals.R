@@ -150,7 +150,7 @@ facetRowOrig <- reactive({
 facetRow <- reactive({
   aggLimDf <- aggLimDf()
   if (anyNull(aggLimDf, input$facetRow)) return('.')
-  fr <- ifelse(input$facetRow=='None', '.', input$facetRow)
+  fr <- if (input$facetRow == 'None') '.' else input$facetRow
   if (fr != '.' && fr %in% colnames(aggLimDf)) fr else '.'
 })
 
@@ -161,7 +161,7 @@ facetColOrig <- reactive({
 facetCol <- reactive({
   aggLimDf <- aggLimDf()
   if (anyNull(aggLimDf, input$facetCol)) return('.')
-  fc <- ifelse(input$facetCol=='None', '.', input$facetCol)
+  fc <- if (input$facetCol == 'None') '.' else input$facetCol
   if (fc != '.' && fc %in% colnames(aggLimDf)) fc else '.'
 }) 
 

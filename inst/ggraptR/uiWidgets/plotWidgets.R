@@ -253,9 +253,11 @@ output$facetRowCtrl <- renderUI({
 
 # column-wise facet options
 output$facetColCtrl <- renderUI({
+  facetRow <- facetRowOrig()
   if (displayFacetCond()) {
-    isolate(selectInput('facetCol', 'Facet Column', 
-                        c('None', categoricalVars()), facetColOrig()))
+    isolate(selectInput('facetCol', 'Facet Column',
+                        c('None', setdiff(categoricalVars(), facetRow)),
+                        facetColOrig()))
   }
 })
 
