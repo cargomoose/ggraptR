@@ -99,7 +99,7 @@ generateCode <- function(p, state) {
                    if (isWrap) '~ ' else '',
                    paste(facetFormula, collapse = ' ~ '))
     
-    free_mask <- unlist(p$facet$free)
+    free_mask <- unlist(p$facet$params$free)
     if (any(free_mask)) {
       res <- sub(')$', sprintf(
         ', scales="free%s")', 
