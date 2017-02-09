@@ -427,8 +427,9 @@ output$showFacetCtrl <- renderUI({
 })
 
 output$showXYRangeCtrl <- renderUI({
-  plotTypes()
-  checkboxInput('showXYRange', 'Show ranges', value=showXYRange())
+  c(displayYCond(), yOrig())  # bind on plotTypes(), x() and y()
+  # value = F to refresh x and y axes limits
+  checkboxInput('showXYRange', 'Show ranges', value = F)  # showXYRange()
 })
 
 output$showThemeCtrl <- renderUI({
