@@ -2,13 +2,17 @@
 context("Plot tab")
 
 source('script/checkInitPlot.R')
-# source('script/extraBlocks.R')
 source('script/checkImportDataset.R')
-source('script/checkReactiveSubmitReset.R')
-source('script/checkExportPlotGenerateCode.R')
 
 test_settings <<- list(only_pairs = F, 
-                       dataset = sample(c(basename(customDatasetFilepath), 'esoph'), 1))
+                       dataset = sample(c(basename(custom_dataset_filepath), 'esoph'), 1))
 cat('\n  [tested dataset: ', test_settings$dataset, ']\n  ', sep = '')
+switchToDataset(driver, test_settings$dataset, 
+                init_plot = if (test_settings$only_pairs) 'pairs' else 'scatter')
+
+source('script/checkReactiveSubmitReset.R')
+source('script/checkExportPlotGenerateCode.R')
+source('script/checkExtraBlocks.R')
+
 source('script/checkAes.R')
 release_externals()

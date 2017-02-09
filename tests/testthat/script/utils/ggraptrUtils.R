@@ -1,13 +1,16 @@
-switchToDataset <- function(driver, testedDataset, init_plot = 'scatter',
-                            needWaitForPlotReady=F) {
+switchToDataset <- function(driver, dataset, init_plot = 'scatter',
+                            need_wait_for_plot_ready=F) {
+  
+  stopifnot(!is.null(dataset) 
+            && dataset != attr(getEl(driver, '#dataset > option'), 'value'))
   driver %>% getSelectOptions('dataset') %>% 
-    filterElByAttr('data-value', testedDataset) %>% click()
+    filter_el_by_attr('data-value', dataset) %>% click()
   waitAfterDatasetChanged(driver)
   
   driver %>% getSelectOptions('plotTypes') %>% 
-    filterElByAttr('data-value', init_plot) %>% click()
+    filter_el_by_attr('data-value', init_plot) %>% click()
   
-  if (needWaitForPlotReady) waitForPlotReady(driver)
+  if (need_wait_for_plot_ready) waitForPlotReady(driver)
 }
 
 # sophisticated wait for histogram plotType and then for null plotType
@@ -40,7 +43,7 @@ tryAddNextPlot <- function(driver) {
 
 startNewPlotGroup <- function(driver, nextPlotType) {
   getSelectOptions(driver, 'plotTypes') %>% 
-    filterElByAttr('outerText', nextPlotType) %>% 
+    filter_el_by_attr('outerText', nextPlotType) %>% 
     click()
 }
 
@@ -78,7 +81,7 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
   
   for (optVal in optVals) {
     getSelectOptions(driver, inpId, withActivated) %>% 
-      filterElByAttr('data-value', optVal) %>% 
+      filter_el_by_attr('data-value', optVal) %>% 
       click()
     
     if (!has_shiny_correct_state(driver, plotNames, inpId, optVal)) {
@@ -113,19 +116,22 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   TRUE
 }
 
-isCheckboxCorrect <- function(driver, inpId, plotNames, block_expr=NULL) {
-  is_block <- grepl('^show', inpId)
+isCheckboxCorrect <- function(driver, inpId, plotNames, 
+                              eval_when_active=NULL) {
+  is_section <- grepl('^show', inpId)
   getBox <- function() driver %>% getEl(c('#', inpId))
-  for (i in 1:(1+is_block)) {
-    query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
+  for (i in 1:(1+is_section)) {
+    n_inputs_query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
                     '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
-    nWidBlockInps <- driver %>% getEls(query) %>% length
-    chkBoxEl <- getBox()
-    if (!isVisible(chkBoxEl) && is_block) return(T)  # pairs showXYRange is invisible
+    n_inputs <- driver %>% getEls(n_inputs_query) %>% length
     
+    chkBoxEl <- getBox()
+    if (!isVisible(chkBoxEl) && is_section) return(T)  # pairs showXYRange is invisible
+    # if (is_section && inpId != 'showXYRange') browser()
     chkBoxEl %>% click()
-    if (is_block && inpId != 'showXYRange') {
-      waitFor({ nWidBlockInps != length(driver %>% getEls(query)) })
+    
+    if (is_section && inpId != 'showXYRange') {
+      waitFor({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
     } else {
       waitForPlotReady(driver)
     }
@@ -133,9 +139,9 @@ isCheckboxCorrect <- function(driver, inpId, plotNames, block_expr=NULL) {
       res <- has_shiny_correct_state(driver, plotNames, inpId,
                                      unlist(getBox()$isElementSelected()), waitPlot=F)
       if (!res) return(FALSE)
-      if (!is.null(substitute(block_expr))) {
-        stopifnot(is_block)
-        eval(substitute(block_expr))
+      if (!is.null(substitute(eval_when_active))) {
+        stopifnot(is_section)
+        eval(substitute(eval_when_active))
       }
     }
   }

@@ -1,5 +1,3 @@
-switchToDataset(driver, test_settings$dataset, 
-                init_plot = if (test_settings$only_pairs) 'pairs' else 'scatter')
 usedPlotNames <- if (!test_settings$only_pairs) c() else {
   cat('\nshort test mode on\n')
   setdiff(getAllPlotNames(), 'Pairs')

@@ -83,6 +83,7 @@ startSelServer <- function() {
 }
 
 getDriver <- function(url='http://127.0.0.1', port=6012) {
+  suppressPackageStartupMessages(require(RSelenium))
   phantomJsFile <- paste0(find.package('RSelenium'), '/bin/phantomjs',
                           if (Sys.info()['sysname'] == 'Windows') '.exe' else '')
   if (!file.exists(phantomJsFile)) {
@@ -119,6 +120,7 @@ as_string <- function(x) {
 }
   
 run_external_ggraptR <- function(...) {
+  suppressPackageStartupMessages(require(dplyr))
   ggraptrArgsLst <- list(...)
   if (is.null(ggraptrArgsLst$launch.browser)) ggraptrArgsLst$launch.browser <- F
   cmds <- c('Sys.getpid()',
@@ -203,7 +205,7 @@ release_externals <- function() {
 
 stop_externals <- function(msgForError=NULL) {
   release_externals()
-  stop(if (is.null(msgForError)) '' else msgForError, '\n')
+  stop(if (is.null(msgForError)) '[absent error message]' else msgForError, '\n')
 }
 
 getEls <- function(source, query, directChildren=F) {
@@ -214,7 +216,8 @@ getEls <- function(source, query, directChildren=F) {
     source$findElements(how, query)
   } else if (class(source) == 'webElement') {
     if (how == 'xpath') {
-      if (grepl('^[\\./]', query)) stop_externals('Wrong query')  # starts with neither . nor /
+      # case: starts with neither . nor /
+      if (grepl('^[\\./]', query)) stop_externals('Wrong query')  
       query <- paste0('./', if (!directChildren) '/', query)
     }
     source$findChildElements(how, query)
@@ -269,11 +272,23 @@ click <- function(el) {
   el$clickElement()
 }
 
-filterElByAttr <- function(els, attrKey, attrVal) {
+filter_el_by_. <- function(els, by, val, attr_key=NULL) {
   if (!is.list(els)) stop_externals('Wrong "els" class')
-  res <- Filter(function(x) attr(x, attrKey) == attrVal, els)
-  if (length(res) != 1) stop_externals()
+  if (!is.list(els)) stop_externals('Wrong "els" class')
+  res <- Filter(function(el) 
+    (if (by == 'attr') attr(el, attr_key) else text(el)) == val, els)
+  if (length(res) != 1) stop_externals(
+    paste('Could not filter one unique attribute.',
+          'Count of attributes found is:', length(res)))
   res[[1]]
+}
+
+filter_el_by_attr <- function(els, attrKey, attrVal) {
+  filter_el_by_.(els, 'attr', attrVal, attrKey)
+}
+
+filter_el_by_text <- function(els, txt) {
+  filter_el_by_.(els, 'text', txt)
 }
 
 moveSlider <- function(driver, dotEl, pos) {
