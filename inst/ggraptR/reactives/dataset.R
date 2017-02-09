@@ -149,10 +149,6 @@ aggLimDf <- reactive({
     } else if (xType() == 'discrete') {
       dataset <- dataset[dataset[[x]] %in% xlim(), ]
     }
-    isolate({
-      reactVals$plotState$lim_range$x$val <- xlim()
-      reactVals$plotState$lim_range$x$type <- xType()
-    })
   }
   
   # subset with ylim filter (if applicable)
@@ -169,11 +165,19 @@ aggLimDf <- reactive({
         dataset <- dataset[dataset[[y]] %in% ylim(), ]
       }
     }
-    isolate({
+  }
+  
+  isolate({
+    if (all(is.null(xlim()), is.null(ylim()))) {
+      reactVals$plotState$lim_range <- NULL
+    } else {
+      reactVals$plotState$lim_range$x$val <- xlim()
+      reactVals$plotState$lim_range$x$type <- xType()
       reactVals$plotState$lim_range$y$val <- ylim()
       reactVals$plotState$lim_range$y$type <- yType()
-    })
-  }
+    }
+  })
+  
   dataset
 })
 
