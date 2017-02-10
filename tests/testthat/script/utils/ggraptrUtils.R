@@ -101,18 +101,25 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   ctrlEl <- getEl(driver, c("#", inpId, "Ctrl"))
   leftPos <- getEl(ctrlEl, ".irs-line-mid")$getElementLocation()$x
   rightPos <- getEl(ctrlEl, ".irs-line-right")$getElementLocation()$x
-  initPos <- (ctrlEl %>% getEl(".irs-slider"))$getElementLocation()$x
   
-  for (pos in c(leftPos, rightPos, initPos)) {
-    dotEl <- ctrlEl %>% getEl(".irs-slider")
-    moveSlider(driver, dotEl, pos)
-
-    val <- ctrlEl %>% getEl('.irs-single') %>% text()
-    if (!has_shiny_correct_state(driver, plotNames, inpId, val)) {
-      warning(sprintf('Error on [%s=%s]', inpId, val))
-      return(F)
+  get_sliders <- function() ctrlEl %>% getEls(".irs-slider")
+  initPositions <- sapply(get_sliders(), function(slider) slider$getElementLocation()$x)
+  if (length(initPositions) > 1 && !inpId %in% c('xlim', 'ylim')) {
+    warning('May contain a bug when to- and from- sliders will try to change their order')
+  }
+  
+  for (sl in 1:length(initPositions)) {
+    for (pos in c(leftPos, rightPos, initPositions[sl])) {
+      moveSlider(driver, get_sliders()[[sl]], pos)
+  
+      val <- ctrlEl %>% getEl(c('.irs-from', '.irs-to')[sl]) %>% text()
+      if (!has_shiny_correct_state(driver, plotNames, inpId, val)) {
+        warning(sprintf('Error on [%s=%s]', inpId, val))
+        return(F)
+      }
     }
   }
+  
   TRUE
 }
 

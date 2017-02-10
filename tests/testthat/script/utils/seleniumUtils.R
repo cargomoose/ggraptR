@@ -240,7 +240,7 @@ getEl <- function(source, query, directChildren=F) {
 isWebElement <- function(obj) class(obj) == 'webElement'
 
 stopIfNotWebElement <- function(obj) {
-  if (!isWebElement(obj)) stop_externals('Input element class: ', class(obj))
+  if (!isWebElement(obj)) stop_externals(paste('Input element class:', class(obj)))
 }
 
 attr <- function(el, attrName) {
