@@ -187,13 +187,13 @@ facetGrids <- reactive({
 })
 
 xlim <- reactive({
-  input$xlim
-  if (!displayXlimCond()) NULL else input$xlim
+  res <- input$xlim
+  if (!displayXlimCond()) NULL else res
 })
 
 ylim <- reactive({
-  input$ylim
-  if (!displayYlimCond()) NULL else input$ylim
+  res <- input$ylim
+  if (!displayYlimCond()) NULL else res
 })
 
 plotTitle <- reactive({
@@ -240,17 +240,19 @@ plotTheme <- reactive({
   if (is.null(input$plotTheme)) 'theme_grey' else input$plotTheme
 })
 
-
 plotAggMeth <- reactive({
-  if (is.null(input$plotAggMeth)) 'none' else input$plotAggMeth
+  res <- input$plotAggMeth
+  if (!displayAggCond() || is.null(res)) 'none' else res
 })
 
 rawVsManAgg <- reactive({
-  input$rawVsManAgg
+  res <- input$rawVsManAgg
+  if (!displayAggCond()) NULL else res
 })
 
 plotAddAggBy <- reactive({
-  input$plotAddAggBy
+  res <- input$plotAddAggBy
+  if (!displayPlotAddAggByCond()) NULL else res
 })
 
 showAes <- reactive({
