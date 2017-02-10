@@ -7,7 +7,8 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
   }
   fileName <- sprintf('report/%s_[%s=%s].png', 
                       pastePlus(plotNames, shorten=shortShotName), toString(elId), 
-                      substr(toString(elVal), 1, 5))
+                      # substr(toString(elVal), 1, 5)  # plotThemeName problem
+                      toString(elVal))
   if (!is.character(fileName)) {
     driver$screenshot(T)
     browser()
@@ -71,7 +72,7 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   }
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
-  isEraseAll <- nItemsBeforeErasing == howMany
+  isEraseAll <- selectId == 'plotTypes' && nItemsBeforeErasing == howMany
   eraseOpts(driver, selectId, max(1, howMany - 1))
   if (howMany > 1) {
     waitForPlotReady(driver)

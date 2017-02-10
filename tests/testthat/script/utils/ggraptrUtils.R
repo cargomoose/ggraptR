@@ -59,6 +59,16 @@ get_current_plot_names <- function(driver) {
   getEls(driver, '#plotTypes option') %>% text()
 }
 
+get_widblock_input_ids <- function(driver, block_name) {
+  getEls(driver, c(
+    '.widblock',
+    '> #', block_name, 'Ctrl',
+    '~ * .shiny-bound-input.shinyjs-resettable')) %>% 
+    Filter(function(el) attr(el, 'data-shinyjs-resettable-type') %in% 
+             c('Select', 'Slider', 'Checkbox'), .) %>% 
+    attr('id')
+}
+
 check_input <- function(driver, inp_id, plot_names) {
   inp_type <- driver %>% getEl(c('#', inp_id)) %>% attr('data-shinyjs-resettable-type')
   test_that(sprintf('[%s] [%s] works correct', pastePlus(plot_names), inp_id), {
@@ -73,11 +83,10 @@ check_input <- function(driver, inp_id, plot_names) {
 
 isSelectCorrect <- function(driver, inpId, plotNames) {
   withActivated <- grepl('^pairs', inpId)
-  
   optVals <- getSelectOptions(driver, inpId, withActivated) %>%
-    attr('data-value')
-  # workaround for a strange bug related to non-linear smooth that appears only in tests
-  optVals <- setdiff(optVals, 'auto')  
+    attr('data-value') %>% 
+    # workaround for a strange bug with non-linear smoothing that appears only in tests
+    setdiff('auto')
   
   for (optVal in optVals) {
     getSelectOptions(driver, inpId, withActivated) %>% 

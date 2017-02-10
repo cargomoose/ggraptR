@@ -1,10 +1,6 @@
 block_name <- 'showFacet'
 driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
-  facet_ids <- getEls(driver, c(
-    '.widblock',
-    '> #', block_name, 'Ctrl',
-    '~ * .shiny-bound-input.shinyjs-resettable')) %>%
-    attr('id')
+  facet_ids <- get_widblock_input_ids(driver, block_name)
 
   make_select_none <- function(driver, inp_id) {
     opts <- driver %>% getSelectOptions(inp_id) %>%
@@ -23,9 +19,10 @@ driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_act
   for (inp_id in facet_wrap_ids) make_select_none(driver, inp_id)
 })
 
-block_name <- 'showXYRange'
-driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
-  for (inp_id in c('xlim', 'ylim')) check_input(driver, inp_id, NULL)
-})
-
-stop('success [preventing next tests]')
+for (block_name in c('showXYRange', 'showTheme', 'showDSTypeAndPlotAgg')) {
+  driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
+    inp_ids <- c(get_widblock_input_ids(driver, block_name),
+                 if (block_name == 'showDSTypeAndPlotAgg') 'plotAddAggBy')
+    for (inp_id in inp_ids) check_input(driver, inp_id, NULL)
+  })
+}
