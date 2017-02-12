@@ -82,4 +82,15 @@ shinyUI(bootstrapPage(
                br(),
                htmlOutput('plotLog'),
                value='logTab'),
+      
+      tabPanel('Console',
+               br(),
+               br(),
+               fluidRow(
+                 column(8, textInput('console', NULL, width = '800px',
+                                     placeholder = 'Enter R command here')),
+                 column(2, uiOutput('evalConsoleBtn'))),
+               br(),
+               textOutput('consoleCtrl'),
+               value='consoleTab'),
       id = "conditionedPanels"))))
