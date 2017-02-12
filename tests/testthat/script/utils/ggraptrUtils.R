@@ -1,16 +1,17 @@
 switchToDataset <- function(driver, dataset, init_plot = 'scatter',
                             need_wait_for_plot_ready=F) {
   
-  stopifnot(!is.null(dataset) 
-            && dataset != attr(getEl(driver, '#dataset > option'), 'value'))
+  stopifnot(!is.null(dataset) && 
+              dataset != attr(getEl(driver, '#dataset > option'), 'value'))
   driver %>% getSelectOptions('dataset') %>% 
     filter_el_by_attr('data-value', dataset) %>% click()
   waitAfterDatasetChanged(driver)
   
-  driver %>% getSelectOptions('plotTypes') %>% 
-    filter_el_by_attr('data-value', init_plot) %>% click()
-  
-  if (need_wait_for_plot_ready) waitForPlotReady(driver)
+  if (!is.null(init_plot)) {
+    driver %>% getSelectOptions('plotTypes') %>% 
+      filter_el_by_attr('data-value', init_plot) %>% click()
+    if (need_wait_for_plot_ready) waitForPlotReady(driver)
+  }
 }
 
 # sophisticated wait for histogram plotType and then for null plotType
@@ -27,6 +28,25 @@ waitAfterDatasetChanged <- function(driver) {
   }
 }
   
+go_to_tab <- function(driver, tab_name) {
+  cur_tab <- driver %>% getEl('#conditionedPanels > li.active') %>% 
+    text() %>% tolower() %>% trimws()
+  if (!tab_name %in% setdiff(c('plot', 'table', 'log'), cur_tab)) {
+    stop_externals(sprintf('It is impossible to click on tab [%s]', tab_name))
+  }
+  
+  driver %>% getEl(c('a[data-value="', tab_name, 'Tab"]')) %>% click()
+  
+  if (tab_name == 'plot') {
+    waitFor({ isVisible(driver %>% getEl('#plot')) }, driver, timeout = 3)
+  } else if (tab_name == 'table') {
+    waitFor({ isVisible(driver %>% getEl('#displayTable')) }, driver, timeout = 3)
+    wait_for_table_ready(driver)
+  } else {
+    waitFor({ isVisible(driver %>% getEl('#plotLog')) }, driver, timeout = 3)
+  }
+}
+
 tryAddNextPlot <- function(driver) {
   plot_types_id <- 'plotTypes'
   plotTypeGroupRestOpts <- function() getSelectOptions(driver, plot_types_id)

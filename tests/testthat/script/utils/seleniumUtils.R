@@ -7,8 +7,10 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
   oneWaitDur <- timeout / nChecks
   
   targetFun <- 
-    if (class(substitute(target)) == '{') {  # if quoted expression
+    if (class(substitute(target)) == '{') {  # for quoted expression
       call_obj <- as.call(substitute(target))
+      # target expression must not started with 'if'. Fail-fast
+      stopifnot(!startsWith(as.character(call_obj[2]), 'if ('))
       function(placeholder) eval.in.any.env(call_obj)
     } else if (is.function(target)) {
       target

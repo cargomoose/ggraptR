@@ -35,18 +35,24 @@ waitForPlotReady <- function(driver) {
   }
 }
 
+wait_for_table_ready <- function(driver) {
+  Sys.sleep(0.2)
+  waitFor(paste0('.dataTables_processing[style="display: none;"]'), driver)
+  # waitFor({ !isVisible(driver %>% getEl('.dataTables_processing')) }, driver)
+}
+
 isSelectEl <- function(selId, source=driver) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
 
 getSelectOptions <- function(driver, selId, withActivated=F) {
-  # shiny 'select' inputs do not have their options at the beginning. Click to load
   if (!isSelectEl(selId, source=driver)) stop_externals('!isSelectEl in getSelectOptions')
   
   selControlEl <- getEl(driver, c('select#', selId, ' + div'))
   selEl <- getEl(selControlEl, '.selectize-input')
   
   if (!grepl('\\binput-active\\b', attr(selEl, 'class'))) {
+    # shiny 'select' inputs do not have their options at the beginning. Click to load
     selEl %>% click()  # makes available options visible
     waitFor('.selectize-input.input-active', selControlEl)
   }

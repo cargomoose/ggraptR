@@ -7,7 +7,7 @@ invisible(apply(
     driver %>% getEl(row['modalBt']) %>% click()
     root <- waitFor(paste0(row['modalRoot'], '[style="display: block;"]'), driver)
     
-    test_that(paste(row['modalBt'], 'works fine'), {
+    test_that(paste(row['modalBt'], 'button works fine'), {
       if (!is.na(row['dwnload'])) {
         expect_true(!is.null(waitFor('a#dlPlot', root)))
       } else {
