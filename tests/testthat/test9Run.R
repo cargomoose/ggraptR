@@ -1,4 +1,5 @@
-context("Test ggraptR() run opportunity") 
+context("Test ggraptR() run opportunity")
+
 if (.Platform$OS.typ != 'windows') return()
 source('script/utils/funs.R')
 

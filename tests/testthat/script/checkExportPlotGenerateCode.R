@@ -1,3 +1,5 @@
+cat("\nExport plot and generate code buttons")
+
 invisible(apply(
   data.frame(modalBt=c('#exportPlot', '#generatePlotCode'),
              modalRoot=c('#modalExportOptions', '#modalCodeView'),

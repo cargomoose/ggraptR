@@ -1,3 +1,5 @@
+cat("\nFacets, XY limits and other extra blocks")
+
 block_name <- 'showFacet'
 driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
   facet_ids <- get_widblock_input_ids(driver, block_name)
@@ -21,8 +23,11 @@ driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_act
 
 for (block_name in c('showXYRange', 'showTheme', 'showDSTypeAndPlotAgg')) {
   driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
-    inp_ids <- c(get_widblock_input_ids(driver, block_name),
-                 if (block_name == 'showDSTypeAndPlotAgg') 'plotAddAggBy')
+    inp_ids <- if (block_name == 'showDSTypeAndPlotAgg') {
+      c('plotAggMeth', 'plotAddAggBy')
+    } else {
+      get_widblock_input_ids(driver, block_name)
+    }
     for (inp_id in inp_ids) check_input(driver, inp_id, NULL)
   })
 }

@@ -1,3 +1,4 @@
+cat("\nInitial plot")
 source('script/utils/funs.R')
 # killExternalRprocess()  # if the last run was finished with an error
 

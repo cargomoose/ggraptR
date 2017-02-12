@@ -1,3 +1,5 @@
+cat("\nImport dataset")
+
 #### go to import tab ####
 driver %>% getEl('a[data-value="importTab"]') %>% click()
 rootEl <- waitFor('#fileInputSelectCtrl', driver, timeout = 3)
@@ -19,3 +21,9 @@ waitFor({ text(driver %>% getEl('#file_progress > .progress-bar')) == 'Upload co
 unlink(dirname(custom_dataset_filepath), T, T)
 driver %>% getEl('#viewPlot') %>% click()
 waitForPlotReady(driver)  # waitFor('li.active > a[data-value="plotTab"]')
+
+
+#### random dataset ####
+cat(' [randomly choosed tested dataset: ', test_settings$dataset, ']', sep = '')
+switchToDataset(driver, sample(c(basename(custom_dataset_filepath), 'esoph'), 1),
+                init_plot = 'scatter')

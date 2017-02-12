@@ -1,3 +1,5 @@
+cat("\nReactive submit, reset and missing colorAsFactor")
+
 driver %>% getEl('#reactive') %>% click()
 submitBtn <- waitFor("#submit:not(disabled)", driver)
 

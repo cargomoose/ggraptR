@@ -1,3 +1,5 @@
+cat("\nTable")
+
 orig_dataset <- driver %>% getEl('#dataset') %>% text()
 is_esoph_dataset <- orig_dataset == 'esoph'
 if (!is_esoph_dataset) switchToDataset(driver, 'esoph', NULL, T)
@@ -39,5 +41,5 @@ test_that('Download button works correct', {
 
 go_to_tab(driver, 'plot')
 if (!is_esoph_dataset) {
-  switchToDataset(driver, orig_dataset, init_plot = 'scatter', T)
+  switchToDataset(driver, orig_dataset, init_plot = NULL, T)
 }

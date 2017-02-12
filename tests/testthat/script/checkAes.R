@@ -1,9 +1,8 @@
-usedPlotNames <- if (!test_settings$only_pairs) c() else {
-  cat('\nshort test mode on\n')
-  setdiff(getAllPlotNames(), 'Pairs')
-}
+cat("\nMain aes blocks")
 
+usedPlotNames <- c()
 isLastIter <- F
+
 while (!isLastIter) {
   waitForPlotReady(driver)
   plot_names <- get_current_plot_names(driver)
