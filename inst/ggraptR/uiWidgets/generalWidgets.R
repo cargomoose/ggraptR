@@ -17,3 +17,13 @@ output$submitCtrl <- renderUI({
 output$plotLog <- renderText({
   paste(reactVals$log, collapse='<hr>')
 })
+
+output$evalConsoleBtn <- renderUI({
+  bsButton("evalConsoleBtn", label="Evaluate", icon=icon("play-circle-o"), type="action", 
+           block=TRUE)
+})
+
+output$consoleCtrl <- renderText({
+  input$evalConsoleBtn  # dependency
+  isolate(eval(parse(text = input$console)))
+})
