@@ -56,7 +56,7 @@ observe({
 observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
-  for (id in names(input)) {
+  for (id in setdiff(names(input), 'dataset')) {
     reset(id)
   }
   Sys.sleep(0.5)
