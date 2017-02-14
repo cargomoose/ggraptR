@@ -50,6 +50,7 @@ waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=
   }
   
   if (errorIfNot) {
+    driver$screenshot(T)
     browser()
     stop('Could not wait')
   } 

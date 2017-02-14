@@ -1,10 +1,17 @@
+datasetName <- reactive({
+  input$dataset
+})
+
 plotTypes <- reactive({
   input$plotTypes
 })
 
 plotTypesOpts <- reactive({
   reactVals$plotTypeOptsTrigger  # updates using an observer
-  getPlotTypeOpts(isolate(plotTypes()))
+  isolate({
+    reactVals$is_dataset_changed <- F  # to distinguish plotTypes triggers
+    getPlotTypeOpts(plotTypes())
+  })
 })
 
 x <- reactive({

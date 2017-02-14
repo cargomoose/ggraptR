@@ -14,7 +14,7 @@ output$itersToDrawCtrl <- renderUI({
 
 output$plotTypesCtrl <- renderUI({
   if (displayPlotTypesCond()) {  # !is.null(dataset()) trigger
-    curGroupAllOpts <- plotTypesOpts()  # the second trigger
+    curGroupAllOpts <- plotTypesOpts()  # trigger
     
     isolate({
       pTypes <- plotTypes()
@@ -24,17 +24,16 @@ output$plotTypesCtrl <- renderUI({
           inp <- getInitialArg('initialPlot')
           initialPlot <- if (is.null(inp)) NULL else
             inp %>% tolower() %>% gsub('(plot)| ', '', .)
-      } else {
-        isDatasetChanged <- !is.null(x()) && !x() %in% names(dataset())
       }
       
       ls <- list()
       ls[c('opts', 'val')] <- if (isInit) {
         opts <- getPlotTypeOpts(initialPlot)
         list(opts, if (!is.null(initialPlot)) initialPlot else opts[1])
-      } else if (isDatasetChanged) {
+      } else if (reactVals$is_dataset_changed) {
         if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')
       } else {
+        reactVals$is_dataset_changed <- T  # will be flipped in plotTypesOpts()
         list(curGroupAllOpts, pTypes)
       }
       
@@ -57,7 +56,7 @@ output$xCtrl <- renderUI({
 output$yCtrl <- renderUI({
   if (displayYCond()) {
     isolate({
-      isDiamondsInit <- input$dataset == 'diamonds' && is.null(y())
+      isDiamondsInit <- datasetName() == 'diamonds' && is.null(y())
       vars <- setdiff(numericVars(), if (displayXCond()) x())
       selectInput('y', paste0('Y (numeric', if (!length(vars)) '. Absent', ')'), vars,
                   if (isDiamondsInit) 'price' else y())
@@ -79,7 +78,7 @@ output$colorCtrl <- renderUI({
   if (displayColorCond()) {
     isolate({
       isScatter <- all('scatter' == plotTypes())
-      isDiamondsInit <- isScatter && input$dataset == 'diamonds' && is.null(y())
+      isDiamondsInit <- isScatter && datasetName() == 'diamonds' && is.null(y())
       opts <- c('None', if (isScatter) names(dataset()) else categoricalVars())
       
       selectInput('color', 'Color', opts, if (isDiamondsInit) 'color' else color())

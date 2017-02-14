@@ -22,13 +22,14 @@ waitForPlotReady <- function(driver) {
   if (driver$getWindowSize()$height != 1080 || driver$getWindowSize()$width != 1920) {
     stop_externals('Wrong driver screen resolution')
   }
-  emptyPic <- paste0(rep('A', 1e3), collapse='')
+  emptyPicHtml <- paste0(rep('A', 1e3), collapse='')
+  emptyPicQuery <-    sprintf('#plot img[src*="%s"]', emptyPicHtml)
+  nonEmptyPicQuery <- sprintf('#plot img:not([src*="%s"])', emptyPicHtml)
   
-  isBlank <- waitFor(sprintf('#plot img[src*="%s"]', emptyPic), 
-                     source=driver, errorIfNot=F, timeout = 4)
+  isBlank <- waitFor(emptyPicQuery, source=driver, errorIfNot=F, timeout = 4)
   if (!is.logical(isBlank) || isBlank) {
     waitFor(
-      c(sprintf('#plot img:not([src*="%s"])', emptyPic), '#plot.shiny-output-error'),
+      c(nonEmptyPicQuery, '#plot.shiny-output-error'),
       source=driver)  # normal plot or an err
   } else {
     isBlank

@@ -31,20 +31,20 @@ rawDatasetNames <- reactive({
 # reactive variable for raw dataset
 rawDataset <- reactive({
   # from dataset selection drop-down
-  if (is.null(input$dataset)) return()
+  if (is.null(datasetName())) return()
   
-  isolate(reactVals$plotState$dataset_name <- input$dataset)
+  isolate(reactVals$plotState$dataset_name <- datasetName())
   
   # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
   df <- if (is.null(input$file)) {
-    get(input$dataset)
+    get(datasetName())
   } else { # if custom dataset was uploaded
     # if custom dataset was selected, then set it as raw dataset
-    if (input$dataset == uploadedDfName()) {
+    if (datasetName() == uploadedDfName()) {
       uploadedDf()      
     } else {
       # if custom dataset was not selected, then set one of the preloaded datasets as raw
-      get(input$dataset)
+      get(datasetName())
     }
   }
   
