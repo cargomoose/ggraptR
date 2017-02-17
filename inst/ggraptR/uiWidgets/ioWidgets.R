@@ -1,20 +1,14 @@
 # file input select control
 output$fileInputSelectCtrl <- renderUI({
-  fileInput('file', 'Choose file to upload',
-            accept=c(
-              'text/csv',
-              'text/comma-separated-values',
-              'text/tab-separated-values',
-              'text/plain',
-              '.csv',
-              '.tsv'))
+  isolate({ reactVals$is_dataset_changed <- F })  # for initial run of modal window
+  fileInput('file', 'Choose file to upload', accept=
+              c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 
+                'text/plain', '.csv', '.tsv'))
 })
 
 # file input header control
 output$fileInputHeaderCtrl <- renderUI({
-  checkboxGroupInput('header', 'Header Options', 
-                     choices=c('Header'=TRUE),
-                     selected=c(TRUE))  
+  checkboxGroupInput('header', 'Header Options', choices=c('Header'=TRUE), selected=T)  
 })
 
 # file input quote control
@@ -29,15 +23,16 @@ output$fileInputQuoteCtrl <- renderUI({
 # file input separator control
 output$fileInputSepCtrl <- renderUI({
   radioButtons('sep', 'Separator',
-               c(Comma=',',
-                 Semicolon=';',
-                 Tab='\t'),
-               ',')  
+               c(Comma=',', Semicolon=';', Tab='\t'), ',')  
+})
+
+output$uploadDataCtrl <- renderUI({
+  bsButton("uploadData", label="Add dataset", type="action", icon=icon("plus"))
 })
 
 # CSV download button (for UI)
 output$dlBtnCSV <- renderUI({
-  downloadButton('dlCSV', 'Download')
+  downloadButton('dlCSV', 'Download table')
 })
 
 # image download button (for UI)
@@ -55,7 +50,7 @@ output$dlBtnPlot <- renderUI({
 # })
 
 output$exportPlotCtl <- renderUI({
-  bsButton("exportPlot", label="Export Plot", type="action", icon=icon("download"))
+  bsButton("exportPlot", label="Download plot", type="action", icon=icon("download"))
 })
 
 output$fileTypeCtl <- renderUI({
@@ -80,4 +75,14 @@ output$fileWidthCtl <- renderUI({
 output$fileDPICtl <- renderUI({
   numericInput(inputId="fileDPI", label="Dots Per Inch", 
                value=getFileDefault()$DPI, min=0, max=getFileDefault()$DPIMax)
+})
+
+
+output$dbDriverTypeCtrl <- renderUI({
+  isolate({ reactVals$is_dataset_changed <- F })  # for initial run of modal window
+  radioButtons('dbDriverTypeCtrl', 'Driver type', c('MySQL', 'PostgreSQL', 'SQLite'))
+})
+
+output$dbExecuteBtn <- renderUI({
+  bsButton("dbExecuteBtn", label="Run", icon=icon("play-circle-o"), type="action")
 })

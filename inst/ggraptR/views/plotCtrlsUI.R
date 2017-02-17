@@ -1,5 +1,8 @@
 # plot options
 verticalLayout(
+  
+  uiOutput('plotTypesCtrl'),
+  
   fluidRow(
     column(6, uiOutput('xCtrl')),
     column(6, uiOutput('yCtrl'))),
@@ -9,28 +12,28 @@ verticalLayout(
   # widgets to show/hide advanced control widgets
   div(
     uiOutput('showAesCtrl'),
-    source('./views/plot/aesCtrlsUI.R', local=TRUE)$value,
-    class="widblock"),
+    source('./views/plotBlock/aesCtrlsUI.R', local=TRUE)$value,
+    class="widblock", style="margin-bottom: 0px;"),
   
   conditionalPanel('input.plotTypes != "pairs"',
     div(
       uiOutput('showFacetCtrl'),
-      source('./views/plot/facetCtrlsUI.R', local=TRUE)$value,
+      source('./views/plotBlock/facetCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
       uiOutput('showXYRangeCtrl'),
-      source('./views/plot/xyRangeCtrlsUI.R', local=TRUE)$value,
+      source('./views/plotBlock/xyRangeCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
       uiOutput('showThemeCtrl'),
-      source('./views/plot/labelAndStyleCtrlsUI.R', local=TRUE)$value,
+      source('./views/plotBlock/labelAndStyleCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(
       uiOutput('showDSTypeAndPlotAggCtrl'),
-      source('./views/plot/DSTypeAndPlotAggCtrlsUI.R', local=TRUE)$value,
+      source('./views/plotBlock/DSTypeAndPlotAggCtrlsUI.R', local=TRUE)$value,
       class="widblock")
     
     #uiOutput('showPlotAggCtrl')

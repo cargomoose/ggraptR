@@ -1,6 +1,6 @@
 # dataset drop-down options 
 output$datasetCtrl <- renderUI({
-  initDf <- getInitialArg('initialDf')
+  initDf <- c(isolate(uploadedDfName()), getInitialArg('initialDf'))[1]
   selectInput("dataset", "Dataset", choices=rawDatasetNames(), initDf)
 })
 
@@ -19,8 +19,7 @@ output$plotLog <- renderText({
 })
 
 output$evalConsoleBtn <- renderUI({
-  bsButton("evalConsoleBtn", label="Evaluate", icon=icon("play-circle-o"), type="action", 
-           block=TRUE)
+  bsButton("evalConsoleBtn", label="Evaluate", icon=icon("play-circle-o"), type="action")
 })
 
 output$consoleCtrl <- renderText({

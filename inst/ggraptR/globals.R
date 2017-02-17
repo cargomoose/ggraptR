@@ -1,5 +1,5 @@
 getDefaultPlots <- function() {
-  c("diamonds", "mtcars", "rock", "iris", "esoph")
+  c("diamonds", "mtcars", "iris", "esoph")  # "rock", 
 }
 
 # plotTypes in inner lists are treated as allowed to plot together in plotTypeOpts()

@@ -7,7 +7,8 @@ shinyUI(bootstrapPage(
     type="text/css",
     "#rappy img {max-width: 100%;}",
     "#react_row {max-width: 100%;}",
-    ".widblock {background-color: #F9F9F9; padding: 2px 10px; margin:5px}")),
+    ".widblock {background-color: #fafafa; padding: 2px 10px; margin: 10px 5px}",
+    "hr {margin-top: 15px; margin-bottom: 15px; border-color: #d9d9d9}")),
   
   sidebarPanel(
     splitLayout(
@@ -16,46 +17,52 @@ shinyUI(bootstrapPage(
       div(
           # use shinyjs to disable/enable buttons w/ JS
           useShinyjs(),
-          uiOutput('resetable_input'),
-          actionButton("reset_input", "Reset inputs", width = "100%"),
-          br(), br(),
-          # reactive vs. upon-manual-submit calculations
           
-          fluidRow(
-            column(6, uiOutput('submitCtrl')), 
-            column(6, uiOutput('reactiveCtrl')),
-            id='react_row'))),
-    br(),
-    
-    conditionalPanel(
-      condition = 'input.conditionedPanels != "logTab"',
-      fluidRow(column(6, uiOutput('datasetCtrl')),
-               conditionalPanel('input.conditionedPanels == "plotTab"',
-                                column(6, uiOutput('plotTypesCtrl'))))),
-    
+          fluidRow(column(6, uiOutput('datasetCtrl'), 
+                          style="padding-right:5px;height: 0px"),
+                   column(4, uiOutput('uploadDataCtrl'), 
+                          style="padding-top:25px;padding-left:5px;"),
+                   style="padding-bottom: 10px;"),
+          
+          conditionalPanel(
+            condition = 'input.conditionedPanels == "plotTab"',
+            uiOutput('exportPlotCtl')),
+          conditionalPanel(
+            condition = 'input.conditionedPanels == "tableTab"',
+            uiOutput('dlBtnCSV')),
+          
+          conditionalPanel(
+            condition = 'input.conditionedPanels != "codeTab"',
+            hr(),
+            fluidRow(
+              column(6, uiOutput('submitCtrl')), 
+              column(6, uiOutput('reactiveCtrl')),
+              id='react_row'), 
+            actionButton("reset_input", "Reset inputs", width = "100%")),
+          
+          style='padding-left: 10px; padding-right: 3px; overflow: hidden;')),
+    hr(),
+
+    #### left controls ####
     conditionalPanel(
       condition = 'input.conditionedPanels == "plotTab"',
-      source('./views/plot/plotCtrlsUI.R', local=TRUE)$value),
+      source('./views/plotCtrlsUI.R', local=TRUE)$value),
     
     conditionalPanel(
       condition = 'input.conditionedPanels == "tableTab"',
-      source('./views/table/manAggCtrlsUI.R', local=TRUE)$value),
-    
-    conditionalPanel(
-      condition = 'input.conditionedPanels == "importTab"',
-      actionButton("viewPlot", label = "View Plot"),
-      hr(),
-      source('./views/import/dataImportCtrlsUI.R', local=TRUE)$value)),
+      source('./views/tableCtrlsUI.R', local=TRUE)$value),
   
+    conditionalPanel(
+      condition = 'input.conditionedPanels == "codeTab"',
+      source('./views/codeCtrlsUI.R', local=TRUE)$value)),
+  
+  #### right view ####
   mainPanel(
-    #import modal panels
-    source('./views/modals/modalPanels.R',local=TRUE)$value,
+    source('./views/modalPanels.R',local=TRUE)$value,
     
     tabsetPanel(type = "tabs",
       tabPanel("Plot", 
         br(),
-        fluidRow(column(2, uiOutput('exportPlotCtl')),
-                 column(2, uiOutput('generatePlotCodeCtl'))),
         br(),
         plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=T)),
         uiOutput("itersToDrawCtrl", style="opacity: 0; pointer-events: none"),
@@ -63,34 +70,14 @@ shinyUI(bootstrapPage(
       
       tabPanel("Table",
                br(),
-               uiOutput('dlBtnCSV'),
                br(),
                DT::dataTableOutput("displayTable"),
                value='tableTab'),
       
-      tabPanel('Import',
-               tags$head(tags$script(
-                  'Shiny.addCustomMessageHandler("myCallbackHandler",
-                    function(typeMessage) {
-                      if(typeMessage == 1){
-                        $("a:contains(Plot)").click();
-                      } 
-                    });')),
-               value='importTab'),
-      
-      tabPanel('Log',
+      tabPanel('Code',
                br(),
+               strong('Plot log (latest at the top):'),
+               br(), br(),
                htmlOutput('plotLog'),
-               value='logTab'),
-      
-      tabPanel('Console',
-               br(),
-               br(),
-               fluidRow(
-                 column(8, textInput('console', NULL, width = '800px',
-                                     placeholder = 'Enter R command here')),
-                 column(2, uiOutput('evalConsoleBtn'))),
-               br(),
-               textOutput('consoleCtrl'),
-               value='consoleTab'),
+               value='codeTab'),
       id = "conditionedPanels"))))

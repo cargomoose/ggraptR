@@ -28,8 +28,9 @@ shinyServer(function(input, output, session) {
   sourceAllInDir('uiWidgets', local=T)  # UI controls
   
   output$rappy <- renderImage({
-    list(src = "www/RAPPY.png", height = "140px", width = "120px",
-      contentType = "image/png", alt = "ggraptR")}, deleteFile = FALSE)  
+    list(src = "www/RAPPY.png",
+         contentType = "image/png", alt = "ggraptR")
+    }, deleteFile = FALSE)  
   
   source('observeEvents.R', local=TRUE)
   

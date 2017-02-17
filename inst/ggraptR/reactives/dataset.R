@@ -1,53 +1,93 @@
-# reactive variable for custom (uploadable) dataset file info
-uploadedDfFileInfo <- reactive({
+dbUploadedDf <- reactive({
+  eval_btn <- input$dbExecuteBtn  # trigger
+  
+  isolate({
+    driver_name <- input$dbDriverTypeCtrl
+    if (is.null(driver_name) || !eval_btn) return()
+    package_for_driver <- paste0('R', driver_name)
+    if (!require(package_for_driver, character.only = T)) {
+      install.packages(package_for_driver)
+      library(package_for_driver, character.only = T)
+    }
+    
+    # con <- dbConnect(dbDriver('MySQL'), user='gray', host='db4free.net',
+    #                  password='12348888', dbname='ggtest', port=3307)
+    # select TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, CREATE_TIME
+    # from information_schema.tables
+    
+    con <- dbConnect(dbDriver(driver_name), 
+                     host=input$dbHost, port=as.integer(input$dbPort),
+                     user=input$dbUser, password=input$dbPass, 
+                     dbname=input$dbName)
+    
+    query <- input$dbSqlQuery
+    df <- dbGetQuery(con, query)
+    dbDisconnect(con)
+  })
+  
+  df
+})
+
+# reactive variable for custom (uploaded) dataset
+uploadedDf <- reactive({
   # input$file will be NULL initially. After the user selects
   # and uploads a file, it will be a data frame with 'name',
   # 'size', 'type', and 'datapath' columns. The 'datapath'
   # column will contain the local filenames where the data can
   # be found.
-  input$file
-})
-
-# reactive variable for custom (uploaded) dataset
-uploadedDf <- reactive({
-  fileInfo <- uploadedDfFileInfo()
-  if (is.null(fileInfo) || is.null(input$header) || is.null(input$sep) 
+  if (!is.null(dbUploadedDf())) return(dbUploadedDf())
+  
+  if (is.null(input$file) || is.null(input$header) || is.null(input$sep) 
       || is.null(input$quote)) return()
   
-  read.csv(fileInfo$datapath, header = as.logical(input$header),
+  read.csv(input$file$datapath, header = as.logical(input$header),
            sep = input$sep, quote = input$quote)
 })
 
 # reactive variable for custom dataset name
 uploadedDfName <- reactive({
-  uploadedDfFileInfo()$name
+  if (is.null(uploadedDf())) return()
+  
+  isolate({
+    is_df <- !is.null(input$dbExecuteBtn) && input$dbExecuteBtn
+    if (is_df) {
+      df_name <- input$dbSqlQuery %>% 
+        gsub(' +', ' ',.) %>% 
+        stringr::str_extract('(?i)(?<=from )\\S+')
+      
+      if (is.na(df_name)) 'db_uploaded' else df_name
+    } else {
+      input$file$name
+    }
+  })
 })
+
 
 # reactive variable for raw dataset names
 rawDatasetNames <- reactive({
-  unique(c(getDefaultPlots(), uploadedDfName(), getPreloadedEnvDfNames()))
+  unique(c(uploadedDfName(), getPreloadedEnvDfNames(), getDefaultPlots()))
 })
 
 # reactive variable for raw dataset
 rawDataset <- reactive({
-  # from dataset selection drop-down
-  if (is.null(datasetName())) return()
-  
+  if (is.null(datasetName())) return()  # for initial input$dataset
   isolate(reactVals$plotState$dataset_name <- datasetName())
   
   # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
-  df <- if (is.null(input$file)) {
+  is_db <- !is.null(input$dbExecuteBtn) && input$dbExecuteBtn
+    
+  df <- if (is.null(input$file) && !is_db) {
     get(datasetName())
   } else { # if custom dataset was uploaded
     # if custom dataset was selected, then set it as raw dataset
     if (datasetName() == uploadedDfName()) {
-      uploadedDf()      
+      uploadedDf()
     } else {
       # if custom dataset was not selected, then set one of the preloaded datasets as raw
       get(datasetName())
     }
   }
-  
+
   data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
 })
 
@@ -68,7 +108,7 @@ dataset <- reactive({
   if (is.null(input$rawVsManAgg)) {
     return(rawDataset())
   }
-
+  
   # raw dataset
   if (input$rawVsManAgg == 'raw') {
     rawDataset()

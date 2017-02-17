@@ -45,17 +45,11 @@ observe({
   })
 })
 
-# view plot from import tab
-observe({
-  if (input$viewPlot > 0){
-    session$sendCustomMessage("myCallbackHandler", "1")
-  }
-})
-
 # reset inputs
 observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
+  # setdiff prevents very unstable bug of infinite recursive refresh of plotTypes
   for (id in setdiff(names(input), 'dataset')) {
     reset(id)
   }
