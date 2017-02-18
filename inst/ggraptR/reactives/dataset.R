@@ -21,7 +21,9 @@ dbUploadedDf <- reactive({
                      dbname=input$dbName)
     
     query <- input$dbSqlQuery
+    
     df <- dbGetQuery(con, query)
+    df <- df[, setdiff(names(df), 'row_names')]
     dbDisconnect(con)
   })
   
@@ -73,15 +75,13 @@ rawDataset <- reactive({
   if (is.null(datasetName())) return()  # for initial input$dataset
   isolate(reactVals$plotState$dataset_name <- datasetName())
   
-  # if no custom dataset was uploaded, then set one of the preloaded datasets as raw
   is_db <- !is.null(input$dbExecuteBtn) && input$dbExecuteBtn
-    
+  
   df <- if (is.null(input$file) && !is_db) {
     get(datasetName())
   } else { # if custom dataset was uploaded
-    # if custom dataset was selected, then set it as raw dataset
     if (datasetName() == uploadedDfName()) {
-      uploadedDf()
+      uploadedDf()  # if custom dataset was selected, then set it as raw dataset
     } else {
       # if custom dataset was not selected, then set one of the preloaded datasets as raw
       get(datasetName())

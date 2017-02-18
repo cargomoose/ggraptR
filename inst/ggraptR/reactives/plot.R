@@ -28,8 +28,11 @@ buildPlot <- reactive({
   df <- aggLimDf()
   isPairsPlot <- all('pairs' == pTypes)
   
+  input_plot_pars <- getPlotInputVals(separatePlotInputs(), df)
+  stopifnot(length(c(input_plot_pars[[1]]$x, input_plot_pars[[1]]$columns)) > 0)
   p <- do.call.pasted('plot', if (isPairsPlot) 'Pairs' else 'Ggplot', 
-                      args=list(df, getPlotInputVals(separatePlotInputs(), df)))
+                      args=list(df, input_plot_pars))
+  stopifnot(length(p$mapping) > 0)
   if (!is.null(p$pairsAes)) {
     isolate(reactVals$plotState$pairs <- p$pairsAes)
   }
