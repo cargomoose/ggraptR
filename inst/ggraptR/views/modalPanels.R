@@ -8,9 +8,9 @@ div(
           uiOutput('fileWidthCtl'),
           uiOutput('fileDPICtl'),
           uiOutput('fileTypeCtl'),
-          uiOutput('dlBtnPlot')),
+          uiOutput('dlBtnPlot'))
   
-  bsModal("modalCodeV", "Generated Code", "generatePlotCodeCtl",
-          textOutput('generateCode'))
+  # bsModal("modalCodeView", "Generated Code", "generatePlotCodeCtl",
+  #         textOutput('generateCode'))
 
 )

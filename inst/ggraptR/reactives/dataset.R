@@ -39,11 +39,15 @@ uploadedDf <- reactive({
   # be found.
   input$file  # trigger
   db_df <- dbUploadedDf()
-  
+
   isolate({
-    if (not_null_true(reactVals$is_db_upload)) return(db_df)
+    if (not_null_true(reactVals$is_db_upload)) {
+      toggleModal(session, "modalUploadOptions", toggle = "close")
+      return(db_df)
+    }
     if (anyNull(input$file, input$header, input$sep, input$quote)) return()
     
+    toggleModal(session, "modalUploadOptions", toggle = "close")
     read.csv(input$file$datapath, header = as.logical(input$header),
              sep = input$sep, quote = input$quote)
   })

@@ -449,10 +449,10 @@ output$showDSTypeAndPlotAggCtrl <- renderUI({
 
 
 
-output$generatePlotCodeCtl <- renderUI({
-  bsButton("generatePlotCode", "Generate Plot Code", type="action", icon = icon("code"))
-})
+# output$generatePlotCodeCtl <- renderUI({
+#   bsButton("generatePlotCode", "Generate Plot Code", type="action", icon = icon("code"))
+# })
 
-output$generateCode <- renderText({
-  reactVals$log[1]
-})
+# output$generateCode <- renderText({
+#   reactVals$log[1]
+# })
