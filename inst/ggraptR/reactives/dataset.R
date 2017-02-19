@@ -12,8 +12,6 @@ dbUploadedDf <- reactive({
     
     # con <- dbConnect(dbDriver('MySQL'), user='gray', host='db4free.net',
     #                  password='12348888', dbname='ggtest', port=3307)
-    # select TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME, CREATE_TIME
-    # from information_schema.tables
     
     con <- dbConnect(dbDriver(driver_name), 
                      host=input$dbHost, port=as.integer(input$dbPort),
@@ -25,6 +23,8 @@ dbUploadedDf <- reactive({
     df <- dbGetQuery(con, query)
     df <- df[, setdiff(names(df), 'row_names')]
     dbDisconnect(con)
+    
+    reactVals$is_db_upload <- T
   })
   
   df
@@ -37,13 +37,16 @@ uploadedDf <- reactive({
   # 'size', 'type', and 'datapath' columns. The 'datapath'
   # column will contain the local filenames where the data can
   # be found.
-  if (!is.null(dbUploadedDf())) return(dbUploadedDf())
+  input$file  # trigger
+  db_df <- dbUploadedDf()
   
-  if (is.null(input$file) || is.null(input$header) || is.null(input$sep) 
-      || is.null(input$quote)) return()
-  
-  read.csv(input$file$datapath, header = as.logical(input$header),
-           sep = input$sep, quote = input$quote)
+  isolate({
+    if (not_null_true(reactVals$is_db_upload)) return(db_df)
+    if (anyNull(input$file, input$header, input$sep, input$quote)) return()
+    
+    read.csv(input$file$datapath, header = as.logical(input$header),
+             sep = input$sep, quote = input$quote)
+  })
 })
 
 # reactive variable for custom dataset name
@@ -51,8 +54,9 @@ uploadedDfName <- reactive({
   if (is.null(uploadedDf())) return()
   
   isolate({
-    is_df <- !is.null(input$dbExecuteBtn) && input$dbExecuteBtn
-    if (is_df) {
+    if (not_null_true(reactVals$is_db_upload)) {
+      reactVals$is_db_upload <- NULL
+      
       df_name <- input$dbSqlQuery %>% 
         gsub(' +', ' ',.) %>% 
         stringr::str_extract('(?i)(?<=from )\\S+')
@@ -70,31 +74,24 @@ rawDatasetNames <- reactive({
   unique(c(uploadedDfName(), getPreloadedEnvDfNames(), getDefaultPlots()))
 })
 
+
 # reactive variable for raw dataset
 rawDataset <- reactive({
-  if (is.null(datasetName())) return()  # for initial input$dataset
-  isolate(reactVals$plotState$dataset_name <- datasetName())
+  cur_name <- datasetName()  # trigger
+  if (is.null(cur_name)) return()  # for initial input$datasetName
   
-  is_db <- !is.null(input$dbExecuteBtn) && input$dbExecuteBtn
-  
-  df <- if (is.null(input$file) && !is_db) {
-    get(datasetName())
-  } else { # if custom dataset was uploaded
-    if (datasetName() == uploadedDfName()) {
-      uploadedDf()  # if custom dataset was selected, then set it as raw dataset
-    } else {
-      # if custom dataset was not selected, then set one of the preloaded datasets as raw
-      get(datasetName())
-    }
-  }
-
-  data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
+  isolate({
+    reactVals$plotState$dataset_name <- cur_name
+    df <- if (!is.null(uploadedDfName()) && cur_name == uploadedDfName()) 
+      uploadedDf() else get(cur_name)
+    data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
+  })
 })
 
 # manually aggregated dataset
 manAggDataset <- reactive({
   # if all fields for manual aggregation are filled in
-  if (!is.null(input$aggBy) && !is.null(input$aggTarget) && !is.null(input$aggMeth)) {
+  if (notNulls(input$aggBy, input$aggTarget, input$aggMeth)) {
     # return manually aggregated dataset
     aggregate(rawDataset(), input$aggBy, input$aggTarget, input$aggMeth)
   } else {  # return raw dataset  

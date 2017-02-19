@@ -1,5 +1,5 @@
 datasetName <- reactive({
-  input$dataset
+  input$datasetName
 })
 
 plotTypes <- reactive({

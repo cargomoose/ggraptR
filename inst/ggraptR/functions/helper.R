@@ -221,6 +221,9 @@ anyNull <- function(...) {
   !notNulls(...)
 }
 
+not_null_true <- function(x) !is.null(x) && x
+not_null_false <- function(x) !is.null(x) && !x
+
 na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
 
 trimList <- function(...) na_omit(list(...))

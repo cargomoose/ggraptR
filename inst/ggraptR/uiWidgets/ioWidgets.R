@@ -1,9 +1,9 @@
 # file input select control
 output$fileInputSelectCtrl <- renderUI({
-  isolate({ reactVals$is_dataset_changed <- F })  # for initial run of modal window
-  fileInput('file', 'Choose file to upload', accept=
-              c('text/csv', 'text/comma-separated-values', 'text/tab-separated-values', 
-                'text/plain', '.csv', '.tsv'))
+  rawDataset()
+  fileInput('file', 'Choose file to upload', 
+            accept=c('text/csv', 'text/comma-separated-values', 
+                     'text/tab-separated-values', 'text/plain', '.csv', '.tsv'))
 })
 
 # file input header control
@@ -79,7 +79,6 @@ output$fileDPICtl <- renderUI({
 
 
 output$dbDriverTypeCtrl <- renderUI({
-  isolate({ reactVals$is_dataset_changed <- F })  # for initial run of modal window
   radioButtons('dbDriverTypeCtrl', 'Driver type', c('MySQL', 'PostgreSQL', 'SQLite'))
 })
 

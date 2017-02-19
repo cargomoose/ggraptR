@@ -1,7 +1,10 @@
 # dataset drop-down options 
 output$datasetCtrl <- renderUI({
-  initDf <- c(isolate(uploadedDfName()), getInitialArg('initialDf'))[1]
-  selectInput("dataset", "Dataset", choices=rawDatasetNames(), initDf)
+  opts <- rawDatasetNames()
+  isolate({
+    initDf <- c(uploadedDfName(), getInitialArg('initialDf'))[1]
+    selectInput("datasetName", "Dataset", choices=opts, initDf)
+  })
 })
 
 # reactive  option

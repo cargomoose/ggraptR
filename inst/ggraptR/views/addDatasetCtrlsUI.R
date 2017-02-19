@@ -35,7 +35,7 @@ tabsetPanel(
     
     br(),
     fluidRow(
-      column(9, textAreaInput('dbSqlQuery', 'Sql query', 'select * from iris_short',
+      column(9, textAreaInput('dbSqlQuery', 'Sql query', 'select * from diam_db_short',
                               width='430px')),
       column(3, uiOutput('dbExecuteBtn'), style='padding-top:25px')),
     

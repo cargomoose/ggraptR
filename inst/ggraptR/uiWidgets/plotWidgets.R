@@ -13,33 +13,32 @@ output$itersToDrawCtrl <- renderUI({
 })
 
 output$plotTypesCtrl <- renderUI({
-  if (displayPlotTypesCond()) {  # !is.null(dataset()) trigger
-    curGroupAllOpts <- plotTypesOpts()  # trigger
+  if (!displayPlotTypesCond()) return()  # !is.null(dataset()) trigger
+  curGroupAllOpts <- plotTypesOpts()  # trigger
+  
+  isolate({
+    pTypes <- plotTypes()
+    isInit <- all(sapply(c(x(), y(), columns(), plotTypes()), is.null))
     
-    isolate({
-      pTypes <- plotTypes()
-      isInit <- all(sapply(c(x(), y(), columns(), plotTypes()), is.null))
-      
-      if (isInit) {
-          inp <- getInitialArg('initialPlot')
-          initialPlot <- if (is.null(inp)) NULL else
-            inp %>% tolower() %>% gsub('(plot)| ', '', .)
-      }
-      
-      ls <- list()
-      ls[c('opts', 'val')] <- if (isInit) {
-        opts <- getPlotTypeOpts(initialPlot)
-        list(opts, if (!is.null(initialPlot)) initialPlot else opts[1])
-      } else if (reactVals$is_dataset_changed) {
-        if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')
-      } else {
-        reactVals$is_dataset_changed <- T  # will be flipped in plotTypesOpts()
-        list(curGroupAllOpts, pTypes)
-      }
-      
-      selectInput("plotTypes", "Plot type", ls$opts, ls$val, multiple = T)
-    })
-  }
+    if (isInit) {
+        inp <- getInitialArg('initialPlot')
+        initialPlot <- if (is.null(inp)) NULL else
+          inp %>% tolower() %>% gsub('(plot)| ', '', .)
+    }
+    
+    ls <- list()
+    ls[c('opts', 'val')] <- if (isInit) {
+      opts <- getPlotTypeOpts(initialPlot)
+      list(opts, if (!is.null(initialPlot)) initialPlot else opts[1])
+    } else if (reactVals$is_dataset_changed) {
+      if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')
+    } else {
+      reactVals$is_dataset_changed <- T  # will be flipped in plotTypesOpts()
+      list(curGroupAllOpts, pTypes)
+    }
+    
+    selectInput("plotTypes", "Plot type", ls$opts, ls$val, multiple = T)
+  })
 })
 
 output$xCtrl <- renderUI({
