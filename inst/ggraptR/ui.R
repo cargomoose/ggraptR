@@ -40,6 +40,10 @@ shinyUI(bootstrapPage(
               id='react_row'), 
             actionButton("reset_input", "Reset inputs", width = "100%")),
           
+          conditionalPanel(
+            condition = 'input.conditionedPanels == "codeTab"',
+            div(br(), style='padding-bottom: 120px')),
+          
           style='padding-left: 10px; padding-right: 3px; overflow: hidden;')),
     hr(),
 
