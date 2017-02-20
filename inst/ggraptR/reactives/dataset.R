@@ -39,15 +39,27 @@ uploadedDf <- reactive({
   # be found.
   input$file  # trigger
   db_df <- dbUploadedDf()
-
+  
   isolate({
+    # to add all dwnload input names at once
+    # prevents premature closing of the modal window
+    if (sum(c('dbExecuteBtn', 'file') %in% names(input)) == 1) {
+      updateTabsetPanel(session, 'addDatasetTabset', 'addFileTab')
+    }
+    
+    close_modal_if_opened <- function() {
+      if (input$modalUploadOptions) {
+        toggleModal(session, "modalUploadOptions", toggle = "close")
+      }
+    }
+    
     if (not_null_true(reactVals$is_db_upload)) {
-      toggleModal(session, "modalUploadOptions", toggle = "close")
+      close_modal_if_opened()
       return(db_df)
     }
     if (anyNull(input$file, input$header, input$sep, input$quote)) return()
     
-    toggleModal(session, "modalUploadOptions", toggle = "close")
+    close_modal_if_opened()
     read.csv(input$file$datapath, header = as.logical(input$header),
              sep = input$sep, quote = input$quote)
   })

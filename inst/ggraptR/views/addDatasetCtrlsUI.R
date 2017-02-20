@@ -39,5 +39,8 @@ tabsetPanel(
                               width='430px')),
       column(3, uiOutput('dbExecuteBtn'), style='padding-top:25px')),
     
-    value='addDbTab')
+    value='addDbTab'),
+  
+  id = 'addDatasetTabset',
+  selected = 'addDbTab'
 )
