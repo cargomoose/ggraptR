@@ -16,7 +16,8 @@ switchToDataset <- function(driver, dataset, init_plot = 'scatter',
 
 # sophisticated wait for histogram plotType and then for null plotType
 waitAfterDatasetChanged <- function(driver) {
-  waitRes <- waitFor('#plotTypesCtrl .item[data-value="histogram"]', driver,
+  # alternative: #showAes[data-shinyjs-resettable-value="false"]
+  waitRes <- waitFor('#plotTypesCtrl .selectize-input:not("has-items")', driver,
                      timeout=5, errorIfNot = F)
   if (isWebElement(waitRes)) {
     if (!waitFor({

@@ -2,12 +2,12 @@
 
 source('script/checkInitPlot.R')
 source('script/checkReactiveSubmitReset.R')  # checks diamonds color as well
-source('script/checkExportPlotGenerateCode.R')  # requires diamonds for genCode
-source('script/checkImportDataset.R')
-source('script/checkTable.R')
+source('script/checkDownloadPlotModal.R')
+source('script/checkAddDataset.R')
 
-source('script/checkExtraBlocks.R')
-source('script/checkAes.R')
+source('script/checkTabCode.R')
+source('script/checkTabTable.R')
+source('script/checkTabPlot.R')
 
 cat("\nRelease externals")
 release_externals()

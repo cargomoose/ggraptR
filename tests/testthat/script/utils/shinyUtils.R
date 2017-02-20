@@ -42,6 +42,12 @@ wait_for_table_ready <- function(driver) {
   # waitFor({ !isVisible(driver %>% getEl('.dataTables_processing')) }, driver)
 }
 
+# waitFor may be unsafe in case you need to wait for a long loading element in a tab
+switch_tab <- function(driver, waited_tab_name) {
+  driver %>% getEl(sprintf('a[data-value="%s"]', waited_tab_name)) %>% click()
+  waitFor(sprintf('.tab-pane.active[data-value="%s"]', waited_tab_name), driver)
+}
+
 isSelectEl <- function(selId, source=driver) {
   (getEl(driver, c('#', selId)) %>% attr('data-shinyjs-resettable-type')) == "Select"
 }
