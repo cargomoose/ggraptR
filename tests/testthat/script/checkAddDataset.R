@@ -1,4 +1,4 @@
-cat("\nImport dataset")
+cat("\nAdd dataset")
 
 #### generate custom csv file ####
 custom_dataset_filepath <- 'data/esoph_short.csv'

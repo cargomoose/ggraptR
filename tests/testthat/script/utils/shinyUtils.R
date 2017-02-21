@@ -13,8 +13,14 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
     driver$screenshot(T)
     browser()
   }
+  
+  res <- !length(getEls(driver, '.shiny-output-error'))
+  if (!res) {
+    driver$screenshot(T)
+    fileName <- paste0('!ERROR_', fileName)
+  }
   driver$screenshot(file=fileName)
-  !length(getEls(driver, '.shiny-output-error'))
+  res
 }
 
 waitForPlotReady <- function(driver) {

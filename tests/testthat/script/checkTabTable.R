@@ -1,12 +1,7 @@
-cat("\nTable")
-
-orig_dataset <- driver %>% getEl('#dataset') %>% text()
-is_esoph_dataset <- orig_dataset == 'esoph'
-if (!is_esoph_dataset) switchToDataset(driver, 'esoph', NULL, T)
-go_to_tab(driver, 'table')
+cat("\nTab: table")
+go_to_tab(driver, 'Table')
 
 get_table <- function() driver %>% getEl('#displayTable')
-
 getSelectOptions(driver, 'aggBy')[[1]] %>% click()
 wait_for_table_ready(driver)
 getSelectOptions(driver, 'aggTarget')[[1]] %>% click()
@@ -25,7 +20,7 @@ aggreg_res_serial <-
          'median125340071011502354406903150345542884606163455644757629164565743675501',
          '71536751181302111Showing1to6of6entriesPrevious1Next')
 
-test_that('table aggregations work correctt', {
+test_that('Table aggregations work correct', {
   expect_equal(get_table() %>% text() %>% gsub('\\W', '', .), aggreg_res_serial)
 })
 
@@ -38,8 +33,3 @@ test_that('Download button works correct', {
                     aggreg_res_serial)) 
   }
 )
-
-go_to_tab(driver, 'plot')
-if (!is_esoph_dataset) {
-  switchToDataset(driver, orig_dataset, init_plot = NULL, T)
-}
