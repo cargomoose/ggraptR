@@ -1,13 +1,13 @@
-switchToDataset <- function(driver, dataset, init_plot = 'scatter',
-                            need_wait_for_plot_ready=F) {
+switchToDataset <- function(driver, dataset, init_plot = NULL,
+                            need_wait_for_plot_ready = T) {
   
   stopifnot(!is.null(dataset) && 
-              dataset != attr(getEl(driver, '#dataset > option'), 'value'))
-  driver %>% getSelectOptions('dataset') %>% 
+              dataset != attr(getEl(driver, '#datasetName > option'), 'value'))
+  driver %>% getSelectOptions('datasetName') %>% 
     filter_el_by_attr('data-value', dataset) %>% click()
   waitAfterDatasetChanged(driver)
   
-  if (!is.null(init_plot)) {
+  if (!is.null(init_plot) && !setequal(init_plot, get_current_plot_names(driver))) {
     driver %>% getSelectOptions('plotTypes') %>% 
       filter_el_by_attr('data-value', init_plot) %>% click()
     if (need_wait_for_plot_ready) waitForPlotReady(driver)
@@ -17,7 +17,7 @@ switchToDataset <- function(driver, dataset, init_plot = 'scatter',
 # sophisticated wait for histogram plotType and then for null plotType
 waitAfterDatasetChanged <- function(driver) {
   # alternative: #showAes[data-shinyjs-resettable-value="false"]
-  waitRes <- waitFor('#plotTypesCtrl .selectize-input:not("has-items")', driver,
+  waitRes <- waitFor('#plotTypesCtrl .selectize-input:not(.has-items)', driver,
                      timeout=5, errorIfNot = F)
   if (isWebElement(waitRes)) {
     if (!waitFor({
@@ -32,7 +32,9 @@ waitAfterDatasetChanged <- function(driver) {
 go_to_tab <- function(driver, tab_name) {
   cur_tab <- driver %>% getEl('#conditionedPanels > li.active') %>% 
     text() %>% tolower() %>% trimws()
-  if (!tab_name %in% setdiff(c('plot', 'table', 'log'), cur_tab)) {
+  all_tabs <- driver %>% getEls('#conditionedPanels li') %>% text %>% tolower %>% trimws
+  tab_name <- tab_name %>% tolower()
+  if (!tab_name %in% setdiff(all_tabs, cur_tab)) {
     stop_externals(sprintf('It is impossible to click on tab [%s]', tab_name))
   }
   

@@ -35,7 +35,8 @@ test_that("Database uploading works correct", {
                           shortShotName=F, waitPlot=F)
 })
 
-
-#### random dataset ####
-rnd_df_name <- sample(c(basename(custom_dataset_filepath), 'esoph'), 1)
-cat(' [randomly choosed tested dataset: ', rnd_df_name, ']', sep = '')
+ 
+# # random dataset
+# rnd_df_name <- sample(c(basename(custom_dataset_filepath), 'esoph'), 1)
+# cat(' [randomly choosed tested dataset: ', rnd_df_name, ']', sep = '')
+switchToDataset(driver, 'esoph', init_plot = 'scatter')

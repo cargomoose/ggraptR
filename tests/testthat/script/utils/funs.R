@@ -13,7 +13,7 @@ eval.in.any.env <- function(targetExpr) {
   for (env in sys.frames()) {
     res <- try(eval(targetExpr, envir = env), T)
     if (!is_error_of(res, 'object .* not found') && 
-        !is_error_of(res, 'Summary: NoSuchDriver')) {
+        !is_error_of(res, 'Summary: NoSuchDriver') && length(res)) {
       if (is.error(res)) stop(getErrorMessage(res))
       return(res)
     }
