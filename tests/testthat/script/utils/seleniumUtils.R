@@ -1,62 +1,5 @@
 EXTERN_LOG_NAME <- 'rcmd.log'
 
-# target - charater of css/xpath query, function returning T/F, expression like {a+2==5}
-# source - webDriver or webElement
-waitFor <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
-  nChecks <- 2 * timeout
-  oneWaitDur <- timeout / nChecks
-  
-  targetFun <- 
-    if (class(substitute(target)) == '{') {  # for quoted expression
-      call_obj <- as.call(substitute(target))
-      # target expression must not started with 'if'. Fail-fast
-      stopifnot(!startsWith(as.character(call_obj[2]), 'if ('))
-      function(placeholder) eval.in.any.env(call_obj)
-    } else if (is.function(target)) {
-      target
-    } else if (is.character(target)) {
-      function(x) unlist(lapply(target, function(el) getEls(x, el)))
-    } else {
-      stop(sprintf('Not implemented for target class [%s]', class(target)))
-    }
-  
-  for (i in 1:nChecks) {
-    res <- suppressMessages(tryCatch(
-      targetFun(source),
-      error=function(e) {
-        if (is_error_of(e, 'Summary: UnknownError') || 
-            (catchStale && is_error_of(e, 'StaleElementReference'))) {
-          FALSE
-        } else {
-          browser()
-          stop(e$message)
-        }
-      }))
-    
-    if (is.list(res)) {
-      if (length(target) == 1) {
-        if (length(res)) {
-          return(invisible(if (length(res) > 1) res else res[[1]]))
-        }
-      } else {
-        if (length(Filter(length, res)) == 1) {
-          return(Filter(length, res)[[1]])
-        }
-      }
-    } else if (is.logical(res) && res) {
-      return(TRUE)
-    }
-    Sys.sleep(oneWaitDur)
-  }
-  
-  if (errorIfNot) {
-    driver$screenshot(T)
-    browser()
-    stop('Could not wait')
-  } 
-  FALSE
-}
-
 # from find.package('RSelenium')/examples/serverUtils/*.R
 startSelServer <- function() {
   library(XML)
@@ -266,13 +209,19 @@ isVisible <- function(el) {
   el$isElementDisplayed()[[1]]
 }
 
-click <- function(el) {
+click <- function(el, wait_for=NULL) {
   stopIfNotWebElement(el)
   if (!isVisible(el)) {
     browser()
     stop_externals('Input element is invisible: ', html(el))
   }
   el$clickElement()
+  
+  if (!is.null(wait_for)) {
+    if (is.logical(wait_for) && wait_for) {
+      wait_for_plot_ready(driver)
+    }
+  }
 }
 
 filter_el_by_. <- function(els, by, val, attr_key=NULL) {
@@ -280,9 +229,13 @@ filter_el_by_. <- function(els, by, val, attr_key=NULL) {
   if (!is.list(els)) stop_externals('Wrong "els" class')
   res <- Filter(function(el) 
     (if (by == 'attr') attr(el, attr_key) else text(el)) == val, els)
-  if (length(res) != 1) stop_externals(
-    paste('Could not filter one unique attribute.',
-          'Count of attributes found is:', length(res)))
+  if (length(res) != 1)  {
+    driver$screenshot(T)
+    browser()
+    stop_externals(
+      paste('Could not filter one unique attribute.',
+            'Count of attributes found is:', length(res)))
+  }
   res[[1]]
 }
 

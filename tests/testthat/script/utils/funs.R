@@ -1,9 +1,8 @@
 suppressPackageStartupMessages(library(RSelenium))
 suppressPackageStartupMessages(library(dplyr))
 
-source('script/utils/seleniumUtils.R')
-source('script/utils/shinyUtils.R')
-source('script/utils/ggraptrUtils.R')
+source('../../inst/ggraptR/functions/helper.R')
+sourceAllInDir('script/utils', except = 'funs.R')
 
 
 eval.in.any.env <- function(targetExpr) {

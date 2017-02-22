@@ -3,50 +3,50 @@ switchToDataset <- function(driver, dataset, init_plot = NULL,
   
   stopifnot(!is.null(dataset) && 
               dataset != attr(getEl(driver, '#datasetName > option'), 'value'))
+  
+  n_plot_types <- length(get_selected_items(driver, 'plotTypes'))
   driver %>% getSelectOptions('datasetName') %>% 
     filter_el_by_attr('data-value', dataset) %>% click()
-  waitAfterDatasetChanged(driver)
+  wait_for({ length(get_current_plot_names(driver)) != n_plot_types }, driver, 
+           catchStale = T)
+  # wait_for(  # alternative: #showAes[data-shinyjs-resettable-value="false"]
+  # sprintf('#plotTypesCtrl .selectize-input%s',
+  #         if (n_plot_types) ':not(.has-items)' else '.has-items'), driver, catchStale = T)
   
   if (!is.null(init_plot) && !setequal(init_plot, get_current_plot_names(driver))) {
-    driver %>% getSelectOptions('plotTypes') %>% 
+    if (length(get_current_plot_names(driver)) > 0) {
+      eraseMultiSelectOpts(driver, 'plotTypes', 'all')
+    }
+    
+    driver %>% 
+      getSelectOptions('plotTypes') %>% 
       filter_el_by_attr('data-value', init_plot) %>% click()
-    if (need_wait_for_plot_ready) waitForPlotReady(driver)
+    if (need_wait_for_plot_ready) wait_for_plot_ready(driver)
   }
 }
 
-# sophisticated wait for histogram plotType and then for null plotType
-waitAfterDatasetChanged <- function(driver) {
-  # alternative: #showAes[data-shinyjs-resettable-value="false"]
-  waitRes <- waitFor('#plotTypesCtrl .selectize-input:not(.has-items)', driver,
-                     timeout=5, errorIfNot = F)
-  if (isWebElement(waitRes)) {
-    if (!waitFor({
-          length(getAllPlotNames()) == length(driver %>% getSelectOptions('plotTypes')) 
-        }, errorIfNot = F, catchStale=T)) {
-      browser()
-      stop_externals('waitAfterDatasetChanged failed')
-    }
-  }
-}
-  
-go_to_tab <- function(driver, tab_name) {
+go_to_tab <- function(driver, tab_name, error_if_not=T) {
   cur_tab <- driver %>% getEl('#conditionedPanels > li.active') %>% 
     text() %>% tolower() %>% trimws()
   all_tabs <- driver %>% getEls('#conditionedPanels li') %>% text %>% tolower %>% trimws
   tab_name <- tab_name %>% tolower()
   if (!tab_name %in% setdiff(all_tabs, cur_tab)) {
-    stop_externals(sprintf('It is impossible to click on tab [%s]', tab_name))
+    if (error_if_not)  {
+      stop_externals(sprintf('It is impossible to click on tab [%s]', tab_name))
+    } else {
+      return()
+    }
   }
   
   driver %>% getEl(c('a[data-value="', tab_name, 'Tab"]')) %>% click()
   
   if (tab_name == 'plot') {
-    waitFor({ isVisible(driver %>% getEl('#plot')) }, driver, timeout = 3)
+    wait_for({ isVisible(driver %>% getEl('#plot')) }, driver, timeout = 3)
   } else if (tab_name == 'table') {
-    waitFor({ isVisible(driver %>% getEl('#displayTable')) }, driver, timeout = 3)
+    wait_for({ isVisible(driver %>% getEl('#displayTable')) }, driver, timeout = 3)
     wait_for_table_ready(driver)
   } else {
-    waitFor({ isVisible(driver %>% getEl('#plotLog')) }, driver, timeout = 3)
+    wait_for({ isVisible(driver %>% getEl('#plotLog')) }, driver, timeout = 3)
   }
 }
 
@@ -78,8 +78,16 @@ get_plot_input_ids <- function(driver) {
     attr('id')
 }
 
+get_selected_items <- function(driver, inpId) {
+  driver %>% getEls(c('#', inpId, 'Ctrl .selectize-control .item'))
+}
+
+get_possible_options <- function(driver, inpId) {
+  driver %>% getEls(c('#', inpId, 'Ctrl .selectize-control .option'))
+}
+
 get_current_plot_names <- function(driver) {
-  getEls(driver, '#plotTypes option') %>% text()
+  driver %>% get_selected_items('plotTypes') %>% text()
 }
 
 get_widblock_input_ids <- function(driver, block_name) {
@@ -121,8 +129,9 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
       return(FALSE)
     }
     if (!is.null(driver %>% getEl(c('#', inpId)) %>% attr('multiple'))) {
+      eraseAll <- length(get_selected_items(driver, inpId)) == 1
       eraseMultiSelectOpts(driver, inpId)
-      waitForPlotReady(driver)
+      wait_for_plot_ready(driver, !eraseAll)
     }
   }
   
@@ -170,9 +179,9 @@ isCheckboxCorrect <- function(driver, inpId, plotNames,
     chkBoxEl %>% click()
     
     if (is_section && inpId != 'showXYRange') {
-      waitFor({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
+      wait_for({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
     } else {
-      waitForPlotReady(driver)
+      wait_for_plot_ready(driver)
     }
     if (i == 1) {
       res <- has_shiny_correct_state(driver, plotNames, inpId,

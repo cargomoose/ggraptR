@@ -10,12 +10,12 @@ if (!file.exists(custom_dataset_filepath)) {
 #### file uploading ####
 driver %>% getEl('#uploadData') %>% click()
 # uplEl <- modalEl %>% getEl('input#file')
-uplEl <- waitFor('input#file', driver)
+uplEl <- wait_for('input#file', driver)
 uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 uplEl$sendKeysToElement(list(custom_dataset_filepath))
-waitFor('#showAes[data-shinyjs-resettable-value="false"]', driver)  # plotTypes -> empty
+wait_for('#showAes[data-shinyjs-resettable-value="false"]', driver)  # plotTypes -> empty
 get_data_name <- function() driver %>% 
-  getEl('#datasetCtrl .selectize-control.single') %>% text()
+  getEl('#datasetNameCtrl .selectize-control.single') %>% text()
 test_that("File uploading works correct", {
   expect_equal(basename(custom_dataset_filepath), get_data_name())
 })
@@ -23,12 +23,11 @@ test_that("File uploading works correct", {
 
 #### database uploading ####
 driver %>% getEl('#uploadData') %>% click()
-modalEl <- waitFor('#modalUploadOptions[style="display: block;"]', driver)
+modalEl <- wait_for('#modalUploadOptions[style="display: block;"]', driver)
 switch_tab(driver, 'addDbTab')
 data_name <- driver %>% getEl('#dbSqlQuery') %>% attr('value') %>% 
   stringr::str_extract('(?i)(?<=from )\\S+')
-driver %>% getEl('button#dbExecuteBtn') %>% click()
-waitForPlotReady(driver)
+driver %>% getEl('button#dbExecuteBtn') %>% click(T)
 test_that("Database uploading works correct", {
   expect_equal(data_name, get_data_name())
   has_shiny_correct_state(driver, 'uploading', 'database', data_name, 

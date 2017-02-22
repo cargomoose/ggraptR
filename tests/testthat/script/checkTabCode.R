@@ -21,11 +21,11 @@ test_target <- 'Console'
 console_input_el <- driver %>% getEl('input#console')
 console_cmd <- 'ls(1)'
 console_input_el$sendKeysToElement(list(console_cmd))
-waitFor({ driver %>% getEl('input#console') %>% attr('value') == console_cmd }, driver)
+wait_for({ driver %>% getEl('input#console') %>% attr('value') == console_cmd }, driver)
 driver %>% getEl('button#evalConsoleBtn') %>% click()
 test_that(paste(test_target, 'works correct'), {
   expect_true(
-    waitFor({ driver %>% getEl('#consoleCtrl') %>% text %>% nchar > 0 }, driver))
+    wait_for({ driver %>% getEl('#consoleCtrl') %>% text %>% nchar > 0 }, driver))
   expect_true(!grepl('shiny-output-error', 
                      driver %>% getEl('#consoleCtrl') %>% attr('class')))
 })

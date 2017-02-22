@@ -1,7 +1,7 @@
 cat("\nReactive submit, reset and missing colorAsFactor")
 
 driver %>% getEl('#reactive') %>% click()
-submitBtn <- waitFor("#submit:not(disabled)", driver)
+submitBtn <- wait_for("#submit:not(disabled)", driver)
 
 # > check for treatColorAsFactor
 test_that('treatColorAsFactor hides correct', 
@@ -11,12 +11,12 @@ caratColorOpt <- driver %>% getSelectOptions('color') %>%
 if (length(caratColorOpt) != 1) 
   stop_externals('Impossible') else caratColorOpt[[1]] %>% click()
 test_that('treatColorAsFactor appears correct', 
-          expect_true(!is.null(waitFor('#treatColorAsFactor'))))
+          expect_true(!is.null(wait_for('#treatColorAsFactor'))))
 driver %>% getEl('#treatColorAsFactor') %>% click()
 # <
 
 test_that('Unreactive submit waits correct', 
-          expect_false(waitForPlotReady(driver)))
+          expect_false(wait_for_plot_ready(driver, F)))
 driver %>% getEl('#submit') %>% click()
 test_that('Unreactive submit works correct', 
           expect_true(driver %>% has_shiny_correct_state(
@@ -25,17 +25,17 @@ test_that('Unreactive submit works correct',
 
 driver %>% getEl('#reactive') %>% click()  # turn reactive on
 test_that('Submit button grays correct', {
-  expect_true(!is.null(waitFor('#submit[disabled]')))
+  expect_true(!is.null(wait_for('#submit[disabled]')))
   driver %>% getEl('#reactive') %>% click()  # turn reactive off to check Reset inputs
-  expect_true(!is.null(waitFor('#submit:not(disabled)')))
+  expect_true(!is.null(wait_for('#submit:not(disabled)')))
 })
 
 driver %>% getEl('#reset_input') %>% click()
 test_that('Reset works correct', {
-  expect_true(waitFor({
+  expect_true(wait_for({
     text(driver %>% getEl('#color option[selected="selected"]')) == 'color' }, 
     catchStale=T))
-  expect_true(waitFor({ is.null(driver %>% getEl('#treatColorAsFactor')) }))
-  expect_true(!is.null(waitFor('#submit[disabled]')))
+  expect_true(wait_for({ is.null(driver %>% getEl('#treatColorAsFactor')) }))
+  expect_true(!is.null(wait_for('#submit[disabled]')))
   expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL, shortShotName=F))
 })

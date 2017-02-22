@@ -1,6 +1,6 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
                                     shortShotName=T, waitPlot=T) {
-  if (waitPlot) waitForPlotReady(driver)
+  if (waitPlot) wait_for_plot_ready(driver)
   if (!dir.exists('report')) {
     dir.create('report')
     cat('Created "report" directory at', getwd())
@@ -23,35 +23,10 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
   res
 }
 
-waitForPlotReady <- function(driver) {
-  # need to know approx count of empty value in blank plot. Depends on screen resolution
-  if (driver$getWindowSize()$height != 1080 || driver$getWindowSize()$width != 1920) {
-    stop_externals('Wrong driver screen resolution')
-  }
-  emptyPicHtml <- paste0(rep('A', 1e3), collapse='')
-  emptyPicQuery <-    sprintf('#plot img[src*="%s"]', emptyPicHtml)
-  nonEmptyPicQuery <- sprintf('#plot img:not([src*="%s"])', emptyPicHtml)
-  
-  isBlank <- waitFor(emptyPicQuery, source=driver, errorIfNot=F, timeout = 4)
-  if (!is.logical(isBlank) || isBlank) {
-    waitFor(
-      c(nonEmptyPicQuery, '#plot.shiny-output-error'),
-      source=driver)  # normal plot or an err
-  } else {
-    isBlank
-  }
-}
-
-wait_for_table_ready <- function(driver) {
-  Sys.sleep(0.2)
-  waitFor(paste0('.dataTables_processing[style="display: none;"]'), driver)
-  # waitFor({ !isVisible(driver %>% getEl('.dataTables_processing')) }, driver)
-}
-
-# waitFor may be unsafe in case you need to wait for a long loading element in a tab
+# wait_for may be unsafe in case you need to wait for a long loading element in a tab
 switch_tab <- function(driver, waited_tab_name) {
   driver %>% getEl(sprintf('a[data-value="%s"]', waited_tab_name)) %>% click()
-  waitFor(sprintf('.tab-pane.active[data-value="%s"]', waited_tab_name), driver)
+  wait_for(sprintf('.tab-pane.active[data-value="%s"]', waited_tab_name), driver)
 }
 
 isSelectEl <- function(selId, source=driver) {
@@ -61,13 +36,13 @@ isSelectEl <- function(selId, source=driver) {
 getSelectOptions <- function(driver, selId, withActivated=F) {
   if (!isSelectEl(selId, source=driver)) stop_externals('!isSelectEl in getSelectOptions')
   
-  selControlEl <- getEl(driver, c('select#', selId, ' + div'))
-  selEl <- getEl(selControlEl, '.selectize-input')
+  selControlEl <- driver %>% getEl(c('select#', selId, ' + div'))
+  selEl <- selControlEl %>% getEl('.selectize-input')
   
   if (!grepl('\\binput-active\\b', attr(selEl, 'class'))) {
     # shiny 'select' inputs do not have their options at the beginning. Click to load
     selEl %>% click()  # makes available options visible
-    waitFor('.selectize-input.input-active', selControlEl)
+    wait_for('.selectize-input.input-active', selControlEl, catchStale = T)
   }
   notSel <- selControlEl %>% getEls('.option:not(.selected)')
   if (withActivated) {
@@ -79,11 +54,11 @@ getSelectOptions <- function(driver, selId, withActivated=F) {
 
 eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   eraseOpts <- function(driver, selectId, n) {
-    getEl(driver, c('#', selectId, ' + .selectize-control input'))$
-    sendKeysToElement(as.list(rep(selKeys$backspace, n)))
+    el <- getEl(driver, c('#', selectId, ' + .selectize-control input'))
+    el$sendKeysToElement(as.list(rep(selKeys$backspace, n)))
   }
   getItemsLength <- function(driver, selectId) {
-    length(getEls(driver, c('#', selectId, ' + .selectize-control .item')))
+    length(get_selected_items(driver, selectId))
   }
   
   if (!isSelectEl(selectId, source=driver)) {
@@ -91,18 +66,19 @@ eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   }
   
   nItemsBeforeErasing <- getItemsLength(driver, selectId)
+  if (howMany == 'all') howMany <- nItemsBeforeErasing
   isEraseAll <- selectId == 'plotTypes' && nItemsBeforeErasing == howMany
   eraseOpts(driver, selectId, max(1, howMany - 1))
   if (howMany > 1) {
-    waitForPlotReady(driver)
+    wait_for_plot_ready(driver)
     getSelectOptions(driver, selectId)  # sets the focus to the select element
     if (!isEraseAll) nItemsBeforeErasing <- getItemsLength(driver, selectId)
     eraseOpts(driver, selectId, 1)
   }
   
   if (isEraseAll) {
-    waitFor(sprintf('#%sCtrl .selectize-input:not(.focus)', selectId), source=driver)
+    wait_for(sprintf('#%sCtrl .selectize-input:not(.focus)', selectId), source=driver)
   } else {
-    waitFor({ nItemsBeforeErasing != getItemsLength(driver, selectId) }, source=driver)
+    wait_for({ nItemsBeforeErasing != getItemsLength(driver, selectId) }, source=driver)
   }
 }

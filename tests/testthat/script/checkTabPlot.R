@@ -1,24 +1,22 @@
 cat("\nTab: plot\n")
-go_to_tab(driver, 'plot')
-
+go_to_tab(driver, 'plot', error_if_not=F)
 
 block_name <- 'showFacet'
 cat(paste0("\n", block_name))
 driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
   facet_ids <- get_widblock_input_ids(driver, block_name)
-  
+
   make_select_none <- function(driver, inp_id) {
     opts <- driver %>% getSelectOptions(inp_id) %>%
-      filter_el_by_text('None') %>% click()
-    waitForPlotReady(driver)
+      filter_el_by_text('None') %>% click(T)
   }
-  
+
   # facet scale will be clicked but later report png rewritten
   # with combination facetWrap+facetScale
   facet_row_col_ids <- setdiff(facet_ids, 'facetWrap')
   for (inp_id in facet_row_col_ids) check_input(driver, inp_id, NULL)
   for (inp_id in facet_row_col_ids) make_select_none(driver, inp_id)
-  
+
   facet_wrap_ids <- setdiff(facet_ids, c('facetRow', 'facetCol'))
   for (inp_id in facet_wrap_ids) check_input(driver, inp_id, NULL)
   for (inp_id in facet_wrap_ids) make_select_none(driver, inp_id)
@@ -40,10 +38,16 @@ for (block_name in c('showXYRange', 'showTheme', 'showDSTypeAndPlotAgg')) {
 
 block_name <- 'showAes'
 cat(paste0("\n", block_name))
+driver %>% getEl('#reset_input') %>% click()
+wait_for({ length(get_current_plot_names(driver)) == 0 }, driver)
+if (get_selected_items(driver, 'datasetName') %>% `[[`(1) %>% text != 'esoph') {
+  switchToDataset(driver, 'esoph', 'scatter', need_wait_for_plot_ready = F)
+}
+
 usedPlotNames <- c()
 isLastIter <- F
 while (!isLastIter) {
-  waitForPlotReady(driver)
+  wait_for_plot_ready(driver)
   plot_names <- get_current_plot_names(driver)
   
   test_that(sprintf('[%s] [default_inputs] work correct', pastePlus(plot_names)), 
