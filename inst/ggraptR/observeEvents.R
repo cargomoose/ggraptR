@@ -50,7 +50,7 @@ observeEvent(input$reset_input, {
   updateCheckboxInput(session, "reactive", value = FALSE)
   Sys.sleep(0.5)
   # setdiff prevents very unstable bug of infinite recursive refresh of plotTypes
-  for (id in setdiff(names(input), 'dataset')) {
+  for (id in setdiff(names(input), 'datasetName')) {
     reset(id)
   }
   Sys.sleep(0.5)
