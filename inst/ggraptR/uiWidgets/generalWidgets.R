@@ -1,5 +1,5 @@
 # dataset drop-down options 
-output$datasetCtrl <- renderUI({
+output$datasetNameCtrl <- renderUI({
   opts <- rawDatasetNames()
   isolate({
     initDf <- c(uploadedDfName(), getInitialArg('initialDf'))[1]
