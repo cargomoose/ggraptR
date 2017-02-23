@@ -222,12 +222,12 @@ aggLimDf <- reactive({
   
   isolate({
     if (all(is.null(xlim()), is.null(ylim()))) {
-      reactVals$plotState$lim_range <- NULL
+      reactVals$plotState$filter <- NULL
     } else {
-      reactVals$plotState$lim_range$x$val <- xlim()
-      reactVals$plotState$lim_range$x$type <- xType()
-      reactVals$plotState$lim_range$y$val <- ylim()
-      reactVals$plotState$lim_range$y$type <- yType()
+      reactVals$plotState$filter$x$val <- xlim()
+      reactVals$plotState$filter$x$type <- xType()
+      reactVals$plotState$filter$y$val <- ylim()
+      reactVals$plotState$filter$y$type <- yType()
     }
   })
   

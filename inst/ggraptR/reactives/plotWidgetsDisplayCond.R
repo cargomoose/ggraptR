@@ -93,11 +93,11 @@ displayFacetCond <- reactive({
 })
 
 displayXlimCond <- reactive({
-  showXYRange() && displayXCond()  # )|| isolate(isInit())
+  showFiltering() && displayXCond()  # )|| isolate(isInit())
 })
 
 displayYlimCond <- reactive({
-  showXYRange() && displayYCond()  # )|| isolate(isInit())
+  showFiltering() && displayYCond()  # )|| isolate(isInit())
 })
 
 displayThemeCond <- reactive({

@@ -174,11 +174,11 @@ isCheckboxCorrect <- function(driver, inpId, plotNames,
     n_inputs <- driver %>% getEls(n_inputs_query) %>% length
     
     chkBoxEl <- getBox()
-    if (!isVisible(chkBoxEl) && is_section) return(T)  # pairs showXYRange is invisible
-    # if (is_section && inpId != 'showXYRange') browser()
+    if (!isVisible(chkBoxEl) && is_section) return(T)  # pairs showFiltering is invisible
+    # if (is_section && inpId != 'showFiltering') browser()
     chkBoxEl %>% click()
     
-    if (is_section && inpId != 'showXYRange') {
+    if (is_section && inpId != 'showFiltering') {
       wait_for({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
     } else {
       wait_for_plot_ready(driver)

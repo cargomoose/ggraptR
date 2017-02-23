@@ -22,8 +22,8 @@ verticalLayout(
       class="widblock"),
     
     div(
-      uiOutput('showXYRangeCtrl'),
-      source('./views/plotBlock/xyRangeCtrlsUI.R', local=TRUE)$value,
+      uiOutput('showFilteringCtrl'),
+      source('./views/plotBlock/filteringCtrlsUI.R', local=TRUE)$value,
       class="widblock"),
     
     div(

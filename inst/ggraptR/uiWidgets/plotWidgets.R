@@ -424,10 +424,10 @@ output$showFacetCtrl <- renderUI({
   isolate(checkboxInput('showFacet', 'Show facets', value=showFacet()))
 })
 
-output$showXYRangeCtrl <- renderUI({
+output$showFilteringCtrl <- renderUI({
   c(displayYCond(), yOrig())  # bind on plotTypes(), x() and y()
   # value = F to refresh x and y axes limits
-  checkboxInput('showXYRange', 'Show ranges', value = F)  # showXYRange()
+  checkboxInput('showFiltering', 'Show filtering', value = F)  # showFiltering()
 })
 
 output$showThemeCtrl <- renderUI({

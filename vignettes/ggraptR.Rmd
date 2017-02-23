@@ -159,7 +159,7 @@ This is useful to improve visual clarity if the relative values of data attribut
 
 #### 2.3.3 Zoom-in
 
-Click on the 'Show ranges' check box to display controls for zooming in on a subset of the plot. 
+Click on the 'Show filtering' check box to display controls for zooming in on a subset of the plot. 
 
 ![alt text](ggraptR_33_ranges.png "Zoom-in")
 

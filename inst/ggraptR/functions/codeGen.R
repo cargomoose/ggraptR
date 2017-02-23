@@ -40,12 +40,12 @@ generateCode <- function(p, state) {
   p$mapping <- rev(p$mapping)
   res_dataset_name <- state$dataset_name
   
-  if (!is.null(state$lim_range)) {
-    lim_range <- state$lim_range
+  if (!is.null(state$filter)) {
+    filtering <- state$filter
     res_dataset_name <- sprintf('data.table(%s)', res_dataset_name)
-    for (i in 1:length(lim_range)) {
-      ax <- lim_range[[i]]
-      ax_name <- names(lim_range)[[i]]
+    for (i in 1:length(filtering)) {
+      ax <- filtering[[i]]
+      ax_name <- names(filtering)[[i]]
       isNum <- is.numeric(ax$val)
       
       res_dataset_name <- sprintf('%s[%s %s c(%s)]',

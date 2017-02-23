@@ -239,10 +239,6 @@ vjust <- reactive({
   if (is.null(input$vjust)) 0.5 else input$vjust
 })
 
-showXYRange <- reactive({
-  !is.null(input$showXYRange) && input$showXYRange
-})
-
 plotTheme <- reactive({
   if (is.null(input$plotTheme)) 'theme_grey' else input$plotTheme
 })
@@ -270,8 +266,8 @@ showFacet <- reactive({
   !is.null(input$showFacet) && input$showFacet
 })
 
-showXYRange <- reactive({
-  !is.null(input$showXYRange) && input$showXYRange
+showFiltering <- reactive({
+  !is.null(input$showFiltering) && input$showFiltering
 })
 
 showTheme <- reactive({

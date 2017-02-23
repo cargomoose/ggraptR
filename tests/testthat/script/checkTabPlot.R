@@ -23,7 +23,7 @@ driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_act
 })
 
 
-for (block_name in c('showXYRange', 'showTheme', 'showDSTypeAndPlotAgg')) {
+for (block_name in c('showFiltering', 'showTheme', 'showDSTypeAndPlotAgg')) {
   cat(paste0("\n", block_name))
   driver %>% isCheckboxCorrect(inpId = block_name, plotNames = NULL, eval_when_active = {
     inp_ids <- if (block_name == 'showDSTypeAndPlotAgg') {
