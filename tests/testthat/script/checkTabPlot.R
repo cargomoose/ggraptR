@@ -39,7 +39,7 @@ for (block_name in c('showXYRange', 'showTheme', 'showDSTypeAndPlotAgg')) {
 block_name <- 'showAes'
 cat(paste0("\n", block_name))
 driver %>% getEl('#reset_input') %>% click()
-wait_for({ length(get_current_plot_names(driver)) == 0 }, driver)
+Sys.sleep(10)
 if (get_selected_items(driver, 'datasetName') %>% `[[`(1) %>% text != 'esoph') {
   switchToDataset(driver, 'esoph', 'scatter', need_wait_for_plot_ready = F)
 }
