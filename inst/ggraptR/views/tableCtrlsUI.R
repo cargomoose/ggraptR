@@ -4,8 +4,4 @@ verticalLayout(
     column(6, uiOutput('aggTargetCtrl'))),
   
   fluidRow(
-    column(6, uiOutput('aggMethCtrl'))),
-  
-  fluidRow(
-    column(6, uiOutput('shareOfCtrl')),
-    column(6, uiOutput('shareTargetCtrl'))))
+    column(6, uiOutput('aggMethCtrl'))))

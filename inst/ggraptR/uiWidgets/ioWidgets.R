@@ -40,15 +40,6 @@ output$dlBtnPlot <- renderUI({
   downloadButton('dlPlot', 'Download')
 })
 
-# user-defined factor variables control options
-# output$usrDefFacVarsCtrl <- renderUI({
-#   if (is.null(dataset()) | is.null(factorVars())) return()  
-#   selectInput('usrDefFacVars', 'User-Defined Factor Variables',
-#               choices=colnames(dataset()), 
-#               selected=factorVars(),
-#               multiple=T)
-# })
-
 output$exportPlotCtl <- renderUI({
   bsButton("exportPlot", label="Download plot", type="action", icon=icon("download"))
 })
