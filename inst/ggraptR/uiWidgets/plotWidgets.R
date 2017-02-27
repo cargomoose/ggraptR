@@ -67,7 +67,7 @@ output$yCtrl <- renderUI({
 output$columnsCtrl <- renderUI({
   if (displayGgpairsColumnsCond()) {
     isolate(selectInput(
-      'columns', 'Columns', choices=names(dataset()), 
+      'columns', 'Columns', choices=names(dataset()),  # aggLimDf() ?
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
         columns(), multiple=T))
   }
@@ -78,7 +78,8 @@ output$colorCtrl <- renderUI({
     isolate({
       isScatter <- all('scatter' == plotTypes())
       isDiamondsInit <- isScatter && datasetName() == 'diamonds' && is.null(y())
-      opts <- c('None', if (isScatter) names(dataset()) else categoricalVars())
+      opts <- c('None', if (isScatter) 
+                 names(dataset()) else categoricalVars())  # aggLimDf() ?
       
       selectInput('color', 'Color', opts, if (isDiamondsInit) 'color' else color())
     })
@@ -326,7 +327,7 @@ output$labelFontFamilyCtrl <- renderUI({
     labelFontFamilyOpts <- c('sans', 'serif', 'mono', 'Calibri', 
                              'Times', 'Helvetica', 'Courier')
     isolate(selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
-                labelFontFamily()))
+                        labelFontFamily()))
   }
 })
 
@@ -348,7 +349,7 @@ output$labelFontSizeCtrl <- renderUI({
 output$labelFontColorCtrl <- renderUI({
   if (displayThemeCond()) {
     isolate(colourInput('labelFontColor', 'Label Font Color',
-                                 value=labelFontColor()))
+                        value=labelFontColor()))
   }
 })
 

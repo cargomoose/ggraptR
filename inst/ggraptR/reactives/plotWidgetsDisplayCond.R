@@ -8,7 +8,7 @@ isInit <- reactive({
 
 aesReady <- reactive({  # serves as trigger too
   displayYCond()
-  showAes() # && isolate(x() %in% names(dataset()))
+  showAes()
 })
 
 displayPlotTypesCond <- reactive({
