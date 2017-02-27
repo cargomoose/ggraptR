@@ -276,25 +276,34 @@ output$facetScaleCtrl <- renderUI({
   }
 })
 
-output$xlimCtrl <- renderUI({
-  if (displayXlimCond()) {
+
+output$filterFeatureCtrl <- renderUI({
+  if (displayFilterCond()) {
     isolate({
-      if (x() %in% aggDfFactorVars()) {
-        selectInput('xlim', label='X Value', choices=unique(as.character(aggDf()[[x()]])), 
-                    multiple=T)
-      } else if (x() %in% aggDfNumericVars() && !is.null(xRange())) {
-        sliderInput("xlim", label="X Range",
-                    min=xRange()[1], max=xRange()[2], value=xRange(), sep='')
-      }
+      aes_inputs <- readLines('views/plotBlock/aesCtrlsUI.R') %>% 
+        paste0(collapse = '') %>% 
+        stringr::str_extract_all('(?<=uiOutput\\(.)\\w+') %>% `[[`(1) %>% 
+        Filter(function(x) !startsWith(x, 'pair'), .) %>% 
+        gsub('Ctrl', '', .) %>% 
+        append(if ('pairs' %in% plotTypes()) 'columns' else c('x', 'y'))
+        
+      opts <- sapply(aes_inputs, function(x) input[[x]]) %>% na_omit() %>% 
+        Filter(function(x) is.character(x), .) %>% unlist() %>% 
+        intersect(names(dataset()))  # aggLimDf() ?
+      
+      selectInput('filterFeature', 'Filter feature', opts)
     })
   }
 })
 
-output$ylimCtrl <- renderUI({
-  if (displayYlimCond()) {
+output$filterValueCtrl <- renderUI({
+  if (displayFilterCond()) {
     isolate({
       if (y() %in% aggDfFactorVars()) {
-        selectInput('ylim', label='Y Value', choices=levels(aggDf()[[y()]]), multiple=T)
+        selectInput('ylim', label='Y Value', 
+                    # choices=levels(aggDf()[[y()]]),  # which one?
+                    # choices=unique(as.character(aggDf()[[x()]])),  # which one?
+                    multiple=T)
       } else if (y() %in% aggDfNumericVars() && !is.null(yRange())) {
         sliderInput("ylim", label="Y Range",
                     min=yRange()[1], max=yRange()[2], value=yRange(), sep='')

@@ -191,36 +191,25 @@ aggLimDf <- reactive({
   dataset <- aggDf()
   if (is.null(dataset)) return()
   
-  # subset with xlim filter (if applicable)
-  if (!is.null(xlim())) {
-    x <- input$x
-    if (is.null(x) || is.null(xType())) {
-      return()
-    }
-    if (xType() == 'continuous') {
-      dataset <- dataset[dataset[[x]] >= xlim()[1] & dataset[[x]] <= xlim()[2], ]
-    } else if (xType() == 'discrete') {
-      dataset <- dataset[dataset[[x]] %in% xlim(), ]
-    }
-  }
-  
-  # subset with ylim filter (if applicable)
-  if (!is.null(ylim())) {
-    flog.debug("dataset::aggLimDf() - !is.null(ylim())", name='all')
-    if ('y' %in% plotInputs()) {
-      y <- y()
-      if (is.null(y) || is.null(yType())) {
-        return()
-      }
-      if (yType() == 'continuous') {
-        dataset <- dataset[dataset[[y]] >= ylim()[1] & dataset[[y]] <= ylim()[2], ]
-      } else if (yType() == 'discrete') {
-        dataset <- dataset[dataset[[y]] %in% ylim(), ]
-      }
-    }
-  }
-  
+  filter_target <- 
+  filter_value <- 
+    
   isolate({
+    if (!is.null(ylim())) {
+      flog.debug("dataset::aggLimDf() - !is.null(ylim())", name='all')
+      if ('y' %in% plotInputs()) {
+        y <- y()
+        if (is.null(y) || is.null(yType())) {
+          return()
+        }
+        if (yType() == 'continuous') {
+          dataset <- dataset[dataset[[y]] >= ylim()[1] & dataset[[y]] <= ylim()[2], ]
+        } else if (yType() == 'discrete') {
+          dataset <- dataset[dataset[[y]] %in% ylim(), ]
+        }
+      }
+    }
+    
     if (all(is.null(xlim()), is.null(ylim()))) {
       reactVals$plotState$filter <- NULL
     } else {

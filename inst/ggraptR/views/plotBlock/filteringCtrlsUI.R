@@ -1,4 +1,4 @@
 verticalLayout(
-  uiOutput('xlimCtrl'),
-  uiOutput('ylimCtrl')
+  uiOutput('filterFeatureCtrl'),
+  uiOutput('filterValueCtrl')
 )
