@@ -24,6 +24,9 @@ clist <- function(arg_lst, need_quote=T) {
 }
 
 generateCode <- function(p, df, df_name, state) {
+  df_name_filtered <- if (!is.null(state$filter)) 
+    applied_filters_expr(df, df_name, state$filter$keys, state$filter$vals) else df_name
+  
   if ('ggmatrix' %in% class(p)) {
     cols <- paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', ')
     mapping <- p$plots[[1]]$mapping
@@ -34,13 +37,11 @@ generateCode <- function(p, df, df_name, state) {
       clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
     
     return(sprintf('ggpairs(%s,%s columns=c(%s)%s)',
-                   df_name, map_aes, cols, adjustment))
+                   df_name_filtered, map_aes, cols, adjustment))
   }
   
   p$mapping <- rev(p$mapping)
-  res <- if (!is.null(state$filter)) 
-    applied_filters_expr(df, df_name, state$filter$keys, state$filter$vals) else df_name
-  res <- sprintf('ggplot(%s, aes(%s))', res, clist(p$mapping))
+  res <- sprintf('ggplot(%s, aes(%s))', df_name_filtered, clist(p$mapping))
   
   for (layer in p$layers) {
     if (any(class(layer$geom) == 'Geom')) {
