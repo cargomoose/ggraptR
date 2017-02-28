@@ -23,7 +23,7 @@ clist <- function(arg_lst, need_quote=T) {
     collapse=', ')
 }
 
-generateCode <- function(p, state) {
+generateCode <- function(p, df, df_name, state) {
   if ('ggmatrix' %in% class(p)) {
     cols <- paste(sapply(p$xAxisLabels, function(w) sprintf('"%s"', w)), collapse=', ')
     mapping <- p$plots[[1]]$mapping
@@ -34,28 +34,13 @@ generateCode <- function(p, state) {
       clist(lapply(state$pairs, function(x) sprintf('list(%s)', clist(x))), F))
     
     return(sprintf('ggpairs(%s,%s columns=c(%s)%s)',
-                   state$dataset_name, map_aes, cols, adjustment))
+                   df_name, map_aes, cols, adjustment))
   }
   
   p$mapping <- rev(p$mapping)
-  res_dataset_name <- state$dataset_name
-  
-  if (!is.null(state$filter)) {
-    filtering <- state$filter
-    res_dataset_name <- sprintf('data.table(%s)', res_dataset_name)
-    for (i in 1:length(filtering)) {
-      ax <- filtering[[i]]
-      ax_name <- names(filtering)[[i]]
-      isNum <- is.numeric(ax$val)
-      
-      res_dataset_name <- sprintf('%s[%s %s c(%s)]',
-        res_dataset_name, deparse(p$mapping[[ax_name]]), 
-        if (isNum) '%between%' else '%in%',
-        paste(if (isNum) round(ax$val, 2) else 
-          gsub('\\b', '\\"', ax$val, perl = T), collapse=', '))
-    }
-  }
-  res <- sprintf('ggplot(%s, aes(%s))', res_dataset_name, clist(p$mapping))
+  res <- if (!is.null(state$filter)) 
+    applied_filters_expr(df, df_name, state$filter$keys, state$filter$vals) else df_name
+  res <- sprintf('ggplot(%s, aes(%s))', res, clist(p$mapping))
   
   for (layer in p$layers) {
     if (any(class(layer$geom) == 'Geom')) {

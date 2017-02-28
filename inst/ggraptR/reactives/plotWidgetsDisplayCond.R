@@ -1,7 +1,6 @@
 # this function is used for early initialization of input$facet.. and other extra wgts. 
 # It prevents the plot redrawing when user clicks on 'Apply facet' the first time or 
-# similar extra block. The only block that redraws plot is xy limits because the 1st init 
-# run does not supply x() value and I can initialize input$xLim with NULL only.
+# similar extra block
 isInit <- reactive({
   is.null(dataset())
 })
@@ -90,14 +89,6 @@ displayFacetCond <- reactive({
   isInit <- isInit()  # dataset() trigger. Can be unavailable if omit separate assignment
   # because of boolen lazy evaluation
   (showFacet() && isolate(!is.null(plotTypes()) && !'pairs' %in% plotTypes())) || isInit
-})
-
-displayXlimCond <- reactive({
-  showFiltering() && displayXCond()  # )|| isolate(isInit())
-})
-
-displayYlimCond <- reactive({
-  showFiltering() && displayYCond()  # )|| isolate(isInit())
 })
 
 displayThemeCond <- reactive({

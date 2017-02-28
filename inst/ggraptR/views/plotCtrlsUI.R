@@ -22,11 +22,6 @@ verticalLayout(
       class="widblock"),
     
     div(
-      uiOutput('showFilteringCtrl'),
-      source('./views/plotBlock/filteringCtrlsUI.R', local=TRUE)$value,
-      class="widblock"),
-    
-    div(
       uiOutput('showThemeCtrl'),
       source('./views/plotBlock/labelAndStyleCtrlsUI.R', local=TRUE)$value,
       class="widblock"),

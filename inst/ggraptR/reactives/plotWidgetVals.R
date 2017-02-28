@@ -193,16 +193,6 @@ facetGrids <- reactive({
   if (anyNull(row, col)) '. ~ .' else paste(row, '~', col)
 })
 
-xlim <- reactive({
-  res <- input$xlim
-  if (!displayXlimCond()) NULL else res
-})
-
-ylim <- reactive({
-  res <- input$ylim
-  if (!displayYlimCond()) NULL else res
-})
-
 plotTitle <- reactive({
   input$plotTitle
 })
@@ -264,10 +254,6 @@ showAes <- reactive({
 
 showFacet <- reactive({
   !is.null(input$showFacet) && input$showFacet
-})
-
-showFiltering <- reactive({
-  !is.null(input$showFiltering) && input$showFiltering
 })
 
 showTheme <- reactive({

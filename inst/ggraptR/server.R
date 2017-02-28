@@ -12,7 +12,8 @@ library(svglite)
 library(futile.logger)
 library(GGally)
 
-options(shiny.maxRequestSize = 10000 * 1024^2)  # by default, the file size limit is 5MB
+# by default, the file size limit is 5MB. 1 Gb = 1024^3 b
+options(shiny.maxRequestSize = 10 * 1024^3)
 
 source('globals.R')
 source('debug/debug.R', local=T)  # set debug logs

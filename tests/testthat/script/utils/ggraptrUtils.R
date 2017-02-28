@@ -145,7 +145,7 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   
   get_sliders <- function() ctrlEl %>% getEls(".irs-slider")
   initPositions <- sapply(get_sliders(), function(slider) slider$getElementLocation()$x)
-  if (length(initPositions) > 1 && !inpId %in% c('xlim', 'ylim')) {
+  if (length(initPositions) > 1) {
     warning('May contain a bug when to- and from- sliders will try to change their order')
   }
   
@@ -175,10 +175,9 @@ isCheckboxCorrect <- function(driver, inpId, plotNames,
     
     chkBoxEl <- getBox()
     if (!isVisible(chkBoxEl) && is_section) return(T)  # pairs showFiltering is invisible
-    # if (is_section && inpId != 'showFiltering') browser()
     chkBoxEl %>% click()
     
-    if (is_section && inpId != 'showFiltering') {
+    if (is_section) {  #  && inpId != 'showFiltering'
       wait_for({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
     } else {
       wait_for_plot_ready(driver)

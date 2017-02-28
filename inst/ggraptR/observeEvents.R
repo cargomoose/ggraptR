@@ -7,7 +7,9 @@ observeEvent(input$reactive, {
       buildPlot()
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table reactively
-      DT::datatable(manAggDataset(), filter='bottom')
+      DT::datatable(manAggDataset(), filter='top', 
+                    # remove options to get back the global table search textInput
+                    options = list(sDom  = '<"top">lrt<"bottom">ip'))
     })
   } else {
     output$plot <- renderPlot({  # display plot upon submit
@@ -16,7 +18,8 @@ observeEvent(input$reactive, {
     }, height=700)
     output$displayTable <- DT::renderDataTable({  # display data table upon submit
       input$submit
-      isolate(DT::datatable(manAggDataset(), filter='bottom'))
+      isolate(DT::datatable(manAggDataset(), filter='top',
+                            options = list(sDom  = '<"top">lrt<"bottom">ip')))
     })
   }
 })

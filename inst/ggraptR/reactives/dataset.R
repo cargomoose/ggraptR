@@ -97,7 +97,6 @@ rawDataset <- reactive({
   if (is.null(cur_name)) return()  # for initial input$datasetName
   
   isolate({
-    reactVals$plotState$dataset_name <- cur_name
     df <- if (!is.null(uploadedDfName()) && cur_name == uploadedDfName()) 
       uploadedDf() else get(cur_name)
     data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
@@ -184,42 +183,31 @@ aggDf <- reactive({
   }
 })
 
-
-# reactive dataset used for plotting 
-# (filtered version of aggDf(), using xlim and ylim)
+# filtered version of aggDf() for plotting
 aggLimDf <- reactive({
-  dataset <- aggDf()
-  if (is.null(dataset)) return()
+  df <- aggDf()
+  search_columns <- input$displayTable_search_columns  # input$displayTable_rows_all
+  if (is.null(df)) return()
   
-  filter_target <- 
-  filter_value <- 
-    
   isolate({
-    if (!is.null(ylim())) {
-      flog.debug("dataset::aggLimDf() - !is.null(ylim())", name='all')
-      if ('y' %in% plotInputs()) {
-        y <- y()
-        if (is.null(y) || is.null(yType())) {
-          return()
-        }
-        if (yType() == 'continuous') {
-          dataset <- dataset[dataset[[y]] >= ylim()[1] & dataset[[y]] <= ylim()[2], ]
-        } else if (yType() == 'discrete') {
-          dataset <- dataset[dataset[[y]] %in% ylim(), ]
-        }
-      }
+    fill_idxs <- if (!is.null(search_columns))
+      1:length(search_columns) %>% Filter(function(i) search_columns[i] != '',.) else c()
+    if (!length(fill_idxs)) {
+      reactVals$plotState$filter <- NULL
+      return(df)
     }
     
-    if (all(is.null(xlim()), is.null(ylim()))) {
-      reactVals$plotState$filter <- NULL
-    } else {
-      reactVals$plotState$filter$x$val <- xlim()
-      reactVals$plotState$filter$x$type <- xType()
-      reactVals$plotState$filter$y$val <- ylim()
-      reactVals$plotState$filter$y$type <- yType()
-    }
+    filter_keys <- names(isolate(manAggDataset()))[fill_idxs]
+    # search_columns[fill_idxs] ex: "[\"25-34\",\"35-44\"]" "18.18 ... 60.00"
+    filter_vals <- lapply(search_columns[fill_idxs], function(x) 
+      (if (startsWith(x, '[')) strsplit(substring(x, 2, nchar(x) - 1), ',') else 
+        strsplit(x, ' \\.{3} ')) %>% `[[`(1))
+    
+    reactVals$plotState$filter$keys <- filter_keys
+    reactVals$plotState$filter$vals <- filter_vals
+    
+    df_expr <- applied_filters_expr(df, datasetName(), filter_keys, filter_vals)
+    eval(parse(text=df_expr))
   })
-  
-  dataset
 })
 

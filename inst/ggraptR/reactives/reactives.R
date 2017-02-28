@@ -51,33 +51,6 @@ aggDfNumericVars <- reactive({
   }
 })
 
-# work-around for round error in sliderInput (for consistency w/ yRange())
-xRange <- reactive({
-  dataset <- aggDf()
-  if (!is.null(dataset) && !is.null(input$x)) {
-    if (input$x %in% aggDfNumericVars()) {
-      range <- range(dataset[input$x], na.rm=TRUE)
-    }
-    range[1] <- range[1] - 1
-    range[2] <- range[2] + 1
-    range
-  }
-})
-
-# work-around for rounding error in sliderInput
-yRange <- reactive({
-  dataset <- aggDf()
-  if (!is.null(dataset) && !is.null(y())) {
-    if (y() %in% aggDfNumericVars()) {
-      range <- range(dataset[[y()]], na.rm=TRUE)
-    }
-    range[1] <- range[1] - 1
-    range[2] <- range[2] + 1
-    range
-  }
-})
-
-
 # conditional: facet widgets are loaded
 facetWidgetsLoaded <- reactive({
   for (widget in c('facetCol', 'facetRow', 'facetWrap','facetScale')) {

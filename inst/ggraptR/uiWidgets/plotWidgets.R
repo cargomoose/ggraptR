@@ -276,42 +276,6 @@ output$facetScaleCtrl <- renderUI({
   }
 })
 
-
-output$filterFeatureCtrl <- renderUI({
-  if (displayFilterCond()) {
-    isolate({
-      aes_inputs <- readLines('views/plotBlock/aesCtrlsUI.R') %>% 
-        paste0(collapse = '') %>% 
-        stringr::str_extract_all('(?<=uiOutput\\(.)\\w+') %>% `[[`(1) %>% 
-        Filter(function(x) !startsWith(x, 'pair'), .) %>% 
-        gsub('Ctrl', '', .) %>% 
-        append(if ('pairs' %in% plotTypes()) 'columns' else c('x', 'y'))
-        
-      opts <- sapply(aes_inputs, function(x) input[[x]]) %>% na_omit() %>% 
-        Filter(function(x) is.character(x), .) %>% unlist() %>% 
-        intersect(names(dataset()))  # aggLimDf() ?
-      
-      selectInput('filterFeature', 'Filter feature', opts)
-    })
-  }
-})
-
-output$filterValueCtrl <- renderUI({
-  if (displayFilterCond()) {
-    isolate({
-      if (y() %in% aggDfFactorVars()) {
-        selectInput('ylim', label='Y Value', 
-                    # choices=levels(aggDf()[[y()]]),  # which one?
-                    # choices=unique(as.character(aggDf()[[x()]])),  # which one?
-                    multiple=T)
-      } else if (y() %in% aggDfNumericVars() && !is.null(yRange())) {
-        sliderInput("ylim", label="Y Range",
-                    min=yRange()[1], max=yRange()[2], value=yRange(), sep='')
-      }
-    })
-  }
-})
-
 output$plotTitleCtrl <- renderUI({
   if (displayTitlesCond()) {
     isolate(textInput('plotTitle', 'Plot Title', value=plotTitle()))
@@ -432,12 +396,6 @@ output$showAesCtrl <- renderUI({
 output$showFacetCtrl <- renderUI({
   plotTypes()
   isolate(checkboxInput('showFacet', 'Show facets', value=showFacet()))
-})
-
-output$showFilteringCtrl <- renderUI({
-  c(displayYCond(), yOrig())  # bind on plotTypes(), x() and y()
-  # value = F to refresh x and y axes limits
-  checkboxInput('showFiltering', 'Show filtering', value = F)  # showFiltering()
 })
 
 output$showThemeCtrl <- renderUI({

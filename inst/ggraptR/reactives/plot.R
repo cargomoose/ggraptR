@@ -29,7 +29,9 @@ buildPlot <- reactive({
   isPairsPlot <- all('pairs' == pTypes)
   
   input_plot_pars <- getPlotInputVals(separatePlotInputs(), df)
-  stopifnot(length(c(input_plot_pars[[1]]$x, input_plot_pars[[1]]$columns)) > 0)
+  if (length(c(input_plot_pars[[1]]$x, input_plot_pars[[1]]$columns)) == 0) {
+    stop('buildPlot() input error')
+  }
   p <- do.call.pasted('plot', if (isPairsPlot) 'Pairs' else 'Ggplot', 
                       args=list(df, input_plot_pars))
   stopifnot(isPairsPlot || length(p$mapping) > 0)
@@ -66,7 +68,7 @@ buildPlot <- reactive({
         if (theme_name == 'calc') {
           scale_color_name <- sub('u', '', scale_color_name)
         }
-        p <- p + if (isColorTypeDiscr && theme_name != 'tufte') 
+        p <- p + if (isColorTypeDiscr && theme_name != 'tufte')
           do.call(scale_color_name, list())
       } else if (theme_name == 'economist') {
         p <- p + scale_colour_economist() + if (isColorTypeDiscr) scale_color_calc()
@@ -93,15 +95,17 @@ buildPlot <- reactive({
   flog.debug(time.taken , name='all')
   
   # add plot history entry. It will be shown at Log tab
-  if (!is.null(p)) {
-    logEntry <- generateCode(p, isolate(reactVals$plotState))
-    curLog <- isolate(reactVals$log)
-    isFirstEntry <- is.null(curLog)
-    
-    if (isFirstEntry || curLog[[1]] != logEntry) {
-      reactVals$log <- if (isFirstEntry) logEntry else c(logEntry, curLog)
+  isolate({
+    if (!is.null(p)) {
+      logEntry <- generateCode(p, df, datasetName(), reactVals$plotState)
+      curLog <- reactVals$log
+      isFirstEntry <- is.null(curLog)
+      
+      if (isFirstEntry || curLog[[1]] != logEntry) {
+        reactVals$log <- if (isFirstEntry) logEntry else c(logEntry, curLog)
+      }
     }
-  }
+  })
   
   p
 })

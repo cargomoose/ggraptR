@@ -43,19 +43,6 @@ getDateColumnName <- function(df) {
   dateCol
 }
 
-# takes two numeric ranges and returns TRUE if the two ranges overlap;
-# it is used to ensure that numeric xlim range has been updated for new dataset and 
-# x variables
-# when plot type is set to histogram (to prevent an error message)
-checkTwoRangesOverlap <- function(range1, range2) {
-  lowerRange1 <- range1[1]
-  upperRange1 <- range1[2]
-  lowerRange2 <- range2[1]
-  upperRange2 <- range2[2]
-  upperRange1 >= lowerRange2 & lowerRange1 <= upperRange2
-}
-
-
 # gets all variable names of data frame objects that are loaded into memory
 getPreloadedEnvDfNames <- function(env=.GlobalEnv) {
   objNames <- ls(env)
@@ -227,6 +214,31 @@ not_null_false <- function(x) !is.null(x) && !x
 na_omit <- function(lst) Filter(function(x) !is.null(x) && length(x), lst)
 
 trimList <- function(...) na_omit(list(...))
+
+applied_filters_expr <- function(df, df_name, filter_keys, filter_vals) {
+  stopifnot(notNulls(lst, filter_keys, filter_vals),
+            length(lst) > 0, length(filter_keys) > 0,
+            length(filter_keys) == length(filter_vals))
+  
+  res <- sprintf('data.table(%s)', df_name)
+  
+  filter_mask_txt <- sapply(1:length(filter_keys), function(i) {
+    col_name <- filter_keys[i]
+    vals <- filter_vals[[i]]
+    is_num <- is.numeric(df[[col_name]])
+    
+    if ((is_num && length(vals) != 2) || length(vals) == 0) {
+      stop('df_name: ', df_name, 'col_name: ', col_name,
+          'is_num: ', is_num, 'length(vals): ', length(vals))
+    }
+    
+    filter_op <- if (is_num) '%between%' else '%in%'
+    filter_cond <- sprintf('c(%s)', paste0(vals, collapse=', '))
+    paste(col_name, filter_op, filter_cond)  # gsub('\\b', '\\"', ax$val, perl = T)
+  })
+  
+  sprintf('%s[%s]', res, paste(filter_mask_txt, collapse = ' & '))
+}
 
 # 'foo' -> 'Foo'
 capitalize <- function(x) {
