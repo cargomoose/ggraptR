@@ -67,7 +67,7 @@ output$yCtrl <- renderUI({
 output$columnsCtrl <- renderUI({
   if (displayGgpairsColumnsCond()) {
     isolate(selectInput(
-      'columns', 'Columns', choices=names(dataset()),  # aggLimDf() ?
+      'columns', 'Columns', choices=names(dataset()),
       selected=if (is.null(columns())) names(dataset())[1:min(ncol(dataset()), 3)] else
         columns(), multiple=T))
   }
@@ -79,7 +79,7 @@ output$colorCtrl <- renderUI({
       isScatter <- all('scatter' == plotTypes())
       isDiamondsInit <- isScatter && datasetName() == 'diamonds' && is.null(y())
       opts <- c('None', if (isScatter) 
-                 names(dataset()) else categoricalVars())  # aggLimDf() ?
+                 names(dataset()) else categoricalVars())
       
       selectInput('color', 'Color', opts, if (isDiamondsInit) 'color' else color())
     })

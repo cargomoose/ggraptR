@@ -16,10 +16,9 @@ for (optVal in attr(get_meth_opts(), 'data-value')) {
 driver$screenshot(file='report/table.png')
 
 aggreg_res_serial <- 
-  paste0('ShowentriesSearchagegpncases_meanncases_sumncases_minncases_maxcountncases_',
+  paste0('Showentriesagegpncases_meanncases_sumncases_minncases_maxcountncases_',
          'median125340071011502354406903150345542884606163455644757629164565743675501',
          '71536751181302111Showing1to6of6entriesPrevious1Next')
-
 test_that('Table aggregations work correct', {
   expect_equal(get_table() %>% text() %>% gsub('\\W', '', .), aggreg_res_serial)
 })
