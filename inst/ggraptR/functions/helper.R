@@ -220,8 +220,6 @@ applied_filters_expr <- function(df, df_name, filter_keys, filter_vals) {
             length(lst) > 0, length(filter_keys) > 0,
             length(filter_keys) == length(filter_vals))
   
-  res <- sprintf('data.table(%s)', df_name)
-  
   filter_mask_txt <- sapply(1:length(filter_keys), function(i) {
     col_name <- filter_keys[i]
     vals <- filter_vals[[i]]
@@ -232,12 +230,13 @@ applied_filters_expr <- function(df, df_name, filter_keys, filter_vals) {
           'is_num: ', is_num, 'length(vals): ', length(vals))
     }
     
-    filter_op <- if (is_num) '%between%' else '%in%'
-    filter_cond <- sprintf('c(%s)', paste0(vals, collapse=', '))
-    paste(col_name, filter_op, filter_cond)  # gsub('\\b', '\\"', ax$val, perl = T)
+    filter_cond <- paste0(vals, collapse=', ')
+    sprintf(if (is_num) 'between(%s, %s)' else '%s %%in%% c(%s)', 
+            col_name, filter_cond)
   })
   
-  sprintf('%s[%s]', res, paste(filter_mask_txt, collapse = ' & '))
+  sprintf('%s[with(%s, %s), ]', 
+          df_name, df_name, paste(filter_mask_txt, collapse = ' & '))
 }
 
 # 'foo' -> 'Foo'
