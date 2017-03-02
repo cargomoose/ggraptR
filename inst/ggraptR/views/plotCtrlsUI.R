@@ -9,28 +9,23 @@ verticalLayout(
   
   uiOutput('columnsCtrl'),  # for ggpairs
   
-  # widgets to show/hide advanced control widgets
-  div(
-    uiOutput('showAesCtrl'),
-    source('./views/plotBlock/aesCtrlsUI.R', local=TRUE)$value,
-    class="widblock", style="margin-bottom: 0px;"),
+ 
+  bsCollapse(id = "aesBlock", open = "Aesthetic",
+    bsCollapsePanel("Aesthetic", 
+                    source('./views/plotBlock/aesCtrlsUI.R', local=T)$value, 
+                    style = "warning")),
   
   conditionalPanel('input.plotTypes != "pairs"',
-    div(
-      uiOutput('showFacetCtrl'),
-      source('./views/plotBlock/facetCtrlsUI.R', local=TRUE)$value,
-      class="widblock"),
-    
-    div(
-      uiOutput('showThemeCtrl'),
-      source('./views/plotBlock/labelAndStyleCtrlsUI.R', local=TRUE)$value,
-      class="widblock"),
-    
-    div(
-      uiOutput('showDSTypeAndPlotAggCtrl'),
-      source('./views/plotBlock/DSTypeAndPlotAggCtrlsUI.R', local=TRUE)$value,
-      class="widblock")
-    
-    #uiOutput('showPlotAggCtrl')
+    bsCollapse(
+      id = "extraPlotBlocks", open = c("Facet", "Theme", "Aggregation"), multiple=T,
+      bsCollapsePanel("Facet", 
+                      source('./views/plotBlock/facetCtrlsUI.R', local=T)$value, 
+                      style = "warning"),
+      bsCollapsePanel("Theme", 
+                      source('./views/plotBlock/labelAndStyleCtrlsUI.R', local=T)$value, 
+                      style = "warning"),
+      bsCollapsePanel("Aggregation", 
+                      source('./views/plotBlock/DSTypeAndPlotAggCtrlsUI.R',local=T)$value,
+                      style = 'warning'))
   )
 )

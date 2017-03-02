@@ -7,8 +7,8 @@ shinyUI(bootstrapPage(
     type="text/css",
     "#rappy img {max-width: 100%;}",
     "#react_row {max-width: 100%;}",
-    ".widblock {background-color: #fafafa; padding: 2px 10px; margin: 10px 5px}",
-    "hr {margin-top: 15px; margin-bottom: 15px; border-color: #d9d9d9}")),
+    "hr {margin-top: 15px; margin-bottom: 15px; border-color: #d9d9d9}",
+    ".sbs-panel-group {margin-bottom: 5px;}")),
   
   sidebarPanel(
     splitLayout(

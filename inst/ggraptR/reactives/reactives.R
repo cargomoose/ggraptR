@@ -51,27 +51,23 @@ aggDfNumericVars <- reactive({
   }
 })
 
-# conditional: facet widgets are loaded
+
+# facets
 facetWidgetsLoaded <- reactive({
-  for (widget in c('facetCol', 'facetRow', 'facetWrap','facetScale')) {
-    if (is.null(input[[widget]])) return(FALSE)
-  }
-  TRUE
+  !any(sapply(c('facetCol', 'facetRow', 'facetWrap','facetScale'), 
+              function(widget) is.null(input[[widget]])))
 })
 
-# conditional: no facet was selected
 isFacetSelected <- reactive({
   if (!facetWidgetsLoaded()) return(F)
   facetFam <- c(facetCol(), facetRow(), facetWrap())
-  !(all('None' == facetFam) || all('' == facetFam) || all('.' == facetFam))
+  !(facetFam[1] %in% c('None', '', '.') && length(unique(facetFam)) == 1)
 })
 
-# conditional: facet grid was selected
 facetGridSelected <- reactive({
-  facetWidgetsLoaded() && (facetCol() != '.' || facetRow() != '.')
+  facetWidgetsLoaded() && any(c(facetCol(), facetRow()) != '.')
 })
 
-# conditional: facet wrap was selected
 facetWrapSelected <- reactive({
   facetWidgetsLoaded() && facetWrap() != '.'
 })

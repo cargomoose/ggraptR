@@ -233,37 +233,14 @@ plotTheme <- reactive({
   if (is.null(input$plotTheme)) 'theme_grey' else input$plotTheme
 })
 
-plotAggMeth <- reactive({
-  res <- input$plotAggMeth
-  if (!displayAggCond() || is.null(res)) 'none' else res
+rawVsManAgg <- reactive({
+  input$rawVsManAgg
 })
 
-rawVsManAgg <- reactive({
-  res <- input$rawVsManAgg
-  if (!displayAggCond()) NULL else res
+plotAggMeth <- reactive({
+  if (is.null(input$plotAggMeth)) 'none' else input$plotAggMeth
 })
 
 plotAddAggBy <- reactive({
-  res <- input$plotAddAggBy
-  if (!displayPlotAddAggByCond()) NULL else res
+  input$plotAddAggBy
 })
-
-showAes <- reactive({
-  !is.null(input$showAes) && input$showAes
-})
-
-showFacet <- reactive({
-  !is.null(input$showFacet) && input$showFacet
-})
-
-showTheme <- reactive({
-  !is.null(input$showTheme) && input$showTheme
-})
-
-showDSTypeAndPlotAgg <- reactive({
-  !is.null(input$showDSTypeAndPlotAgg) && input$showDSTypeAndPlotAgg
-})
-
-# showPlotAgg <- reactive({
-#   !is.null(input$showPlotAgg) && input$showPlotAgg
-# })

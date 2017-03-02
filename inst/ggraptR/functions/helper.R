@@ -1,6 +1,5 @@
 # note: the functions below will find year (YYYY), month (YYYY-MM), 
 # and date (YYYY-MM-DD) between 1800-01-01 and 2099-12-31
-
 # this functions determines the name of the year column (in YYYY format)
 getYearColumnName <- function(df) {
   firstRow <- df[1, ]
@@ -73,11 +72,11 @@ cleanPlotAggBy <- function(x, y, aggBy) {
 
 # ensures correct plot inputs for an updated dataset
 ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
-  flog.debug("helper::ensureCorrectPlotInputs() - Begin", name='all')
   for (name in names(plotInputsList)) {
     if (!is.null(plotInputsList[[name]])) {
       if (name %in% c('x', 'y', 'facetRow', 'facetCol', 'facetWrap') &&
-          !(plotInputsList[[name]] %in% colnames)) {
+          !(plotInputsList[[name]] %in% colnames)) { 
+        # problem here can be produced by staled aggLimDf() %>% names
         # warning('Incorrect plot input has been nulled: ', name)
         plotInputsList[name] <- list(NULL)
       } else if (name %in% c('color', 'size', 'shape') &&
@@ -87,7 +86,6 @@ ensureCorrectPlotInputs <- function(plotInputsList, colnames) {
       }
     }
   }
-  flog.debug("helper::ensureCorrectPlotInputs() - End", name='all')
   plotInputsList
 }
 

@@ -1,19 +1,3 @@
-# this function is used for early initialization of input$facet.. and other extra wgts. 
-# It prevents the plot redrawing when user clicks on 'Apply facet' the first time or 
-# similar extra block
-isInit <- reactive({
-  is.null(dataset())
-})
-
-aesReady <- reactive({  # serves as trigger too
-  displayYCond()
-  showAes()
-})
-
-displayPlotTypesCond <- reactive({
-  !is.null(dataset())
-})
-
 displayXCond <- reactive({
   'x' %in% plotInputs()
 })
@@ -29,80 +13,70 @@ displayGgpairsColumnsCond <- reactive({
 })
 
 displayGgpairsCond <- reactive({
-  displayGgpairsColumnsCond() && showAes()
+  displayGgpairsColumnsCond()
 })
 
+
+#### aes ####
 displayColorCond <- reactive({
-  aesReady() && 'color' %in% isolate(plotInputs())
+  displayYCond() && 'color' %in% isolate(plotInputs())
 })
 
 displayTreatAsFactorCond <- reactive({
-  'treatColorAsFactor' %in% plotInputs() && #aesReady() &&
+  'treatColorAsFactor' %in% plotInputs() && 
     !is.null(color()) && color() %in% isolate(numericVars())
 })
 
 displayFillCond <- reactive({
-  aesReady() && 'fill' %in% isolate(plotInputs())
+  displayYCond() && 'fill' %in% isolate(plotInputs())
 })
 
 displayShapeCond <- reactive({
-  aesReady() && 'shape' %in% isolate(plotInputs())
+  displayYCond() && 'shape' %in% isolate(plotInputs())
 })
 
 displaySizeCond <- reactive({
-  aesReady() && 'size' %in% isolate(plotInputs())
+  displayYCond() && 'size' %in% isolate(plotInputs())
 })
 
 displayCoordFlipCond <- reactive({
-  aesReady() && !'pairs' %in% isolate(plotTypes())
+  displayYCond() && !'pairs' %in% isolate(plotTypes())
 })
 
 displayJitterCond <- reactive({
-  aesReady() && 'jitter' %in% isolate(plotInputs())
+  displayYCond() && 'jitter' %in% isolate(plotInputs())
 })
 
 displaySmthCond <- reactive({
-  aesReady() && 'smooth' %in% isolate(plotInputs())
+  displayYCond() && 'smooth' %in% isolate(plotInputs())
 })
 
 displaySizeMagCond <- reactive({
-  aesReady() && 'sizeMag' %in% isolate(plotInputs()) && is.null(size())
+  displayYCond() && 'sizeMag' %in% isolate(plotInputs()) && is.null(size())
 })
 
 displayAlphaCond <- reactive({
-  aesReady() && 'alpha' %in% isolate(plotInputs())
+  displayYCond() && 'alpha' %in% isolate(plotInputs())
 })
 
 displayPositionCond <- reactive({
-  aesReady() && 'position' %in% isolate(plotInputs()) && !is.null(fill())
+  displayYCond() && 'position' %in% isolate(plotInputs()) && !is.null(fill())
 })
 
 displayBinsCond <- reactive({
-  aesReady() && 'nBins' %in% isolate(plotInputs())
+  displayYCond() && 'nBins' %in% isolate(plotInputs())
 })
 
 displayDensBlackLineCond <- reactive({
-  aesReady() && 'densBlackLine' %in% isolate(plotInputs())
+  displayYCond() && 'densBlackLine' %in% isolate(plotInputs())
 })
+
+
+#### extra ####
+# displayTitlesCond <- reactive({
+#   !is.null(input$reactive) && !input$reactive 
+# })
 
 displayFacetCond <- reactive({
-  isInit <- isInit()  # dataset() trigger. Can be unavailable if omit separate assignment
-  # because of boolen lazy evaluation
-  (showFacet() && isolate(!is.null(plotTypes()) && !'pairs' %in% plotTypes())) || isInit
-})
-
-displayThemeCond <- reactive({
-  showTheme() || isolate(isInit())
-})
-
-displayTitlesCond <- reactive({
-  displayThemeCond() && !is.null(input$reactive) && !input$reactive
-})
-
-displayAggCond <- reactive({
-  showDSTypeAndPlotAgg() || isolate(isInit())
-})
-
-displayPlotAddAggByCond <- reactive({
-  !is.null(plotTypes()) && displayAggCond() && semiAutoAggOn()
+  is.null(plotTypes()) || !'pairs' %in% plotTypes()
 })

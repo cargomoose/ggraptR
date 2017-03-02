@@ -184,6 +184,7 @@ aggDf <- reactive({
 })
 
 # filtered version of aggDf() for plotting
+# plotAggMeth() -> semiAutoAggOn() -> aggDf() -> .
 aggLimDf <- reactive({
   df <- aggDf()
   search_columns <- input$displayTable_search_columns  # input$displayTable_rows_all
@@ -196,6 +197,9 @@ aggLimDf <- reactive({
       reactVals$plotState$filter <- NULL
       return(df)
     }
+    if (tolower(plotAggMeth()) != 'none') {
+      stop('Can not choose between aggregated and limited view')
+    }
     
     filter_keys <- names(isolate(manAggDataset()))[fill_idxs]
     # search_columns[fill_idxs] ex: "[\"25-34\",\"35-44\"]" "18.18 ... 60.00"
@@ -207,7 +211,11 @@ aggLimDf <- reactive({
     reactVals$plotState$filter$vals <- filter_vals
     
     df_expr <- applied_filters_expr(df, datasetName(), filter_keys, filter_vals)
-    eval(parse(text=df_expr))
+    res <- eval(parse(text=df_expr))
+    if (!setequal(colnames(df), colnames(res))) {
+      stop('Looks like an aggregated and limited view collision')
+    }
+    res
   })
 })
 

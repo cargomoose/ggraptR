@@ -13,7 +13,7 @@ output$itersToDrawCtrl <- renderUI({
 })
 
 output$plotTypesCtrl <- renderUI({
-  if (!displayPlotTypesCond()) return()  # !is.null(dataset()) trigger
+  if (is.null(dataset())) return()  # trigger
   curGroupAllOpts <- plotTypesOpts()
   
   isolate({
@@ -277,150 +277,86 @@ output$facetScaleCtrl <- renderUI({
 })
 
 output$plotTitleCtrl <- renderUI({
-  if (displayTitlesCond()) {
-    isolate(textInput('plotTitle', 'Plot Title', value=plotTitle()))
-  }
+  isolate(textInput('plotTitle', 'Plot Title', value=plotTitle()))
 })
 
 output$xLabelCtrl <- renderUI({
-  if (displayTitlesCond()) {
-    isolate(textInput('xLabel', 'X Label', value=xLabel()))
-  }
+  isolate(textInput('xLabel', 'X Label', value=xLabel()))
 })
 
 output$yLabelCtrl <- renderUI({
-  if (displayTitlesCond()) {
-    isolate(textInput('yLabel', 'Y Label', value=yLabel()))
-  }
+  isolate(textInput('yLabel', 'Y Label', value=yLabel()))
 })
 
 output$labelFontFamilyCtrl <- renderUI({
-  if (displayThemeCond()) {
-    # only first 3 fonts are available on Windows machine. Next ones generate warnings
-    labelFontFamilyOpts <- c('sans', 'serif', 'mono', 'Calibri', 
-                             'Times', 'Helvetica', 'Courier')
-    isolate(selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
-                        labelFontFamily()))
-  }
+  # only first 3 fonts are available on Windows machine. Next ones generate warnings
+  labelFontFamilyOpts <- c('sans', 'serif', 'mono', 'Calibri', 
+                           'Times', 'Helvetica', 'Courier')
+  isolate(selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
+                      labelFontFamily()))
 })
 
 output$labelFontFaceCtrl <- renderUI({
-  if (displayThemeCond()) {
-    labelFontFaceOpts <- c('plain', 'bold', 'italic', 'bold.italic')
-    isolate(selectInput('labelFontFace', 'Label Font Face', 
-                        labelFontFaceOpts, labelFontFace()))
-  }
+  labelFontFaceOpts <- c('plain', 'bold', 'italic', 'bold.italic')
+  isolate(selectInput('labelFontFace', 'Label Font Face', 
+                      labelFontFaceOpts, labelFontFace()))
 })
 
 output$labelFontSizeCtrl <- renderUI({
-  if (displayThemeCond()) {
-    isolate(numericInput('labelFontSize', 'Label Font Size', value=labelFontSize(), 
-                         min=7, max=30, step=1))
-  }
+  isolate(numericInput('labelFontSize', 'Label Font Size', value=labelFontSize(), 
+                       min=7, max=30, step=1))
 })
 
 output$labelFontColorCtrl <- renderUI({
-  if (displayThemeCond()) {
-    isolate(colourInput('labelFontColor', 'Label Font Color',
-                        value=labelFontColor()))
-  }
+  isolate(colourInput('labelFontColor', 'Label Font Color',
+                      value=labelFontColor()))
 })
 
 output$hjustCtrl <- renderUI({
-  if (displayThemeCond()) {
-    isolate(numericInput('hjust', 'Horizontal Adjust', hjust(), min=0, max=1, step=0.1))
-  }
+  isolate(numericInput('hjust', 'Horizontal Adjust', hjust(), min=0, max=1, step=0.1))
 })
 
 output$vjustCtrl <- renderUI({
-  if (displayThemeCond()) {
-    isolate(numericInput('vjust', 'Vertical Adjust', vjust(), min=0, max=1, step=0.1))
-  }
+  isolate(numericInput('vjust', 'Vertical Adjust', vjust(), min=0, max=1, step=0.1))
 })
 
 output$plotThemeCtrl <- renderUI({
-  if (displayThemeCond()) {
-    themes <- c('Grey' = 'theme_grey', 
-                'Black and White' = 'theme_bw', 
-                'LibreOffice Calc' = 'theme_calc',
-                'The Economist' = 'theme_economist',
-                'Stephen Few' = 'theme_few',
-                '538' = 'theme_fivethirtyeight', 
-                'Google Docs' = 'theme_gdocs', 
-                'HighCharts' = 'theme_hc', 
-                'pander' = 'theme_pander', 
-                'solarized' = 'theme_solarized', 
-                'Stata' = 'theme_stata', 
-                'Tufte' = 'theme_tufte', 
-                'Wall Street Journal' = 'theme_wsj')
-    isolate(selectInput('plotTheme', 'Plot Themes', themes, plotTheme()))
-  }
+  themes <- c('Grey' = 'theme_grey', 
+              'Black and White' = 'theme_bw', 
+              'LibreOffice Calc' = 'theme_calc',
+              'The Economist' = 'theme_economist',
+              'Stephen Few' = 'theme_few',
+              '538' = 'theme_fivethirtyeight', 
+              'Google Docs' = 'theme_gdocs', 
+              'HighCharts' = 'theme_hc', 
+              'pander' = 'theme_pander', 
+              'solarized' = 'theme_solarized', 
+              'Stata' = 'theme_stata', 
+              'Tufte' = 'theme_tufte', 
+              'Wall Street Journal' = 'theme_wsj')
+  isolate(selectInput('plotTheme', 'Plot Theme', themes, plotTheme()))
 })
 
-# additional aggregation by options
+# raw vs. manually aggregated. Plot tab
+output$rawVsManAggCtrl <- renderUI({
+  isolate(selectInput("rawVsManAgg", "Dataset Type",
+                      c("Raw Dataset" = 'raw', "Manually Aggregated" = 'manAgg'),
+                      rawVsManAgg()))
+})
+
+# aggregation method (sum, mean, ...). Plot tab
+output$plotAggMethCtrl <- renderUI({
+  plotTypes()
+  isolate(selectInput('plotAggMeth', 'Aggregation Method', 
+                      c('None', 'sum', 'mean', 'count', 'min', 'max', 'median'),
+                      plotAggMeth()))
+})
+
+# additional aggregation by feature options. Plot tab
 output$plotAddAggByCtrl <- renderUI({
-  if (displayPlotAddAggByCond()) {
+  if (!is.null(plotTypes()) && semiAutoAggOn()) {
     isolate(selectInput('plotAddAggBy', 'Additional Aggregation Variables', 
                         choices=setdiff(colnames(rawDataset()), plotSemiAutoAggByBase()), 
                         multiple=T, selected=plotAddAggBy()))
   }
 })
-
-# dataset type options (raw vs. manually aggregated)
-output$rawVsManAggCtrl <- renderUI({
-  if (displayAggCond()) {
-    isolate(selectInput("rawVsManAgg", "Dataset Type",
-                        c("Raw Dataset" = 'raw', "Manually Aggregated" = 'manAgg'),
-                        rawVsManAgg()))
-  }
-})
-
-# aggregation method options (for plot view only)
-output$plotAggMethCtrl <- renderUI({
-  if (displayAggCond()) {
-    isolate(selectInput('plotAggMeth', 'Aggregation Method', 
-                        c('None', 'sum', 'mean', 'count', 'min', 'max', 'median'),
-                        plotAggMeth()))
-  }
-})
-
-
-
-# checkboxes for widgets groups
-output$showAesCtrl <- renderUI({
-  plotTypes()
-  isolate(checkboxInput('showAes', 'Show aesthetics', 
-                        value=!is.null(plotTypes())))# is.null(input$showAes) || showAes()
-})
-
-output$showFacetCtrl <- renderUI({
-  plotTypes()
-  isolate(checkboxInput('showFacet', 'Show facets', value=showFacet()))
-})
-
-output$showThemeCtrl <- renderUI({
-  plotTypes()
-  checkboxInput('showTheme', 'Show themes', value=showTheme())
-})
-
-output$showDSTypeAndPlotAggCtrl <- renderUI({
-  plotTypes()
-  checkboxInput('showDSTypeAndPlotAgg', 
-                'Show dataset type and aggregation method', showDSTypeAndPlotAgg())
-})
-
-# output$showPlotAggCtrl <- renderUI({
-#   if (!is.null(plotTypes())) {
-#     checkboxInput('showPlotAgg', 'Show plot aggregations', value=showPlotAgg())
-#   }
-# })
-
-
-
-# output$generatePlotCodeCtl <- renderUI({
-#   bsButton("generatePlotCode", "Generate Plot Code", type="action", icon = icon("code"))
-# })
-
-# output$generateCode <- renderText({
-#   reactVals$log[1]
-# })

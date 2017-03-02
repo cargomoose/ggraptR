@@ -61,39 +61,30 @@ observeEvent(input$reset_input, {
 })
 
 # disable/enable toggle between facet grid and facet wrap
-observeEvent(c(input$facetCol, input$facetRow, input$facetWrap), {
-  if (showFacet()) {
-    if (!isFacetSelected()) {
-      enable('facetCol')
-      enable('facetRow')
-      enable('facetWrap')
-    } else if (facetGridSelected()) {
-      enable('facetCol')
-      enable('facetRow')
-      disable('facetWrap')
-    } else if (facetWrapSelected()) {
-      disable('facetCol')
-      disable('facetRow')
-      enable('facetWrap')
-    } 
+observeEvent(buildPlot(), {
+  if (!isFacetSelected()) {
+    enable('facetRow')
+    enable('facetCol')
+    enable('facetWrap')
+  } else if (facetGridSelected()) {
+    enable('facetRow')
+    enable('facetCol')
+    disable('facetWrap')
+  } else if (facetWrapSelected()) {
+    disable('facetRow')
+    disable('facetCol')
+    enable('facetWrap')
   }
 })
 
-# disable plot title, x and y label text fields when reactivity is enabled
-# observeEvent(c(input$plotTitle, input$xLabel, input$yLabel), {
-#   if (input$showTheme) {
-#     if (checkWidgetsLoaded(input, c('plotTitle', 'xLabel', 'yLabel'))) {
-#       if (input$reactive) {
-#         print('hi')
-#         disable('plotTitle')
-#         disable('xLabel')
-#         disable('yLabel')
-#       } else {
-#         print('bye')
-#         enable('plotTitle')
-#         enable('xLabel')
-#         enable('yLabel')
-#       }
-#     }
-#   }
-# })
+# collapse all extraPlotBlocks after init
+observeEvent(buildPlot(), ({
+  if (length(reactVals$log) == 1) {
+    updateCollapse(session, "extraPlotBlocks", close = input$extraPlotBlocks)
+  }
+}))
+
+# to prevent aggregated and limited dataframes collision
+observeEvent(input$displayTable_search_columns, {
+  if (tolower(plotAggMeth()) != 'none') reset('plotAggMeth')
+})
