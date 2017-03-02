@@ -5,7 +5,8 @@ output$aggByCtrl <- renderUI({
 
 # aggregation target options
 output$aggTargetCtrl <- renderUI({
-  selectInput('aggTarget', 'Aggregation Target', getIsNumericVarNames(rawDataset()), 
+  selectInput('aggTarget', 'Aggregation Target', 
+              setdiff(getIsNumericVarNames(rawDataset()), input$aggBy), 
               multiple=T)
 })
 
