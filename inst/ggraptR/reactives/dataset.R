@@ -87,7 +87,8 @@ uploadedDfName <- reactive({
 
 # reactive variable for raw dataset names
 rawDatasetNames <- reactive({
-  unique(c(uploadedDfName(), getPreloadedEnvDfNames(), getDefaultPlots()))
+  unique(c(uploadedDfName(), getInitialArg('initialDfName'), getPreloadedEnvDfNames(), 
+           "diamonds", "mtcars", "iris", "esoph"))
 })
 
 
@@ -99,6 +100,9 @@ rawDataset <- reactive({
   isolate({
     df <- if (!is.null(uploadedDfName()) && cur_name == uploadedDfName()) 
       uploadedDf() else get(cur_name)
+    if (class(df) == 'reactive') {
+      stop('Please change the dataset name to prevent collision')
+    }
     data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
   })
 })
