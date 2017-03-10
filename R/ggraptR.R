@@ -10,7 +10,7 @@
 #'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
 #' @export
-ggraptR <- function(initialDf="diamonds", ...) {
+ggraptR <- function(initialDf = diamonds, ...) {
   extraArgs <- list(...)
 
   if ('initialPlot' %in% names(extraArgs)) {
@@ -32,13 +32,6 @@ ggraptR <- function(initialDf="diamonds", ...) {
   }
   if ('' %in% names(shinyArgs)) stop('all extra arguments must be named')
   
-  # this variable will be used in generalWidgets.R with 'sys.frame(1)'
-  # if (typeof(initialDf) != "character") initialDf <- deparse(substitute(initialDf))
-  # if (!exists(initialDf)) {  # fail-fast
-  #   # library(ggraptR) -> library(ggplot2) -> diamonds
-  #   stop('Initial dataset [', initialDf, '] not found. ',
-  #        'Perhaps you are using ggraptR::ggraptR without library(ggraptR) first.')
-  # }
   stopifnot(is.data.frame(initialDf))
   initialDfName <- deparse(substitute(initialDf))
   
