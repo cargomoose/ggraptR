@@ -90,6 +90,10 @@ get_current_plot_names <- function(driver) {
   driver %>% get_selected_items('plotTypes') %>% text()
 }
 
+get_current_dataset_name <- function(driver) {
+  driver %>% get_selected_items('datasetName') %>% text()
+}
+
 get_widblock_input_ids <- function(driver, block_name) {
   getEls(driver, c(
     '.widblock',

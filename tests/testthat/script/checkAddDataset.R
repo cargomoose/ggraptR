@@ -13,7 +13,7 @@ driver %>% getEl('#uploadData') %>% click()
 uplEl <- wait_for('input#file', driver)
 uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 uplEl$sendKeysToElement(list(custom_dataset_filepath))
-wait_for('#showAes[data-shinyjs-resettable-value="false"]', driver)  # plotTypes -> empty
+wait_for({length(driver %>% get_current_plot_names()) == 0}, catchStale = T)
 get_data_name <- function() driver %>% 
   getEl('#datasetNameCtrl .selectize-control.single') %>% text()
 test_that("File uploading works correct", {
