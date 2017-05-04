@@ -69,8 +69,7 @@ if (file.exists(predefPack)) {
 
 res <- try(library(ggraptR), silent=T)
 if (!(class(res) == 'try-error' && grepl("no package called .ggraptR", res[1]))) {
-  browser()
-  stop()
+  debug_stop('no package called .ggraptR')
 }
 
 

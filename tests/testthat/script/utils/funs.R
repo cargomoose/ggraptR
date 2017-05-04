@@ -31,6 +31,19 @@ is_error_of <- function(e, msg) {
   is.error(e) && grepl(msg, getErrorMessage(e))
 }
 
+debug_stop <- function(msg, expr=NULL) {
+  driver$screenshot(T)
+  if (!is.null(substitute(expr))) {
+    expr_val <- eval(expr)
+  }
+  browser()
+  if (need_stop_externals) {
+    stop_externals(msg)
+  } else {
+    stop(msg)
+  }
+}
+
 get.anywhere <- function(strObjName) {
   get(strObjName, 
       envir=Filter(function(x) strObjName %in% ls(envir=x), 

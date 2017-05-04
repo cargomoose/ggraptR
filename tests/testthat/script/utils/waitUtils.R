@@ -26,8 +26,8 @@ wait_for_table_ready <- function(driver) {
 # target - charater of css/xpath query, function returning T/F, expression like {a+2==5}
 # source - webDriver or webElement
 wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
-  nChecks <- 2 * timeout
-  oneWaitDur <- timeout / nChecks
+  oneWaitDur <- 0.5  # sec
+  nChecks <- timeout / oneWaitDur
   
   targetFun <- 
     if (class(substitute(target)) == '{') {  # for quoted expression
@@ -51,8 +51,7 @@ wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale
             (catchStale && is_error_of(e, 'StaleElementReference'))) {
           FALSE
         } else {
-          browser()
-          stop(e$message)
+          debug_stop(e$message)
         }
       }))
     
@@ -73,9 +72,7 @@ wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale
   }
   
   if (errorIfNot) {
-    driver$screenshot(T)
-    browser()
-    stop('Could not wait')
+    debug_stop('Could not wait')
   }
   FALSE
 }

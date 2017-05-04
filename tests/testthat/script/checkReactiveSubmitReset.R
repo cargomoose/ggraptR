@@ -1,4 +1,4 @@
-cat("\nReactive submit, reset and missing colorAsFactor")
+cat("\nReactive submit, reset and missed colorAsFactor")
 
 driver %>% getEl('#reactive') %>% click()
 submitBtn <- wait_for("#submit:not(disabled)", driver)
@@ -34,7 +34,7 @@ driver %>% getEl('#reset_input') %>% click()
 test_that('Reset works correct', {
   expect_true(wait_for({
     text(driver %>% getEl('#color option[selected="selected"]')) == 'color' }, 
-    catchStale=T))
+    catchStale=T, timeout = 20))
   expect_true(wait_for({ is.null(driver %>% getEl('#treatColorAsFactor')) }))
   expect_true(!is.null(wait_for('#submit[disabled]')))
   expect_true(has_shiny_correct_state(driver, '^reset', NULL, NULL, shortShotName=F))

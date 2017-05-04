@@ -10,8 +10,7 @@ has_shiny_correct_state <- function(driver, plotNames, elId, elVal,
                       # substr(toString(elVal), 1, 5)  # plotThemeName problem
                       toString(elVal))
   if (!is.character(fileName)) {
-    driver$screenshot(T)
-    browser()
+    debug_stop('fileName for plot is not character')
   }
   
   res <- !length(getEls(driver, '.shiny-output-error'))

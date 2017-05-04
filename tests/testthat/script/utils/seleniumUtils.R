@@ -212,8 +212,7 @@ isVisible <- function(el) {
 click <- function(el, wait_for=NULL) {
   stopIfNotWebElement(el)
   if (!isVisible(el)) {
-    browser()
-    stop_externals('Input element is invisible: ', html(el))
+    stop_debug(paste('Input element is invisible:', html(el)), need_stop_externals=T)
   }
   el$clickElement()
   
@@ -226,15 +225,10 @@ click <- function(el, wait_for=NULL) {
 
 filter_el_by_. <- function(els, by, val, attr_key=NULL) {
   if (!is.list(els)) stop_externals('Wrong "els" class')
-  if (!is.list(els)) stop_externals('Wrong "els" class')
   res <- Filter(function(el) 
     (if (by == 'attr') attr(el, attr_key) else text(el)) == val, els)
   if (length(res) != 1)  {
-    driver$screenshot(T)
-    browser()
-    stop_externals(
-      paste('Could not filter one unique attribute.',
-            'Count of attributes found is:', length(res)))
+    debug_stop(paste('Count of attributes after filtering is:', length(res)))
   }
   res[[1]]
 }

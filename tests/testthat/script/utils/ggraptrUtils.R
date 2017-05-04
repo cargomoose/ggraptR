@@ -11,7 +11,7 @@ switchToDataset <- function(driver, dataset, init_plot = NULL,
            catchStale = T)
   # wait_for(  # alternative: #showAes[data-shinyjs-resettable-value="false"]
   # sprintf('#plotTypesCtrl .selectize-input%s',
-  #         if (n_plot_types) ':not(.has-items)' else '.has-items'), driver, catchStale = T)
+  #         if (n_plot_types) ':not(.has-items)' else '.has-items'), driver, catchStale=T)
   
   if (!is.null(init_plot) && !setequal(init_plot, get_current_plot_names(driver))) {
     if (length(get_current_plot_names(driver)) > 0) {
@@ -20,7 +20,8 @@ switchToDataset <- function(driver, dataset, init_plot = NULL,
     
     driver %>% 
       getSelectOptions('plotTypes') %>% 
-      filter_el_by_attr('data-value', init_plot) %>% click()
+      filter_el_by_attr('data-value', init_plot) %>% 
+      click()
     if (need_wait_for_plot_ready) wait_for_plot_ready(driver)
   }
 }
@@ -42,6 +43,7 @@ go_to_tab <- function(driver, tab_name, error_if_not=T) {
   
   if (tab_name == 'plot') {
     wait_for({ isVisible(driver %>% getEl('#plot')) }, driver, timeout = 3)
+    # Sys.sleep(4)
   } else if (tab_name == 'table') {
     wait_for({ isVisible(driver %>% getEl('#displayTable')) }, driver, timeout = 3)
     wait_for_table_ready(driver)
@@ -94,11 +96,23 @@ get_current_dataset_name <- function(driver) {
   driver %>% get_selected_items('datasetName') %>% text()
 }
 
-get_widblock_input_ids <- function(driver, block_name) {
-  getEls(driver, c(
-    '.widblock',
-    '> #', block_name, 'Ctrl',
-    '~ * .shiny-bound-input.shinyjs-resettable')) %>% 
+get_panel <- function(driver, panel_name) {
+  driver %>% getEl(c('.panel[value="', panel_name, '"]'))
+}
+
+expand_panel <- function(driver, panel) {
+  if (is.character(panel)) {
+    panel <- get_panel(driver, panel)
+  }
+  link <- panel %>% getEl('a[data-toggle="collapse"]')
+  if (!as.logical(link %>% attr('aria-expanded'))) link %>% click()
+  wait_for('a[aria-expanded="true"]', panel)  # acts like assert
+  Sys.sleep(3)
+}
+
+get_panel_input_ids <- function(driver, panel_name) {
+  driver %>% 
+    getEls(c('.panel[value="', panel_name, '"] .shiny-bound-input.shinyjs-resettable')) %>% 
     Filter(function(el) attr(el, 'data-shinyjs-resettable-type') %in% 
              c('Select', 'Slider', 'Checkbox'), .) %>% 
     attr('id')
@@ -168,32 +182,15 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
   TRUE
 }
 
-isCheckboxCorrect <- function(driver, inpId, plotNames, 
-                              eval_when_active=NULL) {
-  is_section <- grepl('^show', inpId)
+isCheckboxCorrect <- function(driver, inpId, plotNames, eval_when_active=NULL) {
   getBox <- function() driver %>% getEl(c('#', inpId))
   for (i in 1:(1+is_section)) {
-    n_inputs_query <- paste0('//*[@class="widblock" and .//*[@id="', inpId, '"]]',
-                    '//*[contains(@class, "shiny-bound-input shinyjs-resettable")]')
-    n_inputs <- driver %>% getEls(n_inputs_query) %>% length
-    
-    chkBoxEl <- getBox()
-    if (!isVisible(chkBoxEl) && is_section) return(T)  # pairs showFiltering is invisible
-    chkBoxEl %>% click()
-    
-    if (is_section) {  #  && inpId != 'showFiltering'
-      wait_for({ n_inputs != length(driver %>% getEls(n_inputs_query)) })
-    } else {
-      wait_for_plot_ready(driver)
-    }
+    getBox() %>% click()
+    wait_for_plot_ready(driver)
     if (i == 1) {
-      res <- has_shiny_correct_state(driver, plotNames, inpId,
-                                     unlist(getBox()$isElementSelected()), waitPlot=F)
-      if (!res) return(FALSE)
-      if (!is.null(substitute(eval_when_active))) {
-        stopifnot(is_section)
-        eval(substitute(eval_when_active))
-      }
+      correct_state <- has_shiny_correct_state(
+        driver, plotNames, inpId, unlist(getBox()$isElementSelected()), waitPlot=F)
+      if (!correct_state) return(FALSE)
     }
   }
   TRUE
