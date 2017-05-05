@@ -142,7 +142,7 @@ killExternalRprocess <- function(silent=T) {
 }
 
 release_externals <- function() {
-  try(eval.in.any.env({ driver$close(); suppressWarnings(rm(driver)) }), silent = T)
+  try(eval.in.any.env({ driver$quit(); suppressWarnings(rm(driver)) }), silent = T)
   try(eval.in.any.env({ selServer$stop(); suppressWarnings(rm(selServer)) }), silent = T)
   try(killExternalRprocess(), silent = T)
   closeAllConnections()

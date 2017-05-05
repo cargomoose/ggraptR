@@ -1,3 +1,5 @@
+checked_types <- c('Select', 'Slider', 'Checkbox')
+  
 switchToDataset <- function(driver, dataset, init_plot = NULL,
                             need_wait_for_plot_ready = T) {
   
@@ -73,10 +75,11 @@ startNewPlotGroup <- function(driver, nextPlotType) {
 }
 
 get_plot_input_ids <- function(driver) {
-  inputIds <- getEls(driver, c(
+  getEls(driver, c(
     'form', 
     '> div[data-display-if="input.conditionedPanels == \\"plotTab\\""]',
     ' .shiny-bound-input.shinyjs-resettable')) %>% 
+    Filter(function(el) attr(el,'data-shinyjs-resettable-type') %in% checked_types,.) %>% 
     attr('id')
 }
 
@@ -100,6 +103,12 @@ get_panel <- function(driver, panel_name) {
   driver %>% getEl(c('.panel[value="', panel_name, '"]'))
 }
 
+get_panel_inputs <- function(driver, panel_name) {
+  driver %>% 
+    getEls(c('.panel[value="',panel_name,'"] .shiny-bound-input.shinyjs-resettable')) %>% 
+    Filter(function(el) attr(el, 'data-shinyjs-resettable-type') %in% checked_types, .)
+}
+
 expand_panel <- function(driver, panel) {
   if (is.character(panel)) {
     panel <- get_panel(driver, panel)
@@ -110,12 +119,12 @@ expand_panel <- function(driver, panel) {
   Sys.sleep(3)
 }
 
-get_panel_input_ids <- function(driver, panel_name) {
-  driver %>% 
-    getEls(c('.panel[value="', panel_name, '"] .shiny-bound-input.shinyjs-resettable')) %>% 
-    Filter(function(el) attr(el, 'data-shinyjs-resettable-type') %in% 
-             c('Select', 'Slider', 'Checkbox'), .) %>% 
-    attr('id')
+pick_select_value <- function(driver, select_name, select_value, 
+                              withActivated=F, sleep=0) {
+  getSelectOptions(driver, select_name, withActivated) %>% 
+    filter_el_by_attr('data-value', select_value) %>% 
+    click()
+  Sys.sleep(sleep)
 }
 
 check_input <- function(driver, inp_id, plot_names) {
@@ -123,6 +132,8 @@ check_input <- function(driver, inp_id, plot_names) {
   test_that(sprintf('[%s] [%s] works correct', pastePlus(plot_names), inp_id), {
     if (is.null(inp_type)) {
       skip(pastePlus(plot_names, inp_id, '[is hidden now]', shorten = F))
+    } else if (!inp_type %in% checked_types) {
+      skip(pastePlus(plot_names, inp_id, '[is not supported type]', shorten = F))
     } else {
       expect_true(do.call(paste0('is', inp_type, 'Correct'), 
                           list(driver, inp_id, plot_names)))
@@ -138,9 +149,7 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
     setdiff('auto')
   
   for (optVal in optVals) {
-    getSelectOptions(driver, inpId, withActivated) %>% 
-      filter_el_by_attr('data-value', optVal) %>% 
-      click()
+    pick_select_value(driver, inpId, optVal, withActivated)
     
     if (!has_shiny_correct_state(driver, plotNames, inpId, optVal)) {
       warning(sprintf('Error on [%s=%s]', inpId, optVal))
@@ -184,14 +193,8 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
 
 isCheckboxCorrect <- function(driver, inpId, plotNames, eval_when_active=NULL) {
   getBox <- function() driver %>% getEl(c('#', inpId))
-  for (i in 1:(1+is_section)) {
-    getBox() %>% click()
-    wait_for_plot_ready(driver)
-    if (i == 1) {
-      correct_state <- has_shiny_correct_state(
-        driver, plotNames, inpId, unlist(getBox()$isElementSelected()), waitPlot=F)
-      if (!correct_state) return(FALSE)
-    }
-  }
-  TRUE
+  getBox() %>% click()
+  wait_for_plot_ready(driver)
+  has_shiny_correct_state(
+    driver, plotNames, inpId, unlist(getBox()$isElementSelected()), waitPlot=F)
 }

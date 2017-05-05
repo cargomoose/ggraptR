@@ -4,7 +4,7 @@ source('script/checkInitPlot.R')
 source('script/checkReactiveSubmitReset.R')  # checks diamonds color as well
 source('script/checkDownloadPlotModal.R')
 source('script/checkAddDataset.R')
-# switchToDataset(driver, 'esoph', init_plot = 'scatter')
+switchToDataset(driver, 'esoph', init_plot = 'scatter')
 
 source('script/checkTabCode.R')
 source('script/checkTabTable.R')

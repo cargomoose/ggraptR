@@ -14,10 +14,8 @@ uplEl <- wait_for('input#file', driver)
 uplEl$setElementAttribute('style', '')  # RSelenium's requirement
 uplEl$sendKeysToElement(list(custom_dataset_filepath))
 wait_for({length(driver %>% get_current_plot_names()) == 0}, catchStale = T)
-get_data_name <- function() driver %>% 
-  getEl('#datasetNameCtrl .selectize-control.single') %>% text()
 test_that("File uploading works correct", {
-  expect_equal(basename(custom_dataset_filepath), get_data_name())
+  expect_equal(basename(custom_dataset_filepath), get_current_dataset_name(driver))
 })
 
 
@@ -29,7 +27,7 @@ data_name <- driver %>% getEl('#dbSqlQuery') %>% attr('value') %>%
   stringr::str_extract('(?i)(?<=from )\\S+')
 driver %>% getEl('button#dbExecuteBtn') %>% click(T)
 test_that("Database uploading works correct", {
-  expect_equal(data_name, get_data_name())
+  expect_equal(data_name, get_current_dataset_name(driver))
   has_shiny_correct_state(driver, 'uploading', 'database', data_name, 
                           shortShotName=F, waitPlot=F)
 })
