@@ -1,3 +1,4 @@
+#### main ####
 datasetName <- reactive({
   input$datasetName
 })
@@ -27,8 +28,7 @@ y <- reactive({
                       isolate(plotAggMeth()), semiAutoAggOn())
 })
 
-# pairsPlot
-columns <- reactive({
+columns <- reactive({  # for pairsPlot
   input$columns
 })
 
@@ -46,6 +46,14 @@ treatColorAsFactor <- reactive({
   !is.null(input$treatColorAsFactor) && input$treatColorAsFactor
 })
 
+fillOrig <- reactive({
+  input$fill
+})
+
+fill <- reactive({
+  convertNoneToNULL(fillOrig())
+})
+
 sizeOrig <- reactive({
   input$size
 })
@@ -56,12 +64,12 @@ size <- reactive({
     isolate(plotAggMeth()), isolate(semiAutoAggOn())))
 })
 
-fillOrig <- reactive({
-  input$fill
+shapeOrig <- reactive({
+  input$shape
 })
 
-fill <- reactive({
- convertNoneToNULL(fillOrig())
+shape <- reactive({
+  convertNoneToNULL(shapeOrig())
 })
 
 position <- reactive({
@@ -72,28 +80,8 @@ jitter <- reactive({
   if (!is.null(input$jitter) && input$jitter) 'jitter' else 'identity'
 })
 
-sizeMagOrig <- reactive({
-  input$sizeMag
-})
-
-sizeMag <- reactive({
-  if (is.null(input$sizeMag)) 4 else input$sizeMag
-})
-
-alphaOrig <- reactive({
-  input$alpha
-})
-
-alpha <- reactive({
-  if (is.null(alphaOrig())) 1 else alphaOrig()
-})
-
-shapeOrig <- reactive({
-  input$shape
-})
-
-shape <- reactive({
-  convertNoneToNULL(shapeOrig())
+coordFlip <- reactive({
+  !is.null(input$coordFlip) && input$coordFlip
 })
 
 smoothOrig <- reactive({
@@ -104,11 +92,32 @@ smooth <- reactive({
   convertNoneToNULL(input$smooth)
 })
 
-coordFlip <- reactive({
-  !is.null(input$coordFlip) && input$coordFlip
+alphaOrig <- reactive({
+  input$alpha
+})
+
+alpha <- reactive({
+  if (is.null(alphaOrig())) 1 else alphaOrig()
+})
+
+sizeMagOrig <- reactive({
+  input$sizeMag
+})
+
+sizeMag <- reactive({
+  if (is.null(input$sizeMag)) 4 else input$sizeMag
+})
+
+nBins <- reactive({
+  input$nBins
+})
+
+densBlackLine <- reactive({
+  input$densBlackLine
 })
 
 
+#### pairs ####
 pairsUpCont <- reactive({
   input$pairsUpCont
 })
@@ -141,15 +150,8 @@ pairsLowDiscr <- reactive({
   input$pairsLowDiscr
 })
 
-nBins <- reactive({
-  input$nBins
-})
 
-densBlackLine <- reactive({
-  input$densBlackLine
-})
-
-
+#### facets ####
 facetRowOrig <- reactive({
   input$facetRow
 })
@@ -193,6 +195,8 @@ facetGrids <- reactive({
   if (anyNull(row, col)) '. ~ .' else paste(row, '~', col)
 })
 
+
+#### theme ####
 plotTitle <- reactive({
   input$plotTitle
 })
@@ -233,6 +237,8 @@ plotTheme <- reactive({
   if (is.null(input$plotTheme)) 'theme_grey' else input$plotTheme
 })
 
+
+#### aggregations ####
 rawVsManAgg <- reactive({
   input$rawVsManAgg
 })

@@ -41,6 +41,8 @@ output$plotTypesCtrl <- renderUI({
   })
 })
 
+
+#### main ####
 output$xCtrl <- renderUI({
   if (displayXCond()) {
     isolate({
@@ -125,7 +127,7 @@ output$jitterCtrl <- renderUI({
 
 output$coordFlipCtrl <- renderUI({
   if (displayCoordFlipCond()) {
-    isolate(checkboxInput('coordFlip', 'Flip X and Y axis', value=F))  # val=coordFlip()
+    isolate(checkboxInput('coordFlip', 'Flip X and Y axis', value=F))
   }
 })
 
@@ -140,7 +142,7 @@ output$smoothCtrl <- renderUI({
 output$alphaCtrl <- renderUI({
   if (displayAlphaCond()) {
     sliderInput("alpha", label = "Opacity",
-                min=0, max=1, value=0.5, step=0.1) #isolate(alpha())
+                min=0, max=1, value=0.5, step=0.1)
   }
 })
 
@@ -148,12 +150,11 @@ output$alphaCtrl <- renderUI({
 output$sizeMagCtrl <- renderUI({
   if (displaySizeMagCond()) {
     sliderInput("sizeMag", label="Size Magnifier",
-                min=1, max=25, value=3, step=1) #isolate(sizeMag())
+                min=1, max=25, value=3, step=1)
   }
 })
 
-# histogram bins options
-output$nBinsCtrl <- renderUI({
+output$nBinsCtrl <- renderUI({  # histogram bins options
   if (displayBinsCond()) {
     isolate(sliderInput('nBins', label = "Number of bins", min=5, max=100, 
                         value=if (is.null(nBins())) 16 else nBins()))
@@ -168,6 +169,8 @@ output$densBlackLineCtrl <- renderUI({
   }
 })
 
+
+#### pairs ####
 output$pairsUpContCtrl <- renderUI({
   if (displayGgpairsCond()) {
     isolate(selectInput(
@@ -241,8 +244,7 @@ output$pairsDiagDiscrCtrl <- renderUI({
 })
 
 
-
-# row-wise facet options
+#### facets ####
 output$facetRowCtrl <- renderUI({
   if (displayFacetCond()) {
     isolate(selectInput('facetRow', 'Facet Row', 
@@ -250,7 +252,6 @@ output$facetRowCtrl <- renderUI({
   }
 })
 
-# column-wise facet options
 output$facetColCtrl <- renderUI({
   facetRow <- facetRowOrig()
   if (displayFacetCond()) {
@@ -276,6 +277,8 @@ output$facetScaleCtrl <- renderUI({
   }
 })
 
+
+#### theme ####
 output$plotTitleCtrl <- renderUI({
   isolate(textInput('plotTitle', 'Plot Title', value=plotTitle()))
 })
@@ -289,7 +292,7 @@ output$yLabelCtrl <- renderUI({
 })
 
 output$labelFontFamilyCtrl <- renderUI({
-  # only first 3 fonts are available on Windows machine. Next ones generate warnings
+  # only the first 3 fonts are available on Windows machine. Next ones generate warnings
   labelFontFamilyOpts <- c('sans', 'serif', 'mono', 'Calibri', 
                            'Times', 'Helvetica', 'Courier')
   isolate(selectInput('labelFontFamily', 'Label Font Family', labelFontFamilyOpts, 
@@ -337,6 +340,8 @@ output$plotThemeCtrl <- renderUI({
   isolate(selectInput('plotTheme', 'Plot Theme', themes, plotTheme()))
 })
 
+
+#### aggregations ####
 # raw vs. manually aggregated. Plot tab
 output$rawVsManAggCtrl <- renderUI({
   isolate(selectInput("rawVsManAgg", "Dataset Type",
