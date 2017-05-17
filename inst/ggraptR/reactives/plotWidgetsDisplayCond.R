@@ -1,3 +1,4 @@
+#### main ####
 displayXCond <- reactive({
   'x' %in% plotInputs()
 })
@@ -12,14 +13,8 @@ displayGgpairsColumnsCond <- reactive({
   'pairs' %in% plotTypes()
 })
 
-displayGgpairsCond <- reactive({
-  displayGgpairsColumnsCond()
-})
-
-
-#### aes ####
 displayColorCond <- reactive({
-  displayYCond() && 'color' %in% isolate(plotInputs())
+  'color' %in% plotInputs()
 })
 
 displayTreatAsFactorCond <- reactive({
@@ -28,55 +23,63 @@ displayTreatAsFactorCond <- reactive({
 })
 
 displayFillCond <- reactive({
-  displayYCond() && 'fill' %in% isolate(plotInputs())
-})
-
-displayShapeCond <- reactive({
-  displayYCond() && 'shape' %in% isolate(plotInputs())
+  'fill' %in% plotInputs()
 })
 
 displaySizeCond <- reactive({
-  displayYCond() && 'size' %in% isolate(plotInputs())
+  'size' %in% plotInputs()
 })
 
-displayCoordFlipCond <- reactive({
-  displayYCond() && !'pairs' %in% isolate(plotTypes())
-})
-
-displayJitterCond <- reactive({
-  displayYCond() && 'jitter' %in% isolate(plotInputs())
-})
-
-displaySmthCond <- reactive({
-  displayYCond() && 'smooth' %in% isolate(plotInputs())
-})
-
-displaySizeMagCond <- reactive({
-  displayYCond() && 'sizeMag' %in% isolate(plotInputs()) && is.null(size())
-})
-
-displayAlphaCond <- reactive({
-  displayYCond() && 'alpha' %in% isolate(plotInputs())
+displayShapeCond <- reactive({
+  'shape' %in% plotInputs()
 })
 
 displayPositionCond <- reactive({
-  displayYCond() && 'position' %in% isolate(plotInputs()) && !is.null(fill())
+  'position' %in% plotInputs() && !is.null(fill())
+})
+
+displayJitterCond <- reactive({
+  'jitter' %in% plotInputs()
+})
+
+displayCoordFlipCond <- reactive({
+  displayXCond() && !'pairs' %in% isolate(plotTypes())
+})
+
+displaySmthCond <- reactive({
+  'smooth' %in% plotInputs()
+})
+
+displayAlphaCond <- reactive({
+  'alpha' %in% plotInputs()
+})
+
+displaySizeMagCond <- reactive({
+  'sizeMag' %in% plotInputs() && is.null(size())
 })
 
 displayBinsCond <- reactive({
-  displayYCond() && 'nBins' %in% isolate(plotInputs())
+  'nBins' %in% plotInputs()
 })
 
 displayDensBlackLineCond <- reactive({
-  displayYCond() && 'densBlackLine' %in% isolate(plotInputs())
+  'densBlackLine' %in% plotInputs()
 })
 
 
-#### extra ####
-# displayTitlesCond <- reactive({
-#   !is.null(input$reactive) && !input$reactive 
-# })
+#### pairs ####
+displayGgpairsCond <- reactive({
+  displayGgpairsColumnsCond()
+})
 
+
+#### facet ####
 displayFacetCond <- reactive({
   is.null(plotTypes()) || !'pairs' %in% plotTypes()
 })
+
+
+#### theme ####
+# displayTitlesCond <- reactive({
+#   !is.null(input$reactive) && !input$reactive 
+# })
