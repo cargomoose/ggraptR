@@ -1,4 +1,4 @@
-EXTERN_LOG_NAME <- 'rcmd.log'
+EXTERN_LOG_NAME <- paste0(Sys.getenv('R_USER'), '/rcmd.log')
 
 # from find.package('RSelenium')/examples/serverUtils/*.R
 startSelServer <- function() {
@@ -147,6 +147,8 @@ release_externals <- function() {
   try(killExternalRprocess(), silent = T)
   closeAllConnections()
   if (nrow(showConnections())) stop('Can not close all connections')
+  
+  if (file.exists('phantomjsdriver.log')) file.remove('phantomjsdriver.log')
 }
 
 stop_externals <- function(msgForError=NULL) {

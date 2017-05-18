@@ -1,12 +1,15 @@
 has_shiny_correct_state <- function(driver, plotNames, elId, elVal, 
                                     shortShotName=T, waitPlot=T) {
   if (waitPlot) wait_for_plot_ready(driver)
-  if (!dir.exists('report')) {
-    dir.create('report')
-    cat('Created "report" directory at', getwd())
+  report_path <- paste0(Sys.getenv('R_USER'), '/report')
+  if (!dir.exists(report_path)) {
+    dir.create(report_path)
+    cat(' >>Created "report" directory at', report_path, ' ')
   }
-  fileName <- sprintf('report/%s_[%s=%s].png', 
-                      pastePlus(plotNames, shorten=shortShotName), toString(elId), 
+  fileName <- sprintf('%s/%s_[%s=%s].png', 
+                      report_path, 
+                      pastePlus(plotNames, shorten=shortShotName), 
+                      toString(elId), 
                       # substr(toString(elVal), 1, 5)  # plotThemeName problem
                       toString(elVal))
   if (!is.character(fileName)) {

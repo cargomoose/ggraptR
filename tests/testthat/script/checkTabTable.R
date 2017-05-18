@@ -13,7 +13,7 @@ for (optVal in attr(get_meth_opts(), 'data-value')) {
   get_meth_opts() %>% filter_el_by_attr('data-value', optVal) %>% click()
   wait_for_table_ready(driver)
 }
-driver$screenshot(file='report/table.png')
+driver$screenshot(file=paste0(Sys.getenv('R_USER'), '/report/tableTab.png'))
 
 aggreg_res_serial <- 
   paste0('Showentriesagegpncases_meanncases_sumncases_minncases_maxcountncases_',

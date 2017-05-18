@@ -1,13 +1,10 @@
 cat("\nAdd dataset")
 
-#### generate custom csv file ####
-custom_dataset_filepath <- 'data/esoph_short.csv'
-if (!file.exists(custom_dataset_filepath)) {
-  dir.create(dirname(custom_dataset_filepath))
-  write.csv(esoph[1:7, 2:ncol(esoph)], file = custom_dataset_filepath, row.names = F)
-}
 
 #### file uploading ####
+custom_dataset_filepath <- 'esoph_short.csv'
+write.csv(esoph[1:7, 2:ncol(esoph)], file = custom_dataset_filepath, row.names = F)
+
 driver %>% getEl('#uploadData') %>% click()
 # uplEl <- modalEl %>% getEl('input#file')
 uplEl <- wait_for('input#file', driver)
@@ -17,6 +14,8 @@ wait_for({length(driver %>% get_current_plot_names()) == 0}, catchStale = T)
 test_that("File uploading works correct", {
   expect_equal(basename(custom_dataset_filepath), get_current_dataset_name(driver))
 })
+
+file.remove(custom_dataset_filepath)
 
 
 #### database uploading ####
