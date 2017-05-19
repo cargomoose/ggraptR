@@ -4,7 +4,7 @@
 \alias{ggraptR}
 \title{Launch ggraptR in the default browser}
 \usage{
-ggraptR(initialDf = "diamonds", ...)
+ggraptR(initialDf = ggplot2::diamonds, ...)
 }
 \arguments{
 \item{initialDf}{initial dataframe to plot}
@@ -22,4 +22,3 @@ if (interactive()) {
   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 }
 }
-

@@ -10,7 +10,7 @@
 #'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
 #' @export
-ggraptR <- function(initialDf = diamonds, ...) {
+ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   extraArgs <- list(...)
 
   if ('initialPlot' %in% names(extraArgs)) {

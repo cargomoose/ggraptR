@@ -65,4 +65,4 @@ Imports:
     xtable (>= 1.8.2)
 BugReports: https://github.com/cargomoose/raptR/issues
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
