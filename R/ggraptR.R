@@ -9,6 +9,7 @@
 #' if (interactive()) {
 #'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
+#' @importFrom ggplot2 diamonds
 #' @export
 ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   extraArgs <- list(...)
@@ -33,7 +34,7 @@ ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   if ('' %in% names(shinyArgs)) stop('all extra arguments must be named')
   
   stopifnot(is.data.frame(initialDf))
-  initialDfName <- deparse(substitute(initialDf))
+  initialDfName <- gsub('.*::', '', deparse(substitute(initialDf)))
   
   do.call(shiny::runApp, args=shinyArgs)
 }
