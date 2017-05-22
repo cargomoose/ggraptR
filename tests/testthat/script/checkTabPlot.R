@@ -54,8 +54,9 @@ if (get_selected_items(driver, 'datasetName') %>% `[[`(1) %>% text != 'esoph') {
   switchToDataset(driver, 'esoph', 'scatter', need_wait_for_plot_ready = F)
 }
 
-panel_names <- (driver %>% getEls('.panel .panel-title'))[2:4] %>% text()
-panels_ids <- panel_names %>% 
+finished_panel_names <- (driver %>% getEls('.panel .panel-title'))[2:4] %>% text()
+sapply(finished_panel_names, expand_panel, driver = driver, collapse = T)
+finished_panel_ids <- finished_panel_names %>% 
   sapply(function(name) get_panel_inputs(driver, name) %>% attr('id')) %>% unlist
 usedPlotNames <- c()
 isLastIter <- F
@@ -67,7 +68,7 @@ while (!isLastIter) {
             expect_true(has_shiny_correct_state(driver, plot_names,
                                                 NULL, NULL, waitPlot=F)))
   
-  aes_input_ids <- setdiff(get_plot_input_ids(driver), c(panels_ids, 'plotTypes'))
+  aes_input_ids <- setdiff(get_plot_input_ids(driver), c(finished_panel_ids, 'plotTypes'))
   #### main loop ####
   for (inp_id in aes_input_ids) check_input(driver, inp_id, plot_names)
   

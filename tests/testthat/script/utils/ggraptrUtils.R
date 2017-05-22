@@ -109,13 +109,13 @@ get_panel_inputs <- function(driver, panel_name) {
     Filter(function(el) attr(el, 'data-shinyjs-resettable-type') %in% checked_types, .)
 }
 
-expand_panel <- function(driver, panel) {
+expand_panel <- function(driver, panel, collapse = FALSE) {
   if (is.character(panel)) {
     panel <- get_panel(driver, panel)
   }
   link <- panel %>% getEl('a[data-toggle="collapse"]')
-  if (!as.logical(link %>% attr('aria-expanded'))) link %>% click()
-  wait_for('a[aria-expanded="true"]', panel)  # acts like assert
+  if (!as.logical(link %>% attr('aria-expanded')) || collapse) link %>% click()
+  if (!collapse) wait_for('a[aria-expanded="true"]', panel)  # acts like assert
   Sys.sleep(3)
 }
 
