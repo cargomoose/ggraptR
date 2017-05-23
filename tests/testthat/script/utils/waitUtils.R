@@ -27,7 +27,6 @@ wait_for_table_ready <- function(driver) {
 # source - webDriver or webElement
 wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
   oneWaitDur <- 0.5  # sec
-  nChecks <- timeout / oneWaitDur
   
   targetFun <- 
     if (class(substitute(target)) == '{') {  # for quoted expression
@@ -43,7 +42,8 @@ wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale
       stop(sprintf('Not implemented for target class [%s]', class(target)))
     }
   
-  for (i in 1:nChecks) {
+  tm <- Sys.time()
+  while (Sys.time() - tm < timeout) {
     res <- suppressMessages(tryCatch(
       targetFun(source),
       error=function(e) {
