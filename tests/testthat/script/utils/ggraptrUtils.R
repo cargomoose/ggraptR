@@ -158,7 +158,7 @@ isSelectCorrect <- function(driver, inpId, plotNames) {
     if (!is.null(driver %>% getEl(c('#', inpId)) %>% attr('multiple'))) {
       eraseAll <- length(get_selected_items(driver, inpId)) == 1
       eraseMultiSelectOpts(driver, inpId)
-      wait_for_plot_ready(driver, !eraseAll)
+      wait_for_plot_ready(driver, eraseAll)
     }
   }
   

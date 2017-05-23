@@ -15,8 +15,8 @@ test_that('treatColorAsFactor appears correct',
 driver %>% getEl('#treatColorAsFactor') %>% click()
 # <
 
-test_that('Unreactive submit waits correct', 
-          expect_false(wait_for_plot_ready(driver, F)))
+# test_that('Unreactive submit waits correct', 
+#           expect_false(wait_for_plot_ready(driver, T)))
 driver %>% getEl('#submit') %>% click()
 test_that('Unreactive submit works correct', 
           expect_true(driver %>% has_shiny_correct_state(

@@ -1,20 +1,17 @@
-wait_for_plot_ready <- function(driver, need_non_blank=T) {
+wait_for_plot_ready <- function(driver, need_blank_plot=F) {
   # need to know approx count of empty value in blank plot. Depends on screen resolution
   if (driver$getWindowSize()$height != 1080 || driver$getWindowSize()$width != 1920) {
     stop_externals('Wrong driver screen resolution')
   }
-  emptyPicHtml <- paste0(rep('A', 1e3), collapse='')
-  emptyPicQuery    <- sprintf('#plot img[src*="%s"]', emptyPicHtml)
-  nonEmptyPicQuery <- sprintf('#plot img:not([src*="%s"])', emptyPicHtml)
   
-  isBlank <- wait_for(emptyPicQuery, source=driver, errorIfNot=F, timeout = 4)
-  if (need_non_blank) {  # !is.logical(isBlank) || isBlank
-    wait_for(
-      c(nonEmptyPicQuery, '#plot.shiny-output-error'),
-      source=driver)  # normal plot or an err
-  } else {
-    isBlank
-  }
+  Sys.sleep(2)  # for blank plot
+  if (need_blank_plot) return()
+  
+  emptyPicHtml <- paste0(rep('A', 1e3), collapse='')
+  # emptyPicQuery    <- sprintf('#plot img[src*="%s"]', emptyPicHtml)
+  nonEmptyPicQuery <- sprintf('#plot img:not([src*="%s"])', emptyPicHtml)
+  # isBlank <- wait_for(emptyPicQuery, source=driver, errorIfNot=F, timeout = 4)
+  wait_for(c(nonEmptyPicQuery, '#plot.shiny-output-error'), source = driver)
 }
 
 wait_for_table_ready <- function(driver) {
