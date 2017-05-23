@@ -248,4 +248,5 @@ moveSlider <- function(driver, dotEl, pos) {
   driver$buttondown()
   driver$mouseMoveToLocation(x = pos - dotEl$getElementLocation()$x, y = -1L)
   driver$buttonup()
+  Sys.sleep(0.5)
 }
