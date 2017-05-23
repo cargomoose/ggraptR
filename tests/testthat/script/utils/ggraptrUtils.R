@@ -180,7 +180,7 @@ isSliderCorrect <- function(driver, inpId, plotNames) {
     for (pos in c(leftPos, rightPos, initPositions[sl])) {
       moveSlider(driver, get_sliders()[[sl]], pos)
   
-      val <- ctrlEl %>% getEl(c('.irs-from', '.irs-to')[sl]) %>% text()
+      val <- ctrlEl %>% getEl(c('.irs-single')[sl]) %>% text()
       if (!has_shiny_correct_state(driver, plotNames, inpId, val)) {
         warning(sprintf('Error on [%s=%s]', inpId, val))
         return(F)
