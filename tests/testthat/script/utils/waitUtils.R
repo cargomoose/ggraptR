@@ -11,7 +11,10 @@ wait_for_plot_ready <- function(driver, need_blank_plot=F) {
   # emptyPicQuery    <- sprintf('#plot img[src*="%s"]', emptyPicHtml)
   nonEmptyPicQuery <- sprintf('#plot img:not([src*="%s"])', emptyPicHtml)
   # isBlank <- wait_for(emptyPicQuery, source=driver, errorIfNot=F, timeout = 4)
-  wait_for(c(nonEmptyPicQuery, '#plot.shiny-output-error'), source = driver)
+  res <- wait_for(c(nonEmptyPicQuery, '#plot.shiny-output-error'), source = driver)
+  
+  wait_for('html:not(.shiny-busy)', source = driver)  # for long calculations like pairs
+  res
 }
 
 wait_for_table_ready <- function(driver) {
