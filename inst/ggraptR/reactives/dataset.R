@@ -87,6 +87,7 @@ uploadedDfName <- reactive({
 
 # reactive variable for raw dataset names
 rawDatasetNames <- reactive({
+  input$evalConsoleBtn  # to update on assignment operation
   unique(c(uploadedDfName(), getInitialArg('initialDfName'), getPreloadedEnvDfNames(), 
            "diamonds", "mtcars", "iris", "esoph"))
 })
@@ -94,6 +95,7 @@ rawDatasetNames <- reactive({
 
 # reactive variable for raw dataset
 rawDataset <- reactive({
+  input$evalConsoleBtn  # to update on assignment operation
   cur_name <- datasetName()  # trigger
   if (is.null(cur_name)) return()  # for initial input$datasetName
   
