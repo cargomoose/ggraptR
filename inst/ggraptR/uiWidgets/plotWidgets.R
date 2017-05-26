@@ -123,7 +123,7 @@ output$jitterCtrl <- renderUI({
   if (displayJitterCond()) {
     is_agg_empty <- is.null(plotAggMeth()) || tolower(plotAggMeth()) == 'none'
     isolate(checkboxInput('jitter', 'Apply jitter effect', 
-                          'scatter' %in% plotTypes() && is_agg_empty))
+                          all('scatter' == plotTypes()) && is_agg_empty))
   }
 })
 
