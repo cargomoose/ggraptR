@@ -8,30 +8,31 @@ plotGgplot <- function(dataset, inpVals) {
   for (lsi in 1:length(inpVals)) {
     ls <- inpVals[[lsi]]
     pType <- names(inpVals)[lsi]
-    # if (pType == 'histogram') stop('histogram demo error message')  ####
     ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
-    apply <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
-                  densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine)
+    need <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
+                 densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine,
+                 ..density..='density' %in% names(inpVals))
     
     geomMapArgs <- trimList(
+      y=if (need$..density..) '..density..',
       shape=asFactor(ls$shape),
       fill=asFactor(ls$fill),
       size=ls$size,
       color=if (!is.null(ls$treatColorAsFactor) && ls$treatColorAsFactor) 
-        asFactor(ls$color) else if (apply$densBlackLine) ls$fill else ls$color)
+        asFactor(ls$color) else if (need$densBlackLine) ls$fill else ls$color)
     
     p <- p + do.call(ggpType, trimList(
-      mapping= do.call(aes_string, geomMapArgs),
+      mapping=do.call(aes_string, geomMapArgs),
       alpha=ls$alpha, 
       bins=ls$nBins, 
       position=if (!is.null(ls$jitter)) ls$jitter else 
         if (pType %in% c('box', 'violin')) position_dodge(width=0.4) else ls$position,
-      size=if (apply$sizeMag) ls$sizeMag,
+      size=if (need$sizeMag) ls$sizeMag,
       stat=if (pType == 'bar') 'identity',
       width=if (pType == 'box') 0.2))
     
     guides_args <- na_omit(sapply(names(geomMapArgs), function(aes) {
-      if (apply$densBlackLine && aes == 'color') {
+      if (need$densBlackLine && aes == 'color') {
         guide_legend(title=ls$fill)
       } else if (grepl('^as.factor', geomMapArgs[[aes]])) {
         guide_legend(title=ls[[aes]])
@@ -39,7 +40,7 @@ plotGgplot <- function(dataset, inpVals) {
     }, simplify=F))
     
     p <- p + if (length(guides_args)) do.call(guides, guides_args)
-    p <- p + if (apply$sizeMag) scale_size(range=c(1, ls$sizeMag))
+    p <- p + if (need$sizeMag) scale_size(range=c(1, ls$sizeMag))
     p <- p + if (!is.null(ls$smooth)) {
       # we need to avoid two different color aestetics: one in geom_, one in smooth 
       # That's why 'else if(is.null(ls$color))' is used
@@ -53,7 +54,6 @@ plotGgplot <- function(dataset, inpVals) {
   }
   p
 }
-
 
 plotPairs <- function(dataset, inpVals) {
   stopifnot(length(inpVals) == 1)
