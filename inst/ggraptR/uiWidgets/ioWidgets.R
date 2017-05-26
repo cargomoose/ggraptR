@@ -27,7 +27,7 @@ output$fileInputSepCtrl <- renderUI({
 })
 
 output$uploadDataCtrl <- renderUI({
-  bsButton("uploadData", label="Add dataset", type="action", icon=icon("plus"))
+  bsButton("uploadData", label=NULL, type="action", icon=icon("plus"))
 })
 
 # CSV download button (for UI)
@@ -37,11 +37,11 @@ output$dlBtnCSV <- renderUI({
 
 # image download button (for UI)
 output$dlBtnPlot <- renderUI({
-  downloadButton('dlPlot', 'Download')
+  downloadButton('modalDlBtnPlot', 'Download')
 })
 
-output$exportPlotCtl <- renderUI({
-  bsButton("exportPlot", label="Download plot", type="action", icon=icon("download"))
+output$downloadPlotCtl <- renderUI({
+  bsButton("downloadPlot", label=' ', type="action", icon=icon("download"))
 })
 
 output$fileTypeCtl <- renderUI({

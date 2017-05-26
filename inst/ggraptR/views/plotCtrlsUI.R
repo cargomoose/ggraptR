@@ -1,7 +1,10 @@
 # plot options
 verticalLayout(
   
-  uiOutput('plotTypesCtrl'),
+  fluidRow(column(10, uiOutput('plotTypesCtrl'), 
+                  style="padding-right:5px"),
+           column(1, uiOutput('downloadPlotCtl'), 
+                  style="padding-top:25px;padding-left:5px;")),
   
   fluidRow(
     column(6, uiOutput('xCtrl')),
