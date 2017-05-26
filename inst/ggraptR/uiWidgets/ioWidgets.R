@@ -13,17 +13,12 @@ output$fileInputHeaderCtrl <- renderUI({
 
 # file input quote control
 output$fileInputQuoteCtrl <- renderUI({
-  radioButtons('quote', 'Quote',
-               c(None='',
-                 'Double Quote'='"',
-                 'Single Quote'="'"),
-               '"')  
+  radioButtons('quote', 'Quote', c(None='', 'Double Quote'='"', 'Single Quote'="'"), '"')  
 })
 
 # file input separator control
 output$fileInputSepCtrl <- renderUI({
-  radioButtons('sep', 'Separator',
-               c(Comma=',', Semicolon=';', Tab='\t'), ',')  
+  radioButtons('sep', 'Separator', c(Comma=',', Semicolon=';', Tab='\t'), ',')  
 })
 
 output$uploadDataCtrl <- renderUI({
@@ -40,30 +35,27 @@ output$dlBtnPlot <- renderUI({
   downloadButton('modalDlBtnPlot', 'Download')
 })
 
-output$downloadPlotCtl <- renderUI({
-  bsButton("downloadPlot", label=' ', type="action", icon=icon("download"))
+output$downloadPlotCtrl <- renderUI({
+  bsButton("downloadPlot", label=NULL, type="action", icon=icon("download"))
 })
 
-output$fileTypeCtl <- renderUI({
+output$fileTypeCtrl <- renderUI({
   selectInput(inputId="fileType", label="File Type", 
-              choices=c('PDF'='.pdf',
-                        'PNG'='.png',
-                        'JPG'='.jpg',
-                        'SVG'='.svg'))
+              choices=c('PDF'='.pdf', 'PNG'='.png', 'JPG'='.jpg', 'SVG'='.svg'))
 })
 
-output$fileHeightCtl <- renderUI({
+output$fileHeightCtrl <- renderUI({
   numericInput(inputId="fileHeight", label="Height (inches)", 
                value=getFileDefault()$width, min=0, max=getFileDefault()$heightMax)
 })
 
-output$fileWidthCtl <- renderUI({
+output$fileWidthCtrl <- renderUI({
   numericInput(inputId="fileWidth", label="Width (inches)", 
               value=getFileDefault()$height, min=0, 
               max=getFileDefault()$widthMax)
 })
 
-output$fileDPICtl <- renderUI({
+output$fileDPICtrl <- renderUI({
   numericInput(inputId="fileDPI", label="Dots Per Inch", 
                value=getFileDefault()$DPI, min=0, max=getFileDefault()$DPIMax)
 })

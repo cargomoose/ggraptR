@@ -3,7 +3,7 @@ verticalLayout(
   
   fluidRow(column(10, uiOutput('plotTypesCtrl'), 
                   style="padding-right:5px"),
-           column(1, uiOutput('downloadPlotCtl'), 
+           column(1, uiOutput('downloadPlotCtrl'), 
                   style="padding-top:25px;padding-left:5px;")),
   
   fluidRow(
