@@ -11,7 +11,8 @@ plotGgplot <- function(dataset, inpVals) {
     ggpType <- paste0('geom_', if (pType %in% names(pMap)) pMap[[pType]] else pType)
     need <- list(sizeMag=!is.null(ls$sizeMag) && is.null(ls$size),
                  densBlackLine=!is.null(ls$densBlackLine) && !ls$densBlackLine,
-                 ..density..='density' %in% names(inpVals))
+                 ..density..='density' %in% names(inpVals),
+                 sepLines=pType == 'line' && 'path' %in% names(inpVals))
     
     geomMapArgs <- trimList(
       y=if (need$..density..) '..density..',
@@ -29,7 +30,8 @@ plotGgplot <- function(dataset, inpVals) {
         if (pType %in% c('box', 'violin')) position_dodge(width=0.4) else ls$position,
       size=if (need$sizeMag) ls$sizeMag,
       stat=if (pType == 'bar') 'identity',
-      width=if (pType == 'box') 0.2))
+      width=if (pType == 'box') 0.2,
+      linetype=if (need$sepLines) 'dashed'))
     
     guides_args <- na_omit(sapply(names(geomMapArgs), function(aes) {
       if (need$densBlackLine && aes == 'color') {
