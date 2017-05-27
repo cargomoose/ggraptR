@@ -1,3 +1,7 @@
+output$datasetOptionsCtrl <- renderUI({
+  bsButton("datasetOptionsBtn", label=NULL, type="action", icon=icon("cog"))
+})
+
 # file input select control
 output$fileInputSelectCtrl <- renderUI({
   rawDataset()
@@ -51,8 +55,7 @@ output$fileHeightCtrl <- renderUI({
 
 output$fileWidthCtrl <- renderUI({
   numericInput(inputId="fileWidth", label="Width (inches)", 
-              value=getFileDefault()$height, min=0, 
-              max=getFileDefault()$widthMax)
+              value=getFileDefault()$height, min=0, max=getFileDefault()$widthMax)
 })
 
 output$fileDPICtrl <- renderUI({

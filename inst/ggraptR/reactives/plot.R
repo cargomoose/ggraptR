@@ -28,6 +28,7 @@ buildPlot <- reactive({
   df <- aggLimDf()
   isPairsPlot <- all('pairs' == pTypes)
   input_plot_pars <- getPlotInputVals(separatePlotInputs(), df)
+  attr(input_plot_pars, 'extra') <- list(nCatUniqVals=isolate(nCatUniqVals()))
   
   if (isPairsPlot) {
     if (length(input_plot_pars[[1]]$columns) == 0) return()

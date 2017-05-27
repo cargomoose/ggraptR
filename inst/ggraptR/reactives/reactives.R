@@ -16,7 +16,8 @@ plotInputs <- reactive({
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
   unique(c(getIsFactorVarNames(dataset()), 
-           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(dataset())))
+           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(
+             dataset(), isolate(nCatUniqVals()))))
 })
 
 numericVars <- reactive({
@@ -24,15 +25,9 @@ numericVars <- reactive({
   setdiff(colnames(dataset()), categoricalVars())
 })
 
-# variables with less than or equal to N unique values
-varsUniqValsCntLOEN <- reactive({
-  dataset <- dataset()
-  if (!is.null(dataset)) {
-    n <- 6 # magic. Previos value was 'input$nUniqValsCntThres'
-    if (!is.null(n)) {
-      getVarNamesUniqValsCntLOEN(dataset)
-    }
-  }
+# to make some numeric features with low n of unique values categorical
+nCatUniqVals <- reactive({
+  if (is.null(input$nCatUniqVals)) 6 else input$nCatUniqVals
 })
 
 

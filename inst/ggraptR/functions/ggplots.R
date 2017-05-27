@@ -44,8 +44,9 @@ plotGgplot <- function(dataset, inpVals) {
     p <- p + if (!is.null(ls$smooth)) {
       # we need to avoid two different color aestetics: one in geom_, one in smooth 
       # That's why 'else if(is.null(ls$color))' is used
-      smoothMapGrp <- if (!is.null(ls$color) && 
-                          ls$color %in% getVarNamesUniqValsCntLOEN(dataset))
+      smoothMapGrp <- 
+        if (!is.null(ls$color) && ls$color %in% 
+            getVarNamesUniqValsCntLOEN(dataset, attr(inpVals, 'extra')$nCatUniqVals))
         geomMapArgs$color else if (is.null(ls$color)) geomMapArgs$shape
       do.call(stat_smooth,   # stat_smooth(method=.., mapping=..orNull)
               trimList(method=ls$smooth,

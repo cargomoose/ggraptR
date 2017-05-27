@@ -95,6 +95,7 @@ rawDatasetNames <- reactive({
 
 # reactive variable for raw dataset
 rawDataset <- reactive({
+  nCatUniqVals()  # to update on change of dataset options
   input$evalConsoleBtn  # to update on assignment operation
   cur_name <- datasetName()  # trigger
   if (is.null(cur_name)) return()  # for initial input$datasetName
