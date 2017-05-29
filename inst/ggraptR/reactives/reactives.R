@@ -27,7 +27,10 @@ categoricalVars <- reactive({
 numericVars <- reactive({
   if (is.null(dataset())) return()
   res <- setdiff(colnames(dataset()), categoricalVars())
-  if (length(res) == 0) stop('Dataset must contain at least one numeric feature')
+  if (length(res) == 0) {
+    session$close()
+    stop('Dataset must contain at least one numeric feature')
+  }
   res
 })
 

@@ -5,7 +5,7 @@ output$itersToDrawCtrl <- renderUI({
   n <- reactVals$itersToDraw
   if (is.null(n)) return()
   if (n > 0) {
-    numericInput('itersToDrawInp', NULL, n, width = '80px')
+    numericInput('itersToDrawInp', NULL, n, width = '80px')  # 1px
   } else {
     reactVals$readyToDraw <- T
     NULL
