@@ -5,7 +5,7 @@ output$itersToDrawCtrl <- renderUI({
   n <- reactVals$itersToDraw
   if (is.null(n)) return()
   if (n > 0) {
-    numericInput('itersToDrawInp', NULL, n, width = '80px')  # 1px
+    numericInput('itersToDrawInp', NULL, n, width = '80px')
   } else {
     reactVals$readyToDraw <- T
     NULL
@@ -28,7 +28,8 @@ output$plotTypesCtrl <- renderUI({
     
     ls <- list()
     ls[c('opts', 'val')] <- if (isInit) {
-      opts <- getPlotTypeOpts(initialPlot)
+      opts <- getPlotTypeOpts(initialPlot, 
+                              length(numericVars()), length(categoricalVars()))
       list(opts, if (!is.null(initialPlot)) initialPlot else opts[1])
     } else if (reactVals$is_dataset_changed > 0) {
       if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')

@@ -11,7 +11,7 @@ plotTypesOpts <- reactive({
   reactVals$plotTypeOptsTrigger  # updates using an observer
   isolate({
     reactVals$is_dataset_changed <- F  # to distinguish plotTypes triggers
-    getPlotTypeOpts(plotTypes())
+    getPlotTypeOpts(plotTypes(), length(numericVars()), length(categoricalVars()))
   })
 })
 

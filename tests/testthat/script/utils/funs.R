@@ -59,7 +59,7 @@ pastePlus <- function(..., shorten=T) {
 getAllPlotNames <- function() {
   source('../../inst/ggraptR/globals.R')
   source('../../inst/ggraptR/functions/helper.R')
-  flattenList(getDefinedPlotInputs()) %>% names %>% 
+  flattenList(getDefinedPlotInputs(3, 3)) %>% names %>% 
     sapply(capitalize) %>% 
     sapply(function(x) gsub('(\\d)', ' \\1', x))
 }

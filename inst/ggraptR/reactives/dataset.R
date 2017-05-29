@@ -104,7 +104,7 @@ rawDataset <- reactive({
     df <- if (!is.null(uploadedDfName()) && cur_name == uploadedDfName()) 
       uploadedDf() else get(cur_name)
     if (any(class(df) == 'reactive')) {
-      stop('Please change the dataset name to prevent a collision with a reactive object')
+      stop('Please change the dataset name to prevent a collision with a ggraptR object')
     }
     data.frame(lapply(df, function(x) if (is.character(x)) as.factor(x) else x))
   })

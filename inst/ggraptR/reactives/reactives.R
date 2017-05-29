@@ -1,7 +1,11 @@
+curDatasetPlotInputs <- reactive({
+  getDefinedPlotInputs(length(numericVars()), length(categoricalVars()))
+})
+
 separatePlotInputs <- reactive({
   if (is.null(plotTypes())) return()
   inputs <- lapply(plotTypes(), function(pType) {
-    flattenList(getDefinedPlotInputs())[[pType]]
+    flattenList(isolate(curDatasetPlotInputs()))[[pType]]
   })
   names(inputs) <- plotTypes()
   inputs
@@ -22,7 +26,9 @@ categoricalVars <- reactive({
 
 numericVars <- reactive({
   if (is.null(dataset())) return()
-  setdiff(colnames(dataset()), categoricalVars())
+  res <- setdiff(colnames(dataset()), categoricalVars())
+  if (length(res) == 0) stop('Dataset must contain at least one numeric feature')
+  res
 })
 
 # to make some numeric features with low n of unique values categorical
