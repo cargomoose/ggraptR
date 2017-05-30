@@ -15,36 +15,38 @@ shinyUI(bootstrapPage(
       cellWidths = c("25%", "75%"),
       imageOutput("rappy", height = "100%"),
       div(
-          # use shinyjs to disable/enable buttons w/ JS
-          useShinyjs(),
-          
-          splitLayout(
-            cellWidths = c("70%", "15%", "15%"),
-            uiOutput('datasetNameCtrl'),
-            uiOutput('uploadDataCtrl', style="padding-top:25px"),
-            uiOutput('datasetOptionsCtrl', style="padding-top:25px"),
-            style='width:95%'),
-          
-          conditionalPanel(
-            condition = 'input.conditionedPanels == "tableTab"',
-            uiOutput('dlBtnCSV')),
-          
-          conditionalPanel(
-            condition = 'input.conditionedPanels != "codeTab"',
-            hr(),
-            fluidRow(
-              column(6, uiOutput('submitCtrl')), 
-              column(6, uiOutput('reactiveCtrl')),
-              id='react_row'), 
-            actionButton("reset_input", "Reset inputs", width = "100%")),
-          
-          conditionalPanel(
-            condition = 'input.conditionedPanels == "codeTab"',
-            div(br(), style='padding-bottom: 120px')),
-          
-          style='padding-left: 10px; padding-right: 3px; overflow: hidden;')),
+        # use shinyjs to disable/enable buttons w/ JS
+        useShinyjs(),
+        
+        fluidRow(
+          column(9, uiOutput('datasetNameCtrl'),
+                 style="padding-right:5px; height: 0px"),
+          column(2,
+                 uiOutput('uploadDataCtrl', inline = T),
+                 uiOutput('datasetOptionsCtrl', inline = T),
+                 style="padding-top:25px;padding-left:5px;"),
+          style='width:100%'),
+        
+        conditionalPanel(
+          condition = 'input.conditionedPanels == "tableTab"',
+          uiOutput('dlBtnCSV')),
+        
+        conditionalPanel(
+          condition = 'input.conditionedPanels != "codeTab"',
+          hr(),
+          fluidRow(
+            column(6, uiOutput('submitCtrl')), 
+            column(6, uiOutput('reactiveCtrl')),
+            id='react_row'), 
+          actionButton("reset_input", "Reset inputs", width = "100%")),
+        
+        conditionalPanel(
+          condition = 'input.conditionedPanels == "codeTab"',
+          div(br(), style='padding-bottom: 120px')),
+        
+        style='padding-left: 10px; padding-right: 3px; overflow: hidden;')),
     hr(),
-
+    
     #### left controls ####
     conditionalPanel(
       condition = 'input.conditionedPanels == "plotTab"',
@@ -53,7 +55,7 @@ shinyUI(bootstrapPage(
     conditionalPanel(
       condition = 'input.conditionedPanels == "tableTab"',
       source('./views/tableCtrlsUI.R', local=TRUE)$value),
-  
+    
     conditionalPanel(
       condition = 'input.conditionedPanels == "codeTab"',
       source('./views/codeCtrlsUI.R', local=TRUE)$value)),
@@ -62,24 +64,24 @@ shinyUI(bootstrapPage(
   mainPanel(
     source('./views/modalPanels.R',local=TRUE)$value,
     
-    tabsetPanel(type = "tabs",
-      tabPanel("Plot", 
-        br(),
-        br(),
-        plotOutput("plot", brush=brushOpts(id="zoom_brush", resetOnNew=T)),
-        uiOutput("itersToDrawCtrl", style="opacity: 0; pointer-events: none"),
+    tabsetPanel(
+      type = "tabs",
+      tabPanel(
+        "Plot", br(), br(),
+        plotOutput("plot", brush=brushOpts(id="zoom_brush",resetOnNew=T)),
+        uiOutput("itersToDrawCtrl", 
+                 style="opacity: 0; pointer-events: none"),
         value='plotTab'), 
       
-      tabPanel("Table",
-               br(),
-               br(),
-               DT::dataTableOutput("displayTable"),
-               value='tableTab'),
+      tabPanel(
+        "Table", br(), br(),
+        DT::dataTableOutput("displayTable"),
+        value='tableTab'),
       
-      tabPanel('Code',
-               br(),
-               strong('Plot log (latest at the top):'),
-               br(), br(),
-               htmlOutput('plotLog'),
-               value='codeTab'),
+      tabPanel(
+        'Code', br(),
+        strong('Plot log (latest at the top):'),
+        br(), br(),
+        htmlOutput('plotLog'),
+        value='codeTab'),
       id = "conditionedPanels"))))
