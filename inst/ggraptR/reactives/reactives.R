@@ -16,6 +16,11 @@ plotInputs <- reactive({
 })
 
 
+# to make some numeric features with low n of unique values categorical
+nCatUniqVals <- reactive({
+  if (is.null(input$nCatUniqVals)) 6 else input$nCatUniqVals
+})
+
 # variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
@@ -34,11 +39,18 @@ numericVars <- reactive({
   res
 })
 
-# to make some numeric features with low n of unique values categorical
-nCatUniqVals <- reactive({
-  if (is.null(input$nCatUniqVals)) 6 else input$nCatUniqVals
+plotTypesWarn <- reactive({
+  if (is.null(dataset())) return()
+  n_num <- length(numericVars())
+  n_cat <- length(categoricalVars())                  
+  problem <- if (n_num == 1) {
+    'number of detected numeric features == 1' 
+  } else if (n_cat == 0) {
+    'number of detected categorical features == 0' 
+  }
+  if (!is.null(problem)) paste('Not all plot types are available for the dataset with',
+                               problem)
 })
-
 
 # variables for aggDf()
 aggDfFactorVars <- reactive({

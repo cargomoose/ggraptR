@@ -11,6 +11,9 @@ div(
   bsModal("datasetOptions", "Dataset options", "datasetOptionsCtrl", size = "small", 
           numericInput(
             "nCatUniqVals", value=6, min=0,
-            label = "Count of unique values to treat numeric feature as categorical"))
+            label = "Count of unique values to treat numeric feature as categorical")),
+  
+  bsModal("pTypesWarnModal", "Plot type warning", "pTypesWarnBtnCtrl", size = "small", 
+          textOutput('pTypesWarnModalMessageCtrl'))
 
 )

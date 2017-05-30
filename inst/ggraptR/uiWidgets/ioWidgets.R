@@ -1,7 +1,3 @@
-output$datasetOptionsCtrl <- renderUI({
-  bsButton("datasetOptionsBtn", label=NULL, type="action", icon=icon("cog"))
-})
-
 # file input select control
 output$fileInputSelectCtrl <- renderUI({
   rawDataset()

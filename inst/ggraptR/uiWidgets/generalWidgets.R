@@ -3,6 +3,10 @@ output$datasetNameCtrl <- renderUI({
   selectInput("datasetName", "Dataset", choices=rawDatasetNames())
 })
 
+output$datasetOptionsCtrl <- renderUI({
+  bsButton("datasetOptionsBtn", label=NULL, type="action", icon=icon("cog"))
+})
+
 # reactive  option
 output$reactiveCtrl <- renderUI({
   checkboxInput("reactive", label="Enable reactivity", value=TRUE)
@@ -13,6 +17,17 @@ output$submitCtrl <- renderUI({
   bsButton("submit", label="Submit", icon=icon("refresh"), type="action", block=TRUE)
 })
 
+output$pTypesWarnBtnCtrl <- renderUI({
+  if (is.null(plotTypesWarn())) return()
+  bsButton("pTypesWarnBtn", label=NULL, icon=icon("warning"), type="action",
+           style="warning")
+})
+
+output$pTypesWarnModalMessageCtrl <- renderText({
+  plotTypesWarn()
+})
+
+#### code tab ####
 output$plotLog <- renderText({
   paste(reactVals$log, collapse='<hr>')
 })
