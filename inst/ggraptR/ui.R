@@ -18,13 +18,12 @@ shinyUI(bootstrapPage(
           # use shinyjs to disable/enable buttons w/ JS
           useShinyjs(),
           
-          fluidRow(column(9, uiOutput('datasetNameCtrl'), 
-                          style="padding-right:5px;height: 0px"),
-                   column(1, uiOutput('uploadDataCtrl'), 
-                          style="padding-top:25px;padding-left:5px;"),
-                   column(1, uiOutput('datasetOptionsCtrl'), 
-                          style="padding-top:25px;padding-left:5px;")),
-                   # style="padding-bottom: 10px;"),
+          splitLayout(
+            cellWidths = c("70%", "15%", "15%"),
+            uiOutput('datasetNameCtrl'),
+            uiOutput('uploadDataCtrl', style="padding-top:25px"),
+            uiOutput('datasetOptionsCtrl', style="padding-top:25px"),
+            style='width:95%'),
           
           conditionalPanel(
             condition = 'input.conditionedPanels == "tableTab"',
