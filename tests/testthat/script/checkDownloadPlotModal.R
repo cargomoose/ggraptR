@@ -1,10 +1,10 @@
-cat("\nExport plot and generate code buttons")
+cat("\nDownload plot and generate code buttons")
 
-driver %>% getEl('#downloadPlot') %>% click()
+driver %>% getEl('#dlPlotOpenModalBtn') %>% click()
 root <- wait_for('#modalDownloadPlotOptions[style="display: block;"]', driver)
 
-test_that('#downloadPlot button works fine', {
-  expect_true(!is.null(wait_for('a#dlPlot', root)))
+test_that('#dlPlotOpenModalBtn button works fine', {
+  expect_true(!is.null(wait_for('a#dlPlotHandler', root)))
 })
 
 root %>% getEl('button.close') %>% click()

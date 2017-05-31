@@ -30,13 +30,12 @@ output$dlBtnCSV <- renderUI({
   downloadButton('dlCSV', 'Download table')
 })
 
-# image download button (for UI)
-output$dlBtnPlot <- renderUI({
-  downloadButton('modalDlBtnPlot', 'Download')
+output$dlPlotCtrl <- renderUI({
+  downloadButton('dlPlotHandler', 'Download')
 })
 
-output$downloadPlotCtrl <- renderUI({
-  bsButton("downloadPlot", label=NULL, type="action", icon=icon("download"))
+output$dlPlotOpenModalCtrl <- renderUI({
+  bsButton("dlPlotOpenModalBtn", label=NULL, type="action", icon=icon("download"))
 })
 
 output$fileTypeCtrl <- renderUI({

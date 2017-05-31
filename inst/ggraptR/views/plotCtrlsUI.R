@@ -5,7 +5,7 @@ verticalLayout(
     column(9, uiOutput('plotTypesCtrl'),
            style="padding-right:5px"),
     column(3,
-           uiOutput('downloadPlotCtrl', inline = T),
+           uiOutput('dlPlotOpenModalCtrl', inline = T),
            uiOutput('pTypesWarnBtnCtrl', inline = T),
            style="padding-top:25px; padding-left:5px;")),
   

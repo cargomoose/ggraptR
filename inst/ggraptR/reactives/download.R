@@ -10,7 +10,7 @@ output$dlCSV <- downloadHandler(
 )
 
 # file output
-output$dlPlot <- downloadHandler(
+output$dlPlotHandler <- downloadHandler(
   filename = function() {
     ts <- gsub(' |-|:', '', as.character(Sys.time()))
     paste0('output_', ts, input$fileType)

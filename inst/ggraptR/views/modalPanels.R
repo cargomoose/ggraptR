@@ -3,10 +3,10 @@ div(
   bsModal("modalUploadOptions", "Upload dataset", "uploadDataCtrl",
           source('./views/addDatasetCtrlsUI.R', local=TRUE)$value),
   
-  bsModal("modalDownloadPlotOptions", "Plot download options", "downloadPlotCtrl", 
+  bsModal("modalDownloadPlotOptions", "Plot download options", "dlPlotOpenModalCtrl", 
           size = "small",
           uiOutput('fileHeightCtrl'), uiOutput('fileWidthCtrl'),
-          uiOutput('fileDPICtrl'), uiOutput('fileTypeCtrl'), uiOutput('modalDlBtnPlot')),
+          uiOutput('fileDPICtrl'), uiOutput('fileTypeCtrl'), uiOutput('dlPlotCtrl')),
   
   bsModal("datasetOptions", "Dataset options", "datasetOptionsCtrl", size = "small", 
           numericInput(
