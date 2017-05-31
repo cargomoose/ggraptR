@@ -15,7 +15,7 @@ plotGgplot <- function(dataset, inpVals) {
                  sepLines=pType == 'line' && 'path' %in% names(inpVals))
     
     geomMapArgs <- trimList(
-      y=if (need$..density..) '..density..',
+      y=if (need$..density..) '..density..',  # to combine density and histogram plots
       shape=asFactor(ls$shape),
       fill=asFactor(ls$fill),
       size=ls$size,
@@ -31,7 +31,7 @@ plotGgplot <- function(dataset, inpVals) {
       size=if (need$sizeMag) ls$sizeMag,
       stat=if (pType == 'bar') 'identity',
       width=if (pType == 'box') 0.2,
-      linetype=if (need$sepLines) 'dashed'))
+      linetype=if (need$sepLines || pType == 'freqpoly') 'dashed'))
     
     guides_args <- na_omit(sapply(names(geomMapArgs), function(aes) {
       if (need$densBlackLine && aes == 'color') {
