@@ -132,6 +132,7 @@ flattenList <- function(lst) {
 
 # preserves list structure and extracts only list elements names
 getStructListNames <- function(lst) {
+  if (is.null(lst)) return()
   res <- list()
   for (i in 1:length(lst)) {
     el <- lst[i]
@@ -145,7 +146,9 @@ getStructListNames <- function(lst) {
 }
 
 getPlotTypeOpts <- function(selectedOpts, n_num, n_cat) {
-  plotTypeRelations <- getStructListNames(getDefinedPlotInputs(n_num, n_cat))
+  defInputs <- getDefinedPlotInputs(n_num, n_cat)
+  if (is.null(defInputs)) return()
+  plotTypeRelations <- getStructListNames(defInputs)
   opts <- unlist(plotTypeRelations[
     if (is.null(selectedOpts)) T else {
       sapply(plotTypeRelations, function(el) unlist(selectedOpts)[1] %in% el)

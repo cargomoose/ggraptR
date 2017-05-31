@@ -1,6 +1,6 @@
 # plotTypes in inner lists are treated as allowed to plot together in plotTypeOpts()
 getDefinedPlotInputs <- function(n_num, n_cat) {
-  stopifnot(n_num > 0)
+  if (n_num == 0) return()
   trimList(
     if (n_num > 1) {
       list(scatter=c('x', 'y', 'color', 'treatColorAsFactor', 'shape', 'size', 'smooth', 

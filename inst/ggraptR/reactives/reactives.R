@@ -3,7 +3,7 @@ curDatasetPlotInputs <- reactive({
 })
 
 separatePlotInputs <- reactive({
-  if (is.null(plotTypes())) return()
+  if (is.null(plotTypes()) || is.null(curDatasetPlotInputs())) return()
   inputs <- lapply(plotTypes(), function(pType) {
     flattenList(isolate(curDatasetPlotInputs()))[[pType]]
   })
@@ -32,17 +32,16 @@ categoricalVars <- reactive({
 numericVars <- reactive({
   if (is.null(dataset())) return()
   res <- setdiff(colnames(dataset()), categoricalVars())
-  if (length(res) == 0) {
-    session$close()
-    stop('Dataset must contain at least one numeric feature')
-  }
-  res
+  if (length(res) != 0) res
 })
 
 plotTypesWarn <- reactive({
   if (is.null(dataset())) return()
   n_num <- length(numericVars())
-  n_cat <- length(categoricalVars())                  
+  n_cat <- length(categoricalVars())
+  if (n_num == 0) {
+    return('Can not draw any plot when number of detected numeric features == 0')
+  }
   problem <- if (n_num == 1) {
     'number of detected numeric features == 1' 
   } else if (n_cat == 0) {

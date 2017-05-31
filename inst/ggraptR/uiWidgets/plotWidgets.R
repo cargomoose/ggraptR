@@ -30,7 +30,7 @@ output$plotTypesCtrl <- renderUI({
     ls[c('opts', 'val')] <- if (isInit) {
       opts <- getPlotTypeOpts(initialPlot, 
                               length(numericVars()), length(categoricalVars()))
-      list(opts, if (!is.null(initialPlot)) initialPlot else opts[1])
+      list(opts, if (!is.null(initialPlot)) initialPlot else if (!is.null(opts)) opts[1])
     } else if (reactVals$is_dataset_changed > 0) {
       if (is.null(pTypes)) list(list('Histogram' = 'histogram'), 'histogram')
     } else {
