@@ -214,7 +214,7 @@ isVisible <- function(el) {
 click <- function(el, wait_for=NULL) {
   stopIfNotWebElement(el)
   if (!isVisible(el)) {
-    stop_debug(paste('Input element is invisible:', html(el)), need_stop_externals=T)
+    debug_stop(paste('Input element is invisible:', html(el)), need_stop_externals=T)
   }
   el$clickElement()
   
