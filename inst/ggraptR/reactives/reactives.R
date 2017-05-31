@@ -24,9 +24,10 @@ nCatUniqVals <- reactive({
 # variables for dataset() -- raw or manually aggregated dataset
 categoricalVars <- reactive({
   if (is.null(dataset())) return()
+  n_uniq_thresh <- isolate(nCatUniqVals())
+  rearValFeatures <- getVarNamesUniqValsCntLOEN(dataset(), n_uniq_thresh)
   unique(c(getIsFactorVarNames(dataset()), 
-           if (nrow(dataset()) > 30) getVarNamesUniqValsCntLOEN(
-             dataset(), isolate(nCatUniqVals()))))
+           if (nrow(dataset()) > n_uniq_thresh * 2) rearValFeatures))
 })
 
 numericVars <- reactive({
