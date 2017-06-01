@@ -1,6 +1,5 @@
 cat("\nTab: code")
 go_to_tab(driver, 'Code')
-
 test_target <- 'Plot log'
 log <- driver %>% getEl('.tab-pane.active[data-value="codeTab"]') %>% 
   text() %>% strsplit('\n') %>% `[[`(1)
@@ -29,3 +28,7 @@ test_that(paste(test_target, 'works correct'), {
   expect_true(!grepl('shiny-output-error', 
                      driver %>% getEl('#consoleCtrl') %>% attr('class')))
 })
+
+# every click on evalConsoleBtn will result changing current dataset on uploaded
+go_to_tab(driver, 'Plot')
+switchToDataset(driver, 'esoph', init_plot = 'scatter')
