@@ -1,7 +1,6 @@
 cat("\nTab: plot\n")
 go_to_tab(driver, 'plot', error_if_not=F)
 
-
 ### facet ####
 panel_name <- 'Facet'
 cat(paste0("\n", panel_name))
