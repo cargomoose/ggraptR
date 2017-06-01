@@ -89,7 +89,7 @@ uploadedDfName <- reactive({
 rawDatasetNames <- reactive({
   input$evalConsoleBtn  # to update on assignment operation
   unique(c(uploadedDfName(), getInitialArg('initialDfName'), getPreloadedEnvDfNames(), 
-           "diamonds", "mtcars", "iris", "esoph"))
+           "diamonds", "mtcars", "esoph"))
 })
 
 

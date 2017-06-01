@@ -5,10 +5,11 @@ shinyUI(bootstrapPage(
   headerPanel(windowTitle="ggraptR", title=div()),
   tags$head(tags$style(
     type="text/css",
-    "#rappy img {max-width: 100%;}",
-    "#react_row {max-width: 100%;}",
     "hr {margin-top: 15px; margin-bottom: 15px; border-color: #d9d9d9}",
-    ".sbs-panel-group {margin-bottom: 5px;}")),
+    ".sbs-panel-group {margin-bottom: 5px;}",
+    # ".shiny-split-layout #datasetNameCtrl { overflow: visible; }",
+    "#rappy img {max-width: 100%;}"  # "#react_row {max-width: 100%;}"
+    )),
   
   sidebarPanel(
     splitLayout(
