@@ -46,7 +46,7 @@ output$consoleCtrl <- renderText({
       res <- capture.output(eval(parse(text = console_input)))
     }, error = function(e) {
       if (grepl('cannot change value of locked binding for', e$message)) {
-        e$message <- "Can change value for .GlobalEnv variables only"
+        e$message <- "Did not find assigned value in .GlobalEnv"
       }
       stop(e$message)
     })
