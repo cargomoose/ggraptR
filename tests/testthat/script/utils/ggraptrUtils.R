@@ -141,6 +141,17 @@ check_input <- function(driver, inp_id, plot_names) {
   })
 }
 
+upload_file <- function(driver, file_path) {
+  driver %>% getEl('#uploadData') %>% click()
+  # uplEl <- modalEl %>% getEl('input#file')
+  uplEl <- wait_for('input#file', driver)
+  uplEl$setElementAttribute('style', '')  # RSelenium's requirement
+  Sys.sleep(2)
+  uplEl$sendKeysToElement(list(file_path))
+  wait_for({length(driver %>% get_current_plot_names()) == 0}, catchStale = T)
+}
+
+
 isSelectCorrect <- function(driver, inpId, plotNames) {
   withActivated <- grepl('^pairs', inpId)
   optVals <- getSelectOptions(driver, inpId, withActivated) %>%
