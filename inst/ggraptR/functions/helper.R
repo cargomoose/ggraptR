@@ -228,7 +228,7 @@ applied_filters_expr <- function(df, df_name, filter_keys, filter_vals) {
     
     if ((is_num && length(vals) != 2) || length(vals) == 0) {
       stop('df_name: ', df_name, 'col_name: ', col_name,
-          'is_num: ', is_num, 'length(vals): ', length(vals))
+           'is_num: ', is_num, 'length(vals): ', length(vals))
     }
     
     filter_cond <- paste0(vals, collapse=', ')
@@ -259,7 +259,7 @@ getInitialArg <- function(argName) {
   ggraptrFormals <- try(names(formals(eval(parse(text="ggraptR::ggraptR")))), silent = T)
   if (class(ggraptrFormals) == 'try-error') return(NULL)
   ggraptrFormals <- setdiff(ggraptrFormals, '...')
-  
+
   envIds <- which(
     sapply(0:length(sys.frames()), function(ienv) 
       !length(setdiff(ggraptrFormals, ls(envir=sys.frame(ienv)))))) - 1

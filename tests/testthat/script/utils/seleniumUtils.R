@@ -52,45 +52,6 @@ openPageInBrowser <- function(driver) {
   browseURL(tmpFileName)
 }
 
-as_string <- function(x) {
-  lst <- Map(function(el) if (is.null(el)) 'NULL' else el, 
-             if (is.list(x)) x else list(x))  # list(x) prevents coertions
-  
-  1:length(lst) %>% 
-    vapply(function(i) {
-      keys <- names(lst)
-      val <- if (is.character(lst[[i]])) sprintf("'%s'", lst[[i]]) else lst[[i]]
-      if (is.null(keys) || keys[i] == '') val else paste(keys[i], val, sep='=')
-    }, FUN.VALUE='') %>% 
-    paste(collapse=', ')
-}
-  
-run_external_ggraptR <- function(...) {
-  suppressPackageStartupMessages(require(dplyr))
-  ggraptrArgsLst <- list(...)
-  if (is.null(ggraptrArgsLst$launch.browser)) ggraptrArgsLst$launch.browser <- F
-  cmds <- c('Sys.getpid()',
-            'suppressPackageStartupMessages(library(ggraptR))',
-            sprintf('suppressPackageStartupMessages(ggraptR(%s))', 
-                    as_string(ggraptrArgsLst)))
-  system(generate_r_cmd(cmds, EXTERN_LOG_NAME), wait=F)
-  # for (i in 3:1) {
-  #   tryCatch({
-  while (length(suppressWarnings(readLines(EXTERN_LOG_NAME))) < 6) {
-    Sys.sleep(1)
-  }
-  #     break
-  #   }, error = function(e) {
-  #     if (grepl('cannot open the connection', getErrorMessage(e))) {
-  #       EXTERN_LOG_NAME <- sub('\\d?\\.', paste0(2, '\\.'), EXTERN_LOG_NAME)
-  #       cat(sprintf('Trying to create another one log file: [%s]', EXTERN_LOG_NAME))
-  #     } else {
-  #       stop(getErrorMessage(e))
-  #     }
-  #   })
-  # }
-}
-
 get_selenium_externals <- function(...) {
   ggraptrArgsLst <- Filter(function(el) !is.null(el), list(...))
   iters_to_find_free_port <- if (!'port' %in% names(ggraptrArgsLst)) {
@@ -101,7 +62,8 @@ get_selenium_externals <- function(...) {
   
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
-    do.call(run_external_ggraptR, ggraptrArgsLst)
+    do.call(ggraptR, c(ggraptrArgsLst, 
+                       list(launch.browser = F, log_file = EXTERN_LOG_NAME)))
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)

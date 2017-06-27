@@ -63,10 +63,3 @@ getAllPlotNames <- function(n_num=3, n_cat=3) {
     sapply(capitalize) %>% 
     sapply(function(x) gsub('(\\d)', ' \\1', x))
 }
-
-# pipe does not like ';' in "R -e .." that's why created generate_r_cmd() exists
-generate_r_cmd <- function(cmds, out_file_name) {
-  if (!file.exists(out_file_name)) file.create(out_file_name)
-  sprintf('R -q %s >%s 2>&1', 
-          paste(paste0('-e "', cmds, '"'), collapse = ' '), out_file_name)
-}
