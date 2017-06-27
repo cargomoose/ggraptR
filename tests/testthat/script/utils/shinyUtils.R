@@ -54,6 +54,7 @@ getSelectOptions <- function(driver, selId, withActivated=F) {
   }
 }
 
+# 'howMany' arg may be 'all'
 eraseMultiSelectOpts <- function(driver, selectId, howMany=1) {
   eraseOpts <- function(driver, selectId, n) {
     el <- getEl(driver, c('#', selectId, ' + .selectize-control input'))
