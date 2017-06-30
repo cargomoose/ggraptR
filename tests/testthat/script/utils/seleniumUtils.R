@@ -62,8 +62,9 @@ get_selenium_externals <- function(...) {
   
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
-    do.call(ggraptR, c(ggraptrArgsLst, 
-                       list(launch.browser = F, log_file = EXTERN_LOG_NAME)))
+    tryCatch(do.call(ggraptR, c(ggraptrArgsLst, list(
+      launch.browser = F, externalRun = T, log_file = EXTERN_LOG_NAME))),
+      warning = function(wrn) if (!grepl('was not closed properly', wrn)) warning(wrn))
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)

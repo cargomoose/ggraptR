@@ -1,29 +1,32 @@
 #' Launch ggraptR in the default browser
 #'
 #' @param initialDf initial dataframe to plot
-#' @param ... extra arguments. shiny::runApp arguments or initialPlot if needed
-#' 
+#' @param ... extra arguments. Possible options are:
+#' initialPlot - a vector of plot names
+#' externalRun - a boolean to run ggraptR in a separate process
+#' any shiny::runApp arguments
 #' @details See \url{http://github.com/cargomoose/raptR} for documentation and tutorials
 #'
 #' @examples
 #' if (interactive()) {
 #'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
-#' @importFrom ggplot2 diamonds
+#' @importFrom DT renderDataTable
+#' @import ggplot2 ggthemes shinyjs shinyBS dplyr futile.logger rmarkdown
 #' @export
 ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   extraArgs <- list(...)
-  if (is.null(extraArgs$block_rsession) || !extraArgs$block_rsession) {
+  if (!is.null(extraArgs$externalRun) && extraArgs$externalRun) {
     do.call(run_external_ggraptR, args = c(
       extraArgs, if (!'launch.browser' %in% names(extraArgs)) list(launch.browser = T)))
     return()
   }
-  extraArgs$block_rsession <- NULL
   
   if ('initialPlot' %in% names(extraArgs)) {
     initialPlot <- extraArgs$initialPlot
   }
-  shinyArgs <- extraArgs[names(extraArgs) != 'initialPlot']
+  shinyArgs <- extraArgs[!names(extraArgs) %in% c(
+    'initialPlot', 'externalRun', 'log_file')]
   
   defaultShinyArgs <- list(
     appDir=system.file("ggraptR", package = "ggraptR"),
@@ -42,16 +45,15 @@ ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   stopifnot(is.data.frame(initialDf))
   initialDfName <- gsub('.*::', '', deparse(substitute(initialDf)))
   
-  print(shinyArgs)
   do.call(shiny::runApp, args=shinyArgs)
-  cat('>> Exit ggraptR()\n')
+  if (!is.null(extraArgs$externalRun)) cat('>> Exit ggraptR()\n')  # logging
 }
 
 
 run_external_ggraptR <- function(...) {
   # suppressPackageStartupMessages(require(dplyr))
   ggraptrArgLst <- list(...)
-  ggraptrArgLst$block_rsession <- T  # to prevent recursion
+  ggraptrArgLst$externalRun <- F  # to prevent recursion
   log_file <- ggraptrArgLst$log_file
   if (is.null(log_file)) log_file <- paste0(Sys.getenv('R_USER'), '/ggraptR.log')
   ggraptrArgLst$log_file <- NULL
