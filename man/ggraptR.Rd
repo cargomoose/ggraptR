@@ -9,7 +9,10 @@ ggraptR(initialDf = ggplot2::diamonds, ...)
 \arguments{
 \item{initialDf}{initial dataframe to plot}
 
-\item{...}{extra arguments. shiny::runApp arguments or initialPlot if needed}
+\item{...}{extra arguments. Possible options are:
+initialPlot - a vector of plot names
+externalRun - a boolean to run ggraptR in a separate process
+any shiny::runApp arguments}
 }
 \description{
 Launch ggraptR in the default browser
