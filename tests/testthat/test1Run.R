@@ -4,10 +4,11 @@ if (.Platform$OS.typ != 'windows') return()
 source('script/utils/funs.R')
 
 gg_arg_combinations <- list(
-  list(NULL), 
-  # list(initialDf=get('esoph')),
+  list(NULL),
+  # list(initialDf=get??('esoph')),  # problems with passing data to external process
   list(initialPlot='Line'),
-  list(appDir=system.file("ggraptR", package = "ggraptR")))
+  list(appDir=system.file("ggraptR", package = "ggraptR"))
+  )
 
 for (args in gg_arg_combinations) {
   run_result <- F

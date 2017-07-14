@@ -9,6 +9,6 @@ list2env(get_selenium_externals(), environment()) %>% invisible()
 
 test_that("Initial diamonds plot is correct", {
   wait_for_plot_ready(driver)
-  expect_true(has_shiny_correct_state(driver, '^diamonds', NULL, NULL, 
-                                      shortShotName=F, waitPlot=F))
+  expect_true(has_shiny_correct_state(
+    driver, '^diamonds', NULL, NULL, shortShotName=F, waitPlot=F))
 })

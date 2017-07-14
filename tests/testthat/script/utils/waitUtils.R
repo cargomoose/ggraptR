@@ -25,7 +25,7 @@ wait_for_table_ready <- function(driver) {
 
 # target - charater of css/xpath query, function returning T/F, expression like {a+2==5}
 # source - webDriver or webElement
-wait_for <- function(target, source=driver, timeout=10, errorIfNot=T, catchStale=F) {
+wait_for <- function(target, source=driver, timeout=20, errorIfNot=T, catchStale=F) {
   oneWaitDur <- 0.5  # sec
   
   targetFun <- 

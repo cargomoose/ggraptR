@@ -46,7 +46,6 @@ ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   initialDfName <- gsub('.*::', '', deparse(substitute(initialDf)))
   
   do.call(shiny::runApp, args=shinyArgs)
-  if (!is.null(extraArgs$externalRun)) cat('>> Exit ggraptR()\n')  # logging
 }
 
 
@@ -56,15 +55,8 @@ run_external_ggraptR <- function(...) {
   ggraptrArgLst$externalRun <- F  # to prevent recursion
   log_file <- ggraptrArgLst$log_file
   if (is.null(log_file)) log_file <- paste0(Sys.getenv('R_USER'), '/ggraptR.log')
+  if (!file.exists(log_file)) file.create(log_file)
   ggraptrArgLst$log_file <- NULL
-  
-  if (!file.exists(log_file)) {
-    file.create(log_file)
-  } else {
-    if (!any(grepl('Exit ggraptR', suppressWarnings(tail(readLines(log_file)))))) {
-      warning('The previous ggraptR session was not closed properly')
-    }
-  }
   
   if (is.null(ggraptrArgLst$launch.browser)) ggraptrArgLst$launch.browser <- F
   cmds <- c('Sys.getpid()',

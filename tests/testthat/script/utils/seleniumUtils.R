@@ -62,16 +62,14 @@ get_selenium_externals <- function(...) {
   
   for (i in 1:iters_to_find_free_port) {
     ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
-    tryCatch(do.call(ggraptR, c(ggraptrArgsLst, list(
-      launch.browser = F, externalRun = T, log_file = EXTERN_LOG_NAME))),
-      warning = function(wrn) if (!grepl('was not closed properly', wrn)) warning(wrn))
+    do.call(ggraptR, c(ggraptrArgsLst, list(
+      launch.browser = F, externalRun = T, log_file = EXTERN_LOG_NAME)))
     
     selServer <- startSelServer()
     driver <- try(getDriver(port = ggraptrArgsLst$port), silent = T)
     
     if (is.error(driver) || driver$getTitle()[[1]] != 'ggraptR') {
-      errMsg <- suppressWarnings(readLines(EXTERN_LOG_NAME)) %>% 
-        head(-1) %>% tail(-3) %>% paste(collapse='\n')
+      errMsg <- suppressWarnings(readLines(EXTERN_LOG_NAME)) %>% paste(collapse='\n')
       
       if (is_error_of(driver, 'Couldnt connect.+ensure.+Selenium.+running') ||
           (grepl('in startServer.+handlerManager.createHttpuvApp', errMsg) &&
