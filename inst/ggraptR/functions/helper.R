@@ -201,7 +201,7 @@ asFactor <- function(var) {
 }
 
 notNulls <- function(...) {  # effective lazy implementation
-  for (el in list(...)) if (is.null(el)) return(F)
+  for (el in list(...)) if (is.null(el)) return(FALSE)
   TRUE
 }
 

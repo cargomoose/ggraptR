@@ -26,8 +26,7 @@ categoricalVars <- reactive({
   if (is.null(dataset())) return()
   n_uniq_thresh <- isolate(nCatUniqVals())
   rearValFeatures <- getVarNamesUniqValsCntLOEN(dataset(), n_uniq_thresh)
-  unique(c(getIsFactorVarNames(dataset()), 
-           if (nrow(dataset()) > n_uniq_thresh * 2) rearValFeatures))
+  unique(c(getIsFactorVarNames(dataset()), rearValFeatures))
 })
 
 numericVars <- reactive({
