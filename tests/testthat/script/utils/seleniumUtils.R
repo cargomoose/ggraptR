@@ -61,7 +61,7 @@ get_selenium_externals <- function(...) {
   init_port <- ggraptrArgsLst$port
   
   for (i in 1:iters_to_find_free_port) {
-    ggraptrArgsLst$port <- ggraptrArgsLst$port + (i - 1) * 10
+    ggraptrArgsLst$port <- ggraptrArgsLst$port + 10 * (i > 1)
     do.call(ggraptR, c(ggraptrArgsLst, list(
       launch.browser = F, externalRun = T, log_file = EXTERN_LOG_NAME)))
     
