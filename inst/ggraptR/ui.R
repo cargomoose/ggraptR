@@ -19,14 +19,15 @@ shinyUI(bootstrapPage(
         # use shinyjs to disable/enable buttons w/ JS
         useShinyjs(),
         
-        fluidRow(
-          column(9, uiOutput('datasetNameCtrl'),
-                 style="padding-right:5px; height: 0px"),
-          column(2,
-                 uiOutput('uploadDataCtrl', inline = T),
-                 uiOutput('datasetOptionsCtrl', inline = T),
-                 style="padding-top:25px;padding-left:5px;"),
-          style='width:100%'),
+        div(
+          uiOutput(
+            'datasetNameCtrl', style = paste(
+              'float: left; margin-right: 83px; width:-webkit-fill-available;
+              white-space: nowrap;')),
+          div(
+            uiOutput('uploadDataCtrl', inline = T),
+            uiOutput('datasetOptionsCtrl', inline = T),
+            style='float: left; margin-left: -79px; padding-top: 25px')),
         
         conditionalPanel(
           condition = 'input.conditionedPanels == "tableTab"',
@@ -45,7 +46,7 @@ shinyUI(bootstrapPage(
           condition = 'input.conditionedPanels == "codeTab"',
           div(br(), style='padding-bottom: 120px')),
         
-        style='padding-left: 10px; padding-right: 3px; overflow: hidden;')),
+        style='padding-left: 10px; padding-right: 4px; overflow: -webkit-paged-x; white-space: normal')),
     hr(),
     
     #### left controls ####
