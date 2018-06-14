@@ -9,7 +9,7 @@ shinyUI(bootstrapPage(
     ".sbs-panel-group {margin-bottom: 5px;}",
     # ".shiny-split-layout #datasetNameCtrl { overflow: visible; }",
     "#rappy img {max-width: 100%;}"  # "#react_row {max-width: 100%;}"
-    )),
+  )),
   
   sidebarPanel(
     splitLayout(
@@ -36,7 +36,7 @@ shinyUI(bootstrapPage(
           condition = 'input.conditionedPanels != "codeTab"',
           hr(),
           fluidRow(
-            column(6, uiOutput('submitCtrl')), 
+            column(6, uiOutput('submitCtrl', style='overflow:hidden')), 
             column(6, uiOutput('reactiveCtrl')),
             id='react_row'), 
           actionButton("reset_input", "Reset inputs", width = "100%")),
