@@ -2,11 +2,11 @@
 verticalLayout(
   div(
     uiOutput('plotTypesCtrl', 
-             style = 'float: left; margin-right: 50px; width:-webkit-fill-available'),
+             style = 'float: left; margin-right: 43px; width:-webkit-fill-available'),
     div(
       uiOutput('dlPlotOpenModalCtrl', style= 'padding-bottom: 5px;'), 
       uiOutput('pTypesWarnBtnCtrl'),  
-      style='float: left; margin-left: -40px; padding-top: 25px; display: inline-block')),
+      style='float: left; margin-left: -39px; padding-top: 25px; display: inline-block')),
   
   fluidRow(
     column(6, uiOutput('xCtrl')),
