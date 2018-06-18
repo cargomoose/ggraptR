@@ -40,7 +40,7 @@ shinyUI(bootstrapPage(
             column(6, uiOutput('submitCtrl', style='overflow:hidden')), 
             column(6, uiOutput('reactiveCtrl')),
             id='react_row'), 
-          actionButton("reset_input", "Reset inputs", width = "100%")),
+          actionButton("reset_input", "Reset inputs", icon=icon("refresh"), width = "100%")),
         
         conditionalPanel(
           condition = 'input.conditionedPanels == "codeTab"',
