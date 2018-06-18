@@ -42,6 +42,11 @@ output$consoleCtrl <- renderText({
   isolate({
     console_input <- gsub('(?<=[^<])<-', '<<-', input$console, perl = T)
     
+    assign_splitted <- strsplit(console_input, '\\s*<<-')[[1]]
+    if (exists(assign_splitted[1]) && length(assign_splitted) > 1) {
+      stop('This variable name has been occupied')
+    }
+    
     tryCatch({
       res <- capture.output(eval(parse(text = console_input)))
     }, error = function(e) {
