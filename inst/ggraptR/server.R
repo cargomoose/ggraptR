@@ -1,16 +1,7 @@
-library(shiny)
-library(ggplot2)
-library(dplyr)
-library(DT)
-library(stringr)
-library(shinyBS)
-library(shinyjs)
-library(colourpicker)
-library(ggthemes)
-library(jsonlite)
-library(svglite)
-library(futile.logger)
-library(GGally)
+pacman::p_load(
+  # purrr, dplyr,  # purrr must be followed by dplyr
+  colourpicker, DT, futile.logger, GGally, ggplot2, ggthemes, jsonlite, 
+  shiny, shinyBS, shinyjs, stringr, svglite)
 
 # by default, the file size limit is 5MB. 1 Gb = 1024^3 b
 options(shiny.maxRequestSize = 10 * 1024^3)

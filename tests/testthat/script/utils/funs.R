@@ -1,5 +1,4 @@
-suppressPackageStartupMessages(library(RSelenium))
-suppressPackageStartupMessages(library(dplyr))
+pacman::p_load(RSelenium, dplyr)
 
 source('../../inst/ggraptR/functions/helper.R')
 sourceAllInDir('script/utils', except = 'funs.R')

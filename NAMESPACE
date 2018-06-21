@@ -2,10 +2,7 @@
 
 export(ggraptR)
 import(dplyr)
-import(futile.logger)
 import(ggplot2)
-import(ggthemes)
-import(rmarkdown)
-import(shinyBS)
-import(shinyjs)
-importFrom(DT,renderDataTable)
+import(pacman)
+import(purrr)
+import(shiny)

@@ -1,5 +1,4 @@
-library(shinyBS)
-library(shinyjs)
+pacman::p_load(shinyBS, shinyjs, DT)
 
 shinyUI(bootstrapPage(
   headerPanel(windowTitle="ggraptR", title=div()),
