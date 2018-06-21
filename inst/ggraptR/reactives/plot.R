@@ -9,11 +9,7 @@ getPlotInputVals <- function(structInpNames, df) {
 }
 
 buildPlot <- reactive({
-  flog.debug("plot::buildPlot() - Begin", name='all')
-  flog.debug("systime - begin", name='all')
-  start.time <- Sys.time()
-  flog.debug(start.time, name='all')
-  
+
   # this block waits for controls and prevents premature plot drawing
   if (isolate(reactVals$readyToDraw)) {
     isolate(reactVals$readyToDraw <- F)
@@ -89,14 +85,6 @@ buildPlot <- reactive({
     isolate(reactVals$plotState$theme_attrs <- theme_attrs)
     p <- p + theme(text=do.call(element_text, theme_attrs))
   }
-  
-  flog.debug("plot::buildPlot() - End", name='all')
-  flog.debug("proctime - end", name='all')
-  end.time <- Sys.time()
-  flog.debug(end.time, name='all')
-  time.taken <- end.time - start.time
-  flog.debug("time.taken", name='all')
-  flog.debug(time.taken , name='all')
   
   # add plot history entry. It will be shown at Log tab
   isolate({
