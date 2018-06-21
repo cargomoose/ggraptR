@@ -19,10 +19,10 @@ License: GPL (>= 2)
 Suggests:
     knitr
 Depends:
-    purrr,
     dplyr (>= 0.7.5),
     ggplot2 (>= 2.2.0),
     pacman (>= 0.4.6),
+    purrr(>= 0.2.4),
     shiny (>= 0.12.2)
 BugReports: https://github.com/cargomoose/raptR/issues
 VignetteBuilder: knitr

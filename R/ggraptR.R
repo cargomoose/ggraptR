@@ -11,7 +11,7 @@
 #' if (interactive()) {
 #'   ggraptR(initialDf='mtcars', initialPlot=c('Scatter', 'Line'), appDir='inst/ggraptR')
 #' }
-#' @import pacman shiny ggplot2 purrr dplyr
+#' @import dplyr ggplot2 pacman purrr shiny 
 #' @export
 ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   extraArgs <- list(...)
