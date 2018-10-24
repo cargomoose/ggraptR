@@ -1,8 +1,7 @@
 Package: ggraptR
 Type: Package
 Title: Allows Interactive Visualization of Data Through a Web Browser GUI
-Version: 0.3
-Date: 2017-01-06
+Version: 1.1
 Authors@R:
     c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),
              email="eugene@presciient.com"),
