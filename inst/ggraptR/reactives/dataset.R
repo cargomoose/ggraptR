@@ -102,7 +102,7 @@ rawDataset <- reactive({
   
   isolate({
     df <- if (!is.null(uploadedDfName()) && cur_name == uploadedDfName()) 
-      uploadedDf() else get(cur_name)
+      uploadedDf() else eval(parse(text = cur_name))
     if (any(class(df) == 'reactive')) {
       stop('Please change the dataset name to prevent a collision with a ggraptR object')
     }

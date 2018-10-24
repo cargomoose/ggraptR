@@ -41,7 +41,6 @@ ggraptR <- function(initialDf = ggplot2::diamonds, ...) {
   }
   if ('' %in% names(shinyArgs)) stop('all extra arguments must be named')
   
-  stopifnot(is.data.frame(initialDf))
   initialDfName <- gsub('.*::', '', deparse(substitute(initialDf)))
   
   do.call(shiny::runApp, args=shinyArgs)
