@@ -11,7 +11,8 @@ wrap_quote <- function(el, need_quote) {
   if (is.character(el) && need_quote) {
     sprintf('"%s"', el)
   } else if (is.language(el)) {
-    as.character(list(el))
+    res <- as.character(list(el))
+    if ("quosure" %in% class(el)) sub("^~", "", res) else res
   } else as.character(el)
 }
 
