@@ -62,7 +62,9 @@ generateCode <- function(p, df, df_name, state) {
       # for (params in c(layer$stat_params, layer$geom_params)) {
       # collision na.rm=F for both stat_params and geom_params
       param_mask <- sapply(layer$stat_params, function(x)
-        !is.null(x) && (!is.logical(x) || x) && (!is.numeric(x) || x > 0) &&
+        !is.null(x) && !is.na(x) &&
+          (!is.logical(x) || x) && 
+          (!is.numeric(x) || x > 0) &&
           ((!is.vector(x) && !is.list(x)) || length(x) > 0))
       if (any(param_mask)) {
         useful_params <- layer$stat_params[param_mask]
