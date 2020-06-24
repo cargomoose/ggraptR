@@ -1,7 +1,7 @@
 Package: ggraptR
 Type: Package
 Title: Allows Interactive Visualization of Data Through a Web Browser GUI
-Version: 1.1
+Version: 1.3
 Authors@R:
     c(person("Eugene", "Dubossarsky", role=c("aut", "cph", "cre"),
              email="eugene@presciient.com"),
@@ -16,7 +16,8 @@ Description: Intended for both technical and non-technical users to create
     code.
 License: GPL (>= 2)
 Suggests:
-    knitr
+    knitr,
+    markdown
 Depends:
     dplyr (>= 0.7.5),
     ggplot2 (>= 2.2.0),
